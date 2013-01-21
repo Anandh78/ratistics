@@ -1,0 +1,21 @@
+statsrb(1) -- gem statsrb
+============================================================
+
+## SYNOPSIS
+
+gem statsrb
+
+## DESCRIPTION
+
+gem statsrb
+
+## FILES
+
+## OPTIONS
+
+## EXAMPLES
+
+## AUTHOR
+
+Jerry D'Antonio &lt;<jerry.dantonio@gmail.com>&gt;<br>
+[https://github.com/jdantonio/statsrb/](https://github.com/jdantonio/statsrb/)
