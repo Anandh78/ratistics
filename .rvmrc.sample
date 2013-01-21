@@ -1,0 +1,4 @@
+rvm use ruby-1.9.3@statsrb --create
+
+# put the gem bin directory in our path
+export PATH=./bin:$PATH
