@@ -40,6 +40,28 @@ module Ratistics
     alias :avg :mean
     alias :average :mean
 
+    # Calculates the statistical median.
+    #
+    # Will sort the data set using natural sort order unless
+    # the #sorted argument is true or a block is given.
+    #
+    # When no block is given every element in the data set will be
+    # cast to a float before computation. When a block is given
+    # the block will be applied to every element in the data set
+    # and the result of the block will be cast to a float. Using
+    # a block in this way allows the median to be computed against
+    # a specific field in a data set of hashes or objects.
+    #
+    # For a block {|item| ... } 
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to compute the median of
+    # @param [Boolean] sorted indicates of the list is already sorted
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Float, 0] the statistical median of the given data set
+    #   or zero if the data set is empty
     def median(data, sorted=false, &block)
       return 0 if data.empty?
       data = data.sort unless block_given? || sorted
@@ -65,6 +87,23 @@ module Ratistics
       return median
     end
 
+    # Calculates the statistical modes.
+    #
+    # When a block is given # the block will be applied to every
+    # element in the data set and the result of the block will be
+    # used to calculate the modes. Using a block in this way
+    # allows modes to be computed against a specific field
+    # in a data set of hashes or objects.
+    #
+    # For a block {|item| ... } 
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to compute the median of
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Array] An array of zero or more values (in no particular
+    #   order) indicating the modes of the data set
     def mode(data, &block)
       return [] if data.empty?
 
@@ -91,6 +130,28 @@ module Ratistics
       return modes
     end
 
+    # Calculates the statistical range.
+    #
+    # Will sort the data set using natural sort order unless
+    # the #sorted argument is true or a block is given.
+    #
+    # When no block is given every element in the data set will be
+    # cast to a float before computation. When a block is given
+    # the block will be applied to every element in the data set
+    # and the result of the block will be cast to a float. Using
+    # a block in this way allows the range to be computed against
+    # a specific field in a data set of hashes or objects.
+    #
+    # For a block {|item| ... } 
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to compute the range of
+    # @param [Boolean] sorted indicates of the list is already sorted
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Float, 0] the statistical range of the given data set
+    #   or zero if the data set is empty
     def range(data, sorted=false, &block)
       return 0 if data.count <= 1
       data = data.sort unless block_given? || sorted
