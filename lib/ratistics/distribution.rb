@@ -6,11 +6,12 @@ module Ratistics
   module Distribution
    extend self
 
-   def variance(data, mu=nil)
+   def variance(data, mu=nil, &block)
 
-     mu = Average.mean(data) if mu.nil?
+     mu = Average.mean(data, &block) if mu.nil?
 
      deviation = data.reduce([]) do |memo, datum|
+       datum = yield(datum) if block_given?
        memo << (datum.to_f - mu) ** 2
      end
 

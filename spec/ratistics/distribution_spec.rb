@@ -11,6 +11,19 @@ module Ratistics
         variance.should be_within(0.01).of(141.2)
       end
 
+      it 'calculates variance around the mean for a sample with block' do
+        sample = [
+          {:count => 67},
+          {:count => 72},
+          {:count => 85},
+          {:count => 93},
+          {:count => 98},
+        ]
+
+        variance = Distribution.variance(sample){|item| item[:count]}
+        variance.should be_within(0.01).of(141.2)
+      end
+
     end
 
     context '#range' do
