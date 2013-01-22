@@ -1,5 +1,5 @@
 $:.push File.join(File.dirname(__FILE__), 'lib')
-$:.push File.join(File.dirname(__FILE__), 'spec/support')
+$:.push File.join(File.dirname(__FILE__), 'tasks/support')
 
 require 'rubygems'
 require 'bundler/gem_tasks'
