@@ -19,12 +19,12 @@ module Ratistics
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
-    # @param [Enumerable] data the data set to compute the range of
+    # @param [Enumerable] data the data set to compute the variance of
     # @param [Float] mu datum around which to compute the variance,
     #   defaults to the statistical mean of the sample
     # @param [Block] block optional block for per-item processing
     #
-    # @return [Float, 0] the statistical range of the given data set
+    # @return [Float, 0] the statistical variance of the given data set
     #   or zero if the data set is empty
     def variance(data, mu=nil, &block)
       return 0 if data.nil? || data.empty?
@@ -54,12 +54,13 @@ module Ratistics
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
-    # @param [Enumerable] data the data set to compute the range of
+    # @param [Enumerable] data the data set to compute the standard
+    #   deviation of
     # @param [Float] mu datum around which to compute the standard
     #   deviation, defaults to the statistical mean of the sample
     # @param [Block] block optional block for per-item processing
     #
-    # @return [Float, 0] the statistical range of the given data set
+    # @return [Float, 0] the standard deviation of the given data set
     #   or zero if the data set is empty
     def standard_deviation(data, mu=nil, &block)
       return 0 if data.nil? || data.empty?
@@ -104,6 +105,23 @@ module Ratistics
       return range
     end
 
+    # Calculates the statistical frequency.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set and the result of the block will
+    # be cast to a float. Using a block in this way allows the
+    # frequency to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # For a block {|item| ... }
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to compute the frequency of
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Hash, nil] the statistical frequency of the given data set
+    #   or nil if the data set is empty
     def frequency(data, &block)
       return nil if data.nil? || data.empty?
 
