@@ -13,7 +13,7 @@ module Ratistics
     # a block in this way allows the mean to be computed against
     # a specific field in a data set of hashes or objects.
     #
-    # For a block {|item| ... } 
+    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -49,7 +49,7 @@ module Ratistics
     # a block in this way allows the median to be computed against
     # a specific field in a data set of hashes or objects.
     #
-    # For a block {|item| ... } 
+    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -92,7 +92,7 @@ module Ratistics
     # allows modes to be computed against a specific field
     # in a data set of hashes or objects.
     #
-    # For a block {|item| ... } 
+    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #

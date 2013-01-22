@@ -2,10 +2,30 @@ require 'ratistics/average'
 
 module Ratistics
 
-  # Various average computation functions.
+  # Various distribution computation functions.
   module Distribution
     extend self
 
+    # Calculates the statistical variance.
+    #
+    # When no block is given every element in the data set will be
+    # cast to a float before computation. When a block is given
+    # the block will be applied to every element in the data set
+    # and the result of the block will be cast to a float. Using
+    # a block in this way allows the variance to be computed against
+    # a specific field in a data set of hashes or objects.
+    #
+    # For a block {|item| ... }
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to compute the range of
+    # @param [Float] mu datum around which to compute the variance,
+    #   defaults to the statistical mean of the sample
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Float, 0] the statistical range of the given data set
+    #   or zero if the data set is empty
     def variance(data, mu=nil, &block)
       return 0 if data.nil? || data.empty?
 
@@ -32,7 +52,7 @@ module Ratistics
     # a block in this way allows the range to be computed against
     # a specific field in a data set of hashes or objects.
     #
-    # For a block {|item| ... } 
+    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
