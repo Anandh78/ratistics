@@ -71,6 +71,9 @@ module Ratistics
       modes = {}
 
       data.each do |item|
+
+        item = yield(item) if block_given?
+
         if modes.has_key? item
           modes[item] = modes[item]+1
         else
