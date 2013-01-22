@@ -1,6 +1,7 @@
 $:.push File.join(File.dirname(__FILE__))
 
 require 'ratistics/average'
+require 'ratistics/distribution'
 require 'ratistics/version'
 
 # Ratistics provides basic statistical computation functions
@@ -10,6 +11,7 @@ require 'ratistics/version'
 module Ratistics
   class << self
     include Average
+    include Distribution
   end
 
 end
