@@ -8,7 +8,7 @@ require 'rspec/core/rake_task'
 require 'cucumber'
 require 'cucumber/rake/task'
 
-require 'statsrb'
+require 'ratistics'
 
 Bundler::GemHelper.install_tasks
 

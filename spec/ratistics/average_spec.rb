@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Statsrb
+module Ratistics
   describe Average do
 
     context 'mean' do
@@ -37,19 +37,19 @@ module Statsrb
 
         it 'calculates the average pregnancy length' do
           data = @pregnancies.filter{|item| item[:birthord] > 0}
-          mean = Statsrb::Average.mean(data) {|birth| birth[:prglength]}
+          mean = Ratistics::Average.mean(data) {|birth| birth[:prglength]}
           mean.should be_within(0.01).of(38.56055968517709)
         end
 
         it 'calculates the average pregnancy length for first babies' do
           data = @pregnancies.filter{|item| item[:birthord] == 1}
-          mean = Statsrb::Average.mean(data) {|birth| birth[:prglength]}
+          mean = Ratistics::Average.mean(data) {|birth| birth[:prglength]}
           mean.should be_within(0.01).of(38.60095173351461)
         end
 
         it 'calculates the average pregnancy length for not first babies' do
           data = @pregnancies.filter{|item| item[:birthord] > 1}
-          mean = Statsrb::Average.mean(data) {|birth| birth[:prglength]}
+          mean = Ratistics::Average.mean(data) {|birth| birth[:prglength]}
           mean.should be_within(0.01).of(38.52291446673706)
         end
 

@@ -1,4 +1,4 @@
-module Statsrb
+module Ratistics
   module Average
     extend self
 

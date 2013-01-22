@@ -3,7 +3,7 @@ $:.push File.join(File.dirname(__FILE__), '../lib')
 
 require 'bundler'
 
-require 'statsrb'
-require 'statsrb/cli'
+require 'ratistics'
+require 'ratistics/cli'
 
-Statsrb::CLI.start
+Ratistics::CLI.start

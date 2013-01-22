@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Statsrb do
+describe Ratistics do
 
   context 'check test data' do
 

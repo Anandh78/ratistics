@@ -1,13 +1,13 @@
-statsrb(1) -- gem statsrb
+ratistics(1) -- gem ratistics
 ============================================================
 
 ## SYNOPSIS
 
-gem statsrb
+gem ratistics
 
 ## DESCRIPTION
 
-gem statsrb
+gem ratistics
 
 ## FILES
 
@@ -18,4 +18,4 @@ gem statsrb
 ## AUTHOR
 
 Jerry D'Antonio &lt;<jerry.dantonio@gmail.com>&gt;<br>
-[https://github.com/jdantonio/statsrb/](https://github.com/jdantonio/statsrb/)
+[https://github.com/jdantonio/ratistics/](https://github.com/jdantonio/ratistics/)

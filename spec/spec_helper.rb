@@ -1,6 +1,6 @@
 require 'simplecov'
 SimpleCov.start do
-  project_name 'statsrb'
+  project_name 'ratistics'
   add_filter '/bin/'
   add_filter '/features/'
   add_filter '/man/'
@@ -11,7 +11,7 @@ end
 require 'rspec'
 require 'debugger'
 
-require 'statsrb'
+require 'ratistics'
 
 # import all the support files
 Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each { |f| require File.expand_path(f) }

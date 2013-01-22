@@ -1,8 +1,8 @@
 require 'thor'
 
-require 'statsrb'
+require 'ratistics'
 
-module Statsrb
+module Ratistics
   class CLI < Thor
 
     # helper methods - not part of the CLI
