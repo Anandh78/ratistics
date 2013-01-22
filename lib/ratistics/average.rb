@@ -37,6 +37,9 @@ module Ratistics
       return total / data.count.to_f
     end
 
+    alias :avg :mean
+    alias :average :mean
+
     def median
     end
 
