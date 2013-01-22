@@ -68,5 +68,18 @@ module Ratistics
     def mode
     end
 
+    def range(data, sorted=false, &block)
+      return 0 if data.count <= 1
+      data = data.sort unless block_given? || sorted
+
+      if block_given?
+        range = yield(data[data.count-1]) - yield(data[0])
+      else
+        range = data[data.count-1] - data[0]
+      end
+
+      return range
+    end
+
   end
 end
