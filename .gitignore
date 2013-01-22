@@ -20,4 +20,5 @@ tmtags
 *.swo
 *.swp
 .idea
+*.py
 *.pyc
