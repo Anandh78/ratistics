@@ -35,6 +35,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'geminabox'
 
+  s.add_development_dependency 'hamster'
+
   s.add_development_dependency 'debugger'
   s.add_development_dependency 'rake'
 

@@ -1,4 +1,5 @@
 require 'zlib'
+require 'hamster/vector'
 
 module Survey
   extend self
@@ -23,12 +24,12 @@ module Survey
     [:finalwgt, 423, 440, :to_f].freeze,
   ].freeze
 
-  def load_respondent_data
-    return load_file(Survey::FEMRESP, RESPONDENT_FIELDS)
+  def get_respondent_data
+    @@respondents ||= load_file(Survey::FEMRESP, Survey::RESPONDENT_FIELDS)
   end
 
-  def load_pregnancy_data
-    return load_file(Survey::FEMPREG, PREGNANCY_FIELDS)
+  def get_pregnancy_data
+    @@pregnancies ||= load_file(Survey::FEMPREG, Survey::PREGNANCY_FIELDS)
   end
 
   def get_counts
@@ -40,7 +41,7 @@ module Survey
   end
 
   def load_file(path, definition)
-    data = []
+    data = Hamster.vector
 
     Zlib::GzipReader.open(path) do |gz|
       gz.each_line do |line|
@@ -48,7 +49,7 @@ module Survey
         definition.each do |field|
           record[field[0]] = line.slice(field[1]-1, field[2]-field[1]+1).send(field[3])
         end
-        data << record
+        data = data.cons(record.freeze)
       end
     end
 
