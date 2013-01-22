@@ -4,5 +4,8 @@ require 'ratistics/average'
 require 'ratistics/version'
 
 module Ratistics
+  class << self
+    include Average
+  end
 
 end
