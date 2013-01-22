@@ -10,11 +10,11 @@ module Ratistics
       end
 
       it 'returns zero for an empty sample' do
-        Average.mean([]).should eq 0
+        Average.mean([].freeze).should eq 0
       end
 
       it 'calculates the mean of a sample' do
-        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
         mean = Average.mean(sample)
         mean.should be_within(0.01).of(15.0)
       end
@@ -30,7 +30,7 @@ module Ratistics
           {:count => 14},
           {:count => 21},
           {:count => 13},
-        ]
+        ].freeze
 
         mean = Average.mean(sample) {|item| item[:count] }
         mean.should be_within(0.01).of(15.0)
@@ -43,19 +43,19 @@ module Ratistics
         end
 
         it 'calculates the mean pregnancy length' do
-          sample = @pregnancies.filter{|item| item[:birthord] > 0}
+          sample = @pregnancies.filter{|item| item[:birthord] > 0}.freeze
           mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
           mean.should be_within(0.01).of(38.56055968517709)
         end
 
         it 'calculates the mean pregnancy length for first babies' do
-          sample = @pregnancies.filter{|item| item[:birthord] == 1}
+          sample = @pregnancies.filter{|item| item[:birthord] == 1}.freeze
           mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
           mean.should be_within(0.01).of(38.60095173351461)
         end
 
         it 'calculates the mean pregnancy length for not first babies' do
-          sample = @pregnancies.filter{|item| item[:birthord] > 1}
+          sample = @pregnancies.filter{|item| item[:birthord] > 1}.freeze
           mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
           mean.should be_within(0.01).of(38.52291446673706)
         end
@@ -69,17 +69,17 @@ module Ratistics
       end
 
       it 'returns zero for an empty sample' do
-        Average.median([]).should eq 0
+        Average.median([].freeze).should eq 0
       end
 
       it 'calculates the median of an even-number sample' do
-        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 0]
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 0].freeze
         median = Average.median(sample)
         median.should be_within(0.01).of(13.5)
       end
 
       it 'calculates the median of an odd-number sample' do
-        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
         median = Average.median(sample)
         median.should be_within(0.01).of(14.0)
       end
@@ -92,7 +92,7 @@ module Ratistics
       end
 
       it 'calculates the median for an unsorted sample' do
-        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
         median = Average.median(sample, false)
         median.should be_within(0.01).of(14.0)
       end
@@ -108,7 +108,7 @@ module Ratistics
           {:count => 16},
           {:count => 18},
           {:count => 21},
-        ]
+        ].freeze
 
         median = Average.median(sample) {|item| item[:count] }
         median.should be_within(0.01).of(14.0)
@@ -126,7 +126,7 @@ module Ratistics
           {:count => 16},
           {:count => 18},
           {:count => 21},
-        ]
+        ].freeze
 
         median = Average.median(sample) {|item| item[:count] }
         median.should be_within(0.01).of(13.5)
@@ -151,23 +151,23 @@ module Ratistics
       end
 
       it 'returns an empty array for an empty sample' do
-        Average.mode([]).should eq []
+        Average.mode([].freeze).should eq []
       end
 
       it 'returns the element for a one-element sample' do
-        sample = [1]
+        sample = [1].freeze
         mode = Average.mode(sample)
         mode.should eq [1]
       end
 
       it 'returns an array of one element for single-modal sample' do
-        sample = [3, 7, 5, 13, 20, 23, 39, 23, 40, 23, 14, 12, 56, 23, 29]
+        sample = [3, 7, 5, 13, 20, 23, 39, 23, 40, 23, 14, 12, 56, 23, 29].freeze
         mode = Average.mode(sample)
         mode.should eq [23]
       end
 
       it 'returns an array of two elements for a bimodal sample' do
-        sample = [1, 3, 3, 3, 4, 4, 6, 6, 6, 9]
+        sample = [1, 3, 3, 3, 4, 4, 6, 6, 6, 9].freeze
         mode = Average.mode(sample)
         mode.count.should eq 2
         mode.should include(3)
@@ -175,7 +175,7 @@ module Ratistics
       end
 
       it 'returns an array with all correct modes for a multi-modal sample' do
-        sample = [1, 1, 1, 3, 3, 3, 4, 4, 4, 6, 6, 6, 9]
+        sample = [1, 1, 1, 3, 3, 3, 4, 4, 4, 6, 6, 6, 9].freeze
         mode = Average.mode(sample)
         mode.count.should eq 4
         mode.should include(1)
@@ -185,7 +185,7 @@ module Ratistics
       end
 
       it 'returns an array with every value when all elements are unique' do
-        sample = [1, 2, 3, 4, 5]
+        sample = [1, 2, 3, 4, 5].freeze
         mode = Average.mode(sample)
         mode.count.should eq 5
         mode.should include(1)
@@ -198,7 +198,7 @@ module Ratistics
       it 'returns the correct values for a single-element sample with a block' do
         sample = [
           {:count => 1},
-        ]
+        ].freeze
 
         mode = Average.mode(sample) {|item| item[:count] }
         mode.should eq [1]
@@ -211,7 +211,7 @@ module Ratistics
           {:count => 2},
           {:count => 2},
           {:count => 2},
-        ]
+        ].freeze
 
         mode = Average.mode(sample) {|item| item[:count] }
         mode.should eq [2]
@@ -224,7 +224,7 @@ module Ratistics
           {:count => 3},
           {:count => 2},
           {:count => 1},
-        ]
+        ].freeze
 
         mode = Average.mode(sample) {|item| item[:count] }
         mode.count.should eq 2
@@ -244,7 +244,7 @@ module Ratistics
           {:count => 3},
           {:count => 4},
           {:count => 5},
-        ]
+        ].freeze
 
         mode = Average.mode(sample) {|item| item[:count] }
         mode.count.should eq 4

@@ -10,17 +10,17 @@ module Ratistics
       end
 
       it 'returns zero when sample is empty' do
-        Distribution.standard_deviation([]).should eq 0
+        Distribution.standard_deviation([].freeze).should eq 0
       end
 
       it 'calculates standard deviation around the mean for a sample' do
-        sample = [67, 72, 85, 93, 98]
+        sample = [67, 72, 85, 93, 98].freeze
         standard_deviation = Distribution.standard_deviation(sample)
         standard_deviation.should be_within(0.01).of(11.882)
       end
 
       it 'calculates standard deviation around a datum for a sample' do
-        sample = [67, 72, 85, 93, 98]
+        sample = [67, 72, 85, 93, 98].freeze
         standard_deviation = Distribution.standard_deviation(sample, 85)
         standard_deviation.should be_within(0.01).of(12.049)
       end
@@ -32,7 +32,7 @@ module Ratistics
           {:count => 85},
           {:count => 93},
           {:count => 98},
-        ]
+        ].freeze
 
         standard_deviation = Distribution.standard_deviation(sample){|item| item[:count]}
         standard_deviation.should be_within(0.01).of(11.882)
@@ -45,7 +45,7 @@ module Ratistics
           {:count => 85},
           {:count => 93},
           {:count => 98},
-        ]
+        ].freeze
 
         standard_deviation = Distribution.standard_deviation(sample, 85){|item| item[:count]}
         standard_deviation.should be_within(0.01).of(12.049)
@@ -59,17 +59,17 @@ module Ratistics
       end
 
       it 'returns zero when sample is empty' do
-        Distribution.variance([]).should eq 0
+        Distribution.variance([].freeze).should eq 0
       end
 
       it 'calculates variance around the mean for a sample' do
-        sample = [67, 72, 85, 93, 98]
+        sample = [67, 72, 85, 93, 98].freeze
         variance = Distribution.variance(sample)
         variance.should be_within(0.01).of(141.2)
       end
 
       it 'calculates variance around a datum for a sample' do
-        sample = [67, 72, 85, 93, 98]
+        sample = [67, 72, 85, 93, 98].freeze
         variance = Distribution.variance(sample, 85)
         variance.should be_within(0.01).of(145.2)
       end
@@ -81,7 +81,7 @@ module Ratistics
           {:count => 85},
           {:count => 93},
           {:count => 98},
-        ]
+        ].freeze
 
         variance = Distribution.variance(sample){|item| item[:count]}
         variance.should be_within(0.01).of(141.2)
@@ -94,7 +94,7 @@ module Ratistics
           {:count => 85},
           {:count => 93},
           {:count => 98},
-        ]
+        ].freeze
 
         variance = Distribution.variance(sample, 85){|item| item[:count]}
         variance.should be_within(0.01).of(145.2)
@@ -108,23 +108,22 @@ module Ratistics
       end
 
       it 'returns zero for an empty list' do
-        sample = []
-        Distribution.range(sample).should eq 0
+        Distribution.range([].freeze).should eq 0
       end
 
       it 'returns zero for a one-element list' do
-        sample = [1]
+        sample = [1].freeze
         Distribution.range(sample).should eq 0
       end
 
       it 'returns the range for a sorted list' do
-        sample = [13, 13, 13, 13, 14, 14, 16, 18, 21]
+        sample = [13, 13, 13, 13, 14, 14, 16, 18, 21].freeze
         range = Distribution.range(sample, true)
         range.should be_within(0.01).of(8.0)
       end
 
       it 'returns the range for an unsorted list' do
-        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
         range = Distribution.range(sample, false)
         range.should be_within(0.01).of(8.0)
       end
@@ -147,7 +146,7 @@ module Ratistics
           {:count => 16},
           {:count => 18},
           {:count => 21},
-        ]
+        ].freeze
 
         range = Distribution.range(sample) {|item| item[:count] }
         range.should be_within(0.01).of(8.0)
@@ -172,17 +171,18 @@ module Ratistics
       end
 
       it 'returns nil for an empty sample' do
-        Distribution.frequency([]).should be_nil 
+        Distribution.frequency([].freeze).should be_nil 
       end
 
       it 'returns a one-element hash for a one-item sample' do
-        sample = [10]
+        sample = [10].freeze
         frequency = Distribution.frequency(sample)
         frequency.should == {10 => 1}
       end
 
       it 'returns a multi-element hash for a multi-element sample' do
-        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
+
         frequency = Distribution.frequency(sample)
 
         frequency.count.should eq 5
@@ -196,7 +196,8 @@ module Ratistics
       it 'returns a one-element hash for a one-item sample with a block' do
         sample = [
           {:count => 10},
-        ]
+        ].freeze
+
         frequency = Distribution.frequency(sample){|item| item[:count]}
         frequency.should == {10 => 1}
       end
@@ -212,7 +213,8 @@ module Ratistics
           {:count => 14},
           {:count => 21},
           {:count => 13},
-        ]
+        ].freeze
+
         frequency = Distribution.frequency(sample){|item| item[:count]}
 
         frequency.count.should eq 5
