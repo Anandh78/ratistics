@@ -10,25 +10,17 @@ Gem::Specification.new do |s|
   s.authors     = ["Jerry D'Antonio"]
   s.email       = ['jerry.dantonio@gmail.com']
   s.homepage    = 'https://github.com/jdantonio/ratistics/'
-  s.summary     = %q{Ruby stats helpers.}
-  s.description = %q{Ruby stats helpers.}
+  s.summary     = %q{Ruby statistics functions.}
+  s.description = %q{Ratistics provides basic statistical computation functions to Ruby programmers.}
 
   s.files         = Dir['Rakefile', 'README*', 'LICENSE*']
-  s.files        += Dir['{bin,features,lib,man,spec,tasks}/**/*']
-  s.test_files    = Dir['{spec,features}/**/*']
-  s.bindir        = 'bin'
-  s.executables   = Dir.glob('bin/*').map { |f| File.basename(f) }
-  s.require_paths = ['lib', 'lib/ratistics']
-
-  s.default_executable = 'ratistics'
+  s.files        += Dir['{lib,spec,tasks}/**/*']
+  s.test_files    = Dir['{spec}/**/*']
+  s.require_paths = ['lib']
 
   # Production dependencies
 
-  s.add_dependency 'activesupport', '~> 3.2.0'
-  s.add_dependency 'thor'
-
-  s.add_dependency 'gem-man'
-  s.add_dependency 'ronn'
+  #s.add_dependency 'activesupport', '~> 3.2.0'
 
   # Development dependencies
   
@@ -42,8 +34,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'simplecov'
-
-  s.add_development_dependency 'cucumber'
-  s.add_development_dependency 'aruba'
 
 end

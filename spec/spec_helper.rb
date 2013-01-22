@@ -1,9 +1,6 @@
 require 'simplecov'
 SimpleCov.start do
   project_name 'ratistics'
-  add_filter '/bin/'
-  add_filter '/features/'
-  add_filter '/man/'
   add_filter '/spec/'
   add_filter '/tasks/'
 end
