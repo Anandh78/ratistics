@@ -103,5 +103,17 @@ module Ratistics
 
       return range
     end
+
+    def frequency(data, &block)
+      return nil if data.nil? || data.empty?
+
+      frequency = data.reduce({}) do |memo, datum|
+        datum = yield(datum) if block_given?
+        memo[datum] = memo[datum].to_i + 1
+        memo
+      end
+
+      return frequency
+    end
   end
 end

@@ -164,5 +164,65 @@ module Ratistics
         Distribution.range(sample, false) {|item| item[:count] }
       end
     end
+
+    context '#frequency' do
+
+      it 'returns nil for a nil sample' do
+        Distribution.frequency(nil).should be_nil 
+      end
+
+      it 'returns nil for an empty sample' do
+        Distribution.frequency([]).should be_nil 
+      end
+
+      it 'returns a one-element hash for a one-item sample' do
+        sample = [10]
+        frequency = Distribution.frequency(sample)
+        frequency.should == {10 => 1}
+      end
+
+      it 'returns a multi-element hash for a multi-element sample' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
+        frequency = Distribution.frequency(sample)
+
+        frequency.count.should eq 5
+        frequency[13].should eq 4
+        frequency[14].should eq 2
+        frequency[16].should eq 1
+        frequency[18].should eq 1
+        frequency[21].should eq 1
+      end
+
+      it 'returns a one-element hash for a one-item sample with a block' do
+        sample = [
+          {:count => 10},
+        ]
+        frequency = Distribution.frequency(sample){|item| item[:count]}
+        frequency.should == {10 => 1}
+      end
+
+      it 'returns a multi-element hash for a multi-element sample with a block' do
+        sample = [
+          {:count => 13},
+          {:count => 18},
+          {:count => 13},
+          {:count => 14},
+          {:count => 13},
+          {:count => 16},
+          {:count => 14},
+          {:count => 21},
+          {:count => 13},
+        ]
+        frequency = Distribution.frequency(sample){|item| item[:count]}
+
+        frequency.count.should eq 5
+        frequency[13].should eq 4
+        frequency[14].should eq 2
+        frequency[16].should eq 1
+        frequency[18].should eq 1
+        frequency[21].should eq 1
+      end
+
+    end
   end
 end
