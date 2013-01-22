@@ -40,7 +40,29 @@ module Ratistics
     alias :avg :mean
     alias :average :mean
 
-    def median
+    def median(data, sorted=false, &block)
+      return 0 if data.empty?
+      data = data.sort unless block_given? || sorted
+
+      index = data.count / 2
+      if data.count % 2 == 0 #even
+
+        if block_given?
+          median = (yield(data[index-1]) + yield(data[index])) / 2.0
+        else
+          median = (data[index-1] + data[index]) / 2.0
+        end
+
+      else #odd
+
+        if block_given?
+          median = yield(data[index])
+        else
+          median = data[index]
+        end
+      end
+
+      return median
     end
 
     def mode
