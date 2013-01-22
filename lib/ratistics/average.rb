@@ -27,11 +27,8 @@ module Ratistics
       total = 0.0
 
       data.each do |item|
-        if block_given?
-          total = total + yield(item).to_f
-        else
-          total = total + item.to_f
-        end
+        item = yield(item) if block_given?
+        total = total + item.to_f
       end
 
       return total / data.count.to_f
