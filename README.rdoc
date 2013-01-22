@@ -1,3 +1,28 @@
-README for ratistics
+= Ratistics - Ruby Statistics Gem
 
-http://greenteapress.com/thinkstats/nsfg.html
+Ratistics provides basic statistical computation functions
+to Ruby programmers. It is intended for small data sets only.
+This gem was designed for simplicity. Very little consideration
+was given to performance.
+
+== Genesis
+
+This gem started out as an exercise while reading the excellent
+book *Think Stats* by Allen B. Downey. None of his Python source
+code was used in this gem, it was only used to check my results.
+For more information please refer to the
+[author's web site](http://greenteapress.com/thinkstats/nsfg.html).
+
+== Test Data
+
+The test data shipped with this gem is freely available from
+the Centers for Disease Control and Prevention
+[National Survey of Family Growth](http://www.cdc.gov/nchs/nsfg.htm).
+It is the test data used in the aforementioned book *Think Stats*.
+
+
+== License and Copyright
+
+Ratistics is Copyright &copy; 2013 Jerry D'Antonio. It is free
+software and may be redistributed under the terms specified in
+the LICENSE file.
