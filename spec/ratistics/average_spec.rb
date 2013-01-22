@@ -13,7 +13,7 @@ module Ratistics
         Average.mean([]).should eq 0
       end
 
-      it 'calculates the mean of an sample' do
+      it 'calculates the mean of a sample' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
         mean = Average.mean(sample)
         mean.should be_within(0.01).of(15.0)
