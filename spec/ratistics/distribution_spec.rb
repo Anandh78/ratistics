@@ -3,39 +3,49 @@ require 'spec_helper'
 module Ratistics
   describe Distribution do
 
+    context '#variance' do
+
+      it 'calculates variance around the mean for a sample' do
+        sample = [67, 72, 85, 93, 98]
+        variance = Distribution.variance(sample)
+        variance.should be_within(0.01).of(141.2)
+      end
+
+    end
+
     context '#range' do
 
       it 'returns zero for an empty list' do
-        data = []
-        Distribution.range(data).should eq 0
+        sample = []
+        Distribution.range(sample).should eq 0
       end
 
       it 'returns zero for a one-element list' do
-        data = [1]
-        Distribution.range(data).should eq 0
+        sample = [1]
+        Distribution.range(sample).should eq 0
       end
 
       it 'returns the range for a sorted list' do
-        data = [13, 13, 13, 13, 14, 14, 16, 18, 21]
-        range = Distribution.range(data, true)
+        sample = [13, 13, 13, 13, 14, 14, 16, 18, 21]
+        range = Distribution.range(sample, true)
         range.should be_within(0.01).of(8.0)
       end
 
       it 'returns the range for an unsorted list' do
-        data = [13, 18, 13, 14, 13, 16, 14, 21, 13]
-        range = Distribution.range(data, false)
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
+        range = Distribution.range(sample, false)
         range.should be_within(0.01).of(8.0)
       end
 
       it 'does not re-sort a sorted list' do
-        data = [13, 13, 13, 13, 14, 14, 16, 18, 21]
-        data.should_not_receive(:sort)
-        data.should_not_receive(:sort_by)
-        Distribution.range(data, true)
+        sample = [13, 13, 13, 13, 14, 14, 16, 18, 21]
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        Distribution.range(sample, true)
       end
 
       it 'calculates the range when using a block' do
-        data = [
+        sample = [
           {:count => 13},
           {:count => 13},
           {:count => 13},
@@ -47,19 +57,19 @@ module Ratistics
           {:count => 21},
         ]
 
-        range = Distribution.range(data) {|item| item[:count] }
+        range = Distribution.range(sample) {|item| item[:count] }
         range.should be_within(0.01).of(8.0)
       end
 
       it 'does not attempt to sort when a using a block' do
-        data = [
+        sample = [
           {:count => 2},
         ]
 
-        data.should_not_receive(:sort)
-        data.should_not_receive(:sort_by)
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
 
-        Distribution.range(data, false) {|item| item[:count] }
+        Distribution.range(sample, false) {|item| item[:count] }
       end
     end
   end

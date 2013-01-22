@@ -1,8 +1,22 @@
+require 'ratistics/average'
+
 module Ratistics
 
   # Various average computation functions.
   module Distribution
    extend self
+
+   def variance(data, mu=nil)
+
+     mu = Average.mean(data) if mu.nil?
+
+     deviation = data.reduce([]) do |memo, datum|
+       memo << (datum.to_f - mu) ** 2
+     end
+
+     variance = Average.mean(deviation)
+     return variance
+   end
  
     # Calculates the statistical range.
     #
