@@ -1,19 +1,84 @@
 # Ratistics - Ruby Statistics Gem
 
-Ratistics provides basic statistical computation functions
-to Ruby programmers. It is intended for small data sets only.
-This gem was designed for simplicity. Very little consideration
-was given to performance.
+Ratistics is a purely functional library that provides basic
+statistical computation functions to Ruby programmers. It is
+intended for small data sets only. This gem was designed for
+simplicity. Only basic consideration was given to performance.
 
-## Genesis
+* [RubyGems project page](https://rubygems.org/gems/ratistics)
+* [Source code on GitHub](https://github.com/jdantonio/ratistics )
+* [YARD documentation on RubyDoc.org](http://rubydoc.info/github/jdantonio/ratistics/master/frames )
 
-This gem started out as an exercise while reading the excellent
-book *Think Stats* by Allen B. Downey. None of his Python source
-code was used in this gem, it was only used to check my results.
-For more information please see
-[the author's web site](http://greenteapress.com/thinkstats/).
+## About
 
-## Test Data
+A [friend](https://github.com/joecannatti) of mine convinced me
+to learn statistics but I'm too lazy to learn [R](http://www.r-project.org/).
+I started my statistics journey by reading the excellent book
+[*Think Stats*](http://greenteapress.com/thinkstats/) by Allen B.
+Downey and didn't want to do the exercises in Python. I looked for a
+Ruby statistics library but couldn't find one that I liked.
+So I decided to write my own.
+
+### Purely Functional
+
+This entire library is written in a purely functional style. All
+functions are stateless, referentially transparent, and side-effect
+free. When possible they are also idempotent. Only the sort order
+of result sets may vary. The automated tests are run against
+frozen data to ensure immutability.
+
+Ruby does not support functions as first-class objects the way
+purely functional languages do. Ruby's blocks are a pretty
+close approximation. All the functions in this library accept
+an optional block parameter. This supports computation against
+complex data types without excessive data copying. I've followed
+the same block idiom as much as possible to make the library as
+consistent.
+
+#### Hamster
+
+The main drawback of side-effect free functions is that in
+non-functional languages they can lead to excessive data copying.
+Some of the functions in this library, specifically ones that must
+sort the data, may suffer from this. For better performance I highly
+recommend using the [Hamster](https://github.com/jdantonio/hamster)
+library of "efficient, immutable, thread-safe collection classes."
+Hamster implements the Ruby [Enumerable](http://ruby-doc.org/core-1.9.3/Enumerable.html)
+interface so all the functions in this library support the appropriate
+Hamster classes. Hamster is not a runtime dependency of this gem but
+the test suite explicitly tests Hamster compatibality.
+
+## Installation
+
+Install from RubyGems:
+
+> gem install ratistics
+
+or add the following line to Gemfile:
+
+> gem 'ratistics'
+
+and run bundle install from your shell.
+
+## Usage
+
+Require Ratistics within your Ruby project:
+
+> require 'ratistics'
+
+then use it:
+
+> sample = [2, 3, 4, 5, 6]
+> 
+> mean = Ratistics.mean(sample)
+
+When working with sets of complex data use blocks to process the data without copying:
+
+> people = Person.all
+> 
+> mean_age = Ratistics.mean(people){|person| person.age}
+
+### Test Data
 
 The test data shipped with this gem is freely available from
 the Centers for Disease Control and Prevention
