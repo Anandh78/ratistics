@@ -27,14 +27,14 @@ describe Statsrb do
         live.count.should == 9148
       end
 
-      specify 'counts the number of first-borns' do
+      specify 'counts the number of first babies' do
         live = @pregnancies.filter {|item| item[:birthord] == 1 }
         live.count.should == 4413
       end
 
-      specify 'counts the number of non-first-borns' do
-        live = @pregnancies.filter {|item| item[:birthord] != 1 }
-        live.count.should == 9180
+      specify 'counts the number of not first babies' do
+        live = @pregnancies.filter {|item| item[:birthord] > 1 }
+        live.count.should == 4735
       end
 
     end

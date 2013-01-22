@@ -12,7 +12,8 @@ module Statsrb
 
       it 'calculates the average of an array' do
         data = [2, 3, 4, 5, 6]
-        Average.mean(data).should be_within(0.1).of(4.0)
+        mean = Average.mean(data)
+        mean.should be_within(0.01).of(4.0)
       end
 
       it 'calculates the average using a block when given' do
@@ -25,7 +26,33 @@ module Statsrb
         ]
 
         mean = Average.mean(data) {|item| item[:count] }
-        mean.should be_within(0.1).of(4.0)
+        mean.should be_within(0.01).of(4.0)
+      end
+
+      context 'with test data' do
+
+        before(:all) do
+          @pregnancies = Survey.get_pregnancy_data
+        end
+
+        it 'calculates the average pregnancy length' do
+          data = @pregnancies.filter{|item| item[:birthord] > 0}
+          mean = Statsrb::Average.mean(data) {|birth| birth[:prglength]}
+          mean.should be_within(0.01).of(38.56055968517709)
+        end
+
+        it 'calculates the average pregnancy length for first babies' do
+          data = @pregnancies.filter{|item| item[:birthord] == 1}
+          mean = Statsrb::Average.mean(data) {|birth| birth[:prglength]}
+          mean.should be_within(0.01).of(38.60095173351461)
+        end
+
+        it 'calculates the average pregnancy length for not first babies' do
+          data = @pregnancies.filter{|item| item[:birthord] > 1}
+          mean = Statsrb::Average.mean(data) {|birth| birth[:prglength]}
+          mean.should be_within(0.01).of(38.52291446673706)
+        end
+
       end
 
     end
