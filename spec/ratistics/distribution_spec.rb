@@ -5,6 +5,14 @@ module Ratistics
 
     context '#variance' do
 
+      it 'returns zero when sample is nil' do
+        Distribution.variance(nil).should eq 0
+      end
+
+      it 'returns zero when sample is empty' do
+        Distribution.variance([]).should eq 0
+      end
+
       it 'calculates variance around the mean for a sample' do
         sample = [67, 72, 85, 93, 98]
         variance = Distribution.variance(sample)
@@ -27,6 +35,10 @@ module Ratistics
     end
 
     context '#range' do
+
+      it 'returns zero when sample is nil' do
+        Distribution.range(nil).should eq 0
+      end
 
       it 'returns zero for an empty list' do
         sample = []

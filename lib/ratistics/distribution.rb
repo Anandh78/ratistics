@@ -4,21 +4,22 @@ module Ratistics
 
   # Various average computation functions.
   module Distribution
-   extend self
+    extend self
 
-   def variance(data, mu=nil, &block)
+    def variance(data, mu=nil, &block)
+      return 0 if data.nil? || data.empty?
 
-     mu = Average.mean(data, &block) if mu.nil?
+      mu = Average.mean(data, &block) if mu.nil?
 
-     deviation = data.reduce([]) do |memo, datum|
-       datum = yield(datum) if block_given?
-       memo << (datum.to_f - mu) ** 2
-     end
+      deviation = data.reduce([]) do |memo, datum|
+        datum = yield(datum) if block_given?
+        memo << (datum.to_f - mu) ** 2
+      end
 
-     variance = Average.mean(deviation)
-     return variance
-   end
- 
+      variance = Average.mean(deviation)
+      return variance
+    end
+
     # Calculates the statistical range.
     #
     # Will sort the data set using natural sort order unless
@@ -42,7 +43,7 @@ module Ratistics
     # @return [Float, 0] the statistical range of the given data set
     #   or zero if the data set is empty
     def range(data, sorted=false, &block)
-      return 0 if data.count <= 1
+      return 0 if data.nil? || data.count <= 1
       data = data.sort unless block_given? || sorted
 
       if block_given?
