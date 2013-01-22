@@ -65,7 +65,27 @@ module Ratistics
       return median
     end
 
-    def mode
+    def mode(data, &block)
+      return [] if data.empty?
+
+      modes = {}
+
+      data.each do |item|
+        if modes.has_key? item
+          modes[item] = modes[item]+1
+        else
+          modes[item] = 1
+        end
+      end
+
+      modes = modes.sort_by{|key, value| value * -1  }
+
+      modes = modes.reduce([]) do |memo, mode|
+        break(memo) if mode[1] < modes[0][1]
+        memo << mode[0]
+      end
+
+      return modes
     end
 
     def range(data, sorted=false, &block)
