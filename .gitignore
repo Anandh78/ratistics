@@ -2,6 +2,8 @@ Gemfile.lock
 *.gem
 .rvmrc
 .bundle/*
+.yardoc/*
+doc/*
 tmp/*
 man/*
 *.tmproj
