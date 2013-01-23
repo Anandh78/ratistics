@@ -5,15 +5,28 @@ require 'ratistics/distribution'
 require 'ratistics/histogram'
 require 'ratistics/version'
 
-# Ratistics provides basic statistical computation functions
-# to Ruby programmers. It is intended for small data sets only.
-# This gem was designed for simplicity. Very little consideration
-# was given to performance.
 module Ratistics
   class << self
     include Average
     include Distribution
     include Histogram
   end
+
+  #begin
+    #require 'hamster'
+    #ARRAY_CLASS = Hamster::Vector
+    #HASH_CLASS = Hamster::Hash
+  #rescue LoadError
+    #ARRAY_CLASS = Array
+    #HASH_CLASS = Hash
+  #end
+
+  #def self.array
+    #return ARRAY_CLASS.new
+  #end
+
+  #def self.hash
+    #return HASH_CLASS.new
+  #end
 
 end
