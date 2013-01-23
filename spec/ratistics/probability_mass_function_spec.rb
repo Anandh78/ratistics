@@ -221,13 +221,13 @@ module Ratistics
       it 'calculates the mean for a one-element sample' do
         sample = [1]
         mean = ProbabilityMassFunction.probability_mean(sample)
-        mean.should eq 0
+        mean.should eq 1
       end
 
       it 'calculates the mean for a multi-element sample' do
-        sample = [2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5]
+        sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6]
         mean = ProbabilityMassFunction.probability_mean(sample)
-        mean.should eq 0
+        mean.should be_within(0.01).of(4.5)
       end
 
       it 'calculates the mean for a sample with a block' do
@@ -238,12 +238,14 @@ module Ratistics
           {:count => 4},
           {:count => 5},
           {:count => 6},
-          {:count => 7},
-          {:count => 8},
+          {:count => 6},
+          {:count => 6},
+          {:count => 6},
+          {:count => 6},
         ]
 
         mean = ProbabilityMassFunction.probability_mean(sample){|item| item[:count]}
-        mean.should eq 0
+        mean.should be_within(0.01).of(4.5)
       end
 
     end
