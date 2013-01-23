@@ -11,22 +11,4 @@ module Ratistics
     include Distribution
     include Histogram
   end
-
-  #begin
-    #require 'hamster'
-    #ARRAY_CLASS = Hamster::Vector
-    #HASH_CLASS = Hamster::Hash
-  #rescue LoadError
-    #ARRAY_CLASS = Array
-    #HASH_CLASS = Hash
-  #end
-
-  #def self.array
-    #return ARRAY_CLASS.new
-  #end
-
-  #def self.hash
-    #return HASH_CLASS.new
-  #end
-
 end
