@@ -93,7 +93,20 @@ When working with sets of complex data use blocks to process the data without co
 
 > people = Person.all
 > 
-> mean_age = Ratistics.mean(people){|person| person.age}
+> mean = Ratistics.mean(people){|person| person.age}
+
+## Available Functions
+
+* mean
+* median
+* mode
+* variance
+* standard_deviation
+* range
+* frequency
+* probability
+* probability_mean
+* probability_variance
 
 ### Test Data
 
