@@ -36,6 +36,20 @@ module Ratistics
         mean.should be_within(0.01).of(15.0)
       end
 
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
+
+        specify { Average.mean(list).should be_within(0.01).of(15.0) }
+
+        specify { Average.mean(vector).should be_within(0.01).of(15.0) }
+
+        specify { Average.mean(set).should be_within(0.01).of(16.4) }
+
+      end
+
       context 'with test sample' do
 
         before(:all) do
@@ -142,12 +156,26 @@ module Ratistics
 
         Average.median(sample, false) {|item| item[:count] }
       end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:vector) { Hamster.vector(13, 13, 13, 13, 14, 14, 16, 18, 21).freeze }
+        let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
+
+        specify { Average.median(list).should be_within(0.01).of(14.0) }
+
+        specify { Average.median(vector, true).should be_within(0.01).of(14.0) }
+
+        specify { Average.median(set).should be_within(0.01).of(16.0) }
+
+      end
     end
 
     context '#mode' do
 
       it 'returns an empty array for a nil sample' do
-        Average.mean(nil).should eq 0
+        Average.mode(nil).should eq []
       end
 
       it 'returns an empty array for an empty sample' do
@@ -252,6 +280,28 @@ module Ratistics
         mode.should include(2)
         mode.should include(3)
         mode.should include(4)
+      end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
+
+        specify { Average.mode(list).should eq [13] }
+
+        specify { Average.mode(vector).should eq [13] }
+
+        specify do
+          mode = Average.mode(set)
+          mode.count.should eq 5
+          mode.should include(16)
+          mode.should include(18)
+          mode.should include(13)
+          mode.should include(14)
+          mode.should include(21)
+        end
+
       end
 
     end

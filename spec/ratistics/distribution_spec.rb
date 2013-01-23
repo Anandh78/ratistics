@@ -50,6 +50,20 @@ module Ratistics
         standard_deviation = Distribution.standard_deviation(sample, 85){|item| item[:count]}
         standard_deviation.should be_within(0.01).of(12.049)
       end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
+
+        specify { Distribution.standard_deviation(list).should be_within(0.01).of(2.666) }
+
+        specify { Distribution.standard_deviation(vector).should be_within(0.01).of(2.666) }
+
+        specify { Distribution.standard_deviation(set).should be_within(0.01).of(2.870) }
+
+      end
     end
 
     context '#variance' do
@@ -98,6 +112,20 @@ module Ratistics
 
         variance = Distribution.variance(sample, 85){|item| item[:count]}
         variance.should be_within(0.01).of(145.2)
+      end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
+
+        specify { Distribution.variance(list).should be_within(0.01).of(7.111) }
+
+        specify { Distribution.variance(vector).should be_within(0.01).of(7.111) }
+
+        specify { Distribution.variance(set).should be_within(0.01).of(8.239) }
+
       end
     end
 
@@ -162,6 +190,20 @@ module Ratistics
 
         Distribution.range(sample, false) {|item| item[:count] }
       end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:vector) { Hamster.vector(13, 13, 13, 13, 14, 14, 16, 18, 21).freeze }
+        let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
+
+        specify { Distribution.range(list).should be_within(0.01).of(8.0) }
+
+        specify { Distribution.range(vector, true).should be_within(0.01).of(8.0) }
+
+        specify { Distribution.range(set).should be_within(0.01).of(8.0) }
+
+      end
     end
 
     context '#frequency' do
@@ -225,6 +267,46 @@ module Ratistics
         frequency[21].should eq 1
       end
 
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+        let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
+
+        specify do
+          frequency = Distribution.frequency(list)
+
+          frequency.count.should eq 5
+          frequency[13].should eq 4
+          frequency[14].should eq 2
+          frequency[16].should eq 1
+          frequency[18].should eq 1
+          frequency[21].should eq 1
+        end
+
+        specify do
+          frequency = Distribution.frequency(vector)
+
+          frequency.count.should eq 5
+          frequency[13].should eq 4
+          frequency[14].should eq 2
+          frequency[16].should eq 1
+          frequency[18].should eq 1
+          frequency[21].should eq 1
+        end
+
+        specify do
+          frequency = Distribution.frequency(set)
+
+          frequency.count.should eq 5
+          frequency[13].should eq 1
+          frequency[14].should eq 1
+          frequency[16].should eq 1
+          frequency[18].should eq 1
+          frequency[21].should eq 1
+        end
+
+      end
     end
   end
 end
