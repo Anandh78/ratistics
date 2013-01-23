@@ -89,7 +89,29 @@ module Ratistics
 
     alias :pmf_mean :probability_mean
 
+    # Calculates the statistical variance of a probability distribution.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # For a block {|item| ... }
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to compute the variance of
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Float, 0] the statistical variance of the given data set
+    #   or zero if the data set is empty
     def probability_variance(data, &block)
+      return 0 if data.nil? || data.empty?
+
+      pmf = probability(data, &block)
+      mean = pmf.reduce(0.0){|n, item| n + (item[0] * item[1]) }
+
+      return pmf.reduce(0.0){|n, item| n + (item[1] * ((item[0] - mean) ** 2)) }
     end
 
     alias :pmf_variance :probability_variance

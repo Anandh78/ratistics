@@ -221,7 +221,7 @@ module Ratistics
       it 'calculates the mean for a one-element sample' do
         sample = [1]
         mean = ProbabilityMassFunction.probability_mean(sample)
-        mean.should eq 1
+        mean.should be_within(0.01).of(1.0)
       end
 
       it 'calculates the mean for a multi-element sample' do
@@ -247,7 +247,47 @@ module Ratistics
         mean = ProbabilityMassFunction.probability_mean(sample){|item| item[:count]}
         mean.should be_within(0.01).of(4.5)
       end
+    end
 
+    context '#probability_variance' do
+
+      it 'returns zero for a nil sample' do
+        ProbabilityMassFunction.probability_variance(nil).should eq 0
+      end
+
+      it 'returns zero for an empty sample' do
+        ProbabilityMassFunction.probability_variance([]).should eq 0
+      end
+
+      it 'calculates the variance for a one-element sample' do
+        sample = [1]
+        variance = ProbabilityMassFunction.probability_variance(sample)
+        variance.should be_within(0.01).of(0.0)
+      end
+
+      it 'calculates the variance for a multi-element sample' do
+        sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6]
+        variance = ProbabilityMassFunction.probability_variance(sample)
+        variance.should be_within(0.01).of(3.25)
+      end
+
+      it 'calculates the variance for a sample with a block' do
+        sample = [
+          {:count => 1},
+          {:count => 2},
+          {:count => 3},
+          {:count => 4},
+          {:count => 5},
+          {:count => 6},
+          {:count => 6},
+          {:count => 6},
+          {:count => 6},
+          {:count => 6},
+        ]
+
+        variance = ProbabilityMassFunction.probability_variance(sample){|item| item[:count]}
+        variance.should be_within(0.01).of(3.25)
+      end
     end
   end
 end
