@@ -20,14 +20,11 @@ Gem::Specification.new do |s|
 
   # Production dependencies
 
-  #s.add_dependency 'activesupport', '~> 3.2.0'
-
   # Development dependencies
 
   s.add_development_dependency 'hamster'
   
   s.add_development_dependency 'bundler'
-  s.add_development_dependency 'geminabox'
 
   s.add_development_dependency 'debugger'
   s.add_development_dependency 'rake'
