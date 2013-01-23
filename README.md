@@ -35,6 +35,23 @@ complex data types without excessive data copying. I've followed
 the same block idiom as much as possible to make the library as
 consistent.
 
+### Pure Ruby
+
+Ratistics is written in pure Ruby and has no runtime gem dependencies.
+It should work with any Ruby interpreter compliant with MRI 1.6.7 or
+newer, but only MRI 1.9.x is officially supported.The test suite is
+regularly run against several versions of Ruby so you should have
+good results with any of the following:
+
+* ruby-1.8.7
+* ruby-1.9.2
+* ruby-1.9.3
+* jruby-1.6.7
+* jruby-1.6.7.2
+* jruby-1.6.8
+* jruby-1.7.0
+* ree-1.8.7
+
 #### Hamster
 
 The main drawback of side-effect free functions is that in

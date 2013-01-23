@@ -6,7 +6,6 @@ SimpleCov.start do
 end
 
 require 'rspec'
-require 'debugger'
 
 require 'ratistics'
 

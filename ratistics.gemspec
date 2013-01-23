@@ -26,9 +26,7 @@ Gem::Specification.new do |s|
   
   s.add_development_dependency 'bundler'
 
-  s.add_development_dependency 'debugger'
   s.add_development_dependency 'rake'
-
   s.add_development_dependency 'yard'
   s.add_development_dependency 'redcarpet'
   #s.add_development_dependency 'github-markup'
