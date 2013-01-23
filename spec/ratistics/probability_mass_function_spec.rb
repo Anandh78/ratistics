@@ -219,13 +219,13 @@ module Ratistics
       end
 
       it 'calculates the mean for a one-element sample' do
-        sample = [1]
+        sample = [1].freeze
         mean = ProbabilityMassFunction.probability_mean(sample)
         mean.should be_within(0.01).of(1.0)
       end
 
       it 'calculates the mean for a multi-element sample' do
-        sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6]
+        sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6].freeze
         mean = ProbabilityMassFunction.probability_mean(sample)
         mean.should be_within(0.01).of(4.5)
       end
@@ -242,10 +242,32 @@ module Ratistics
           {:count => 6},
           {:count => 6},
           {:count => 6},
-        ]
+        ].freeze
 
         mean = ProbabilityMassFunction.probability_mean(sample){|item| item[:count]}
         mean.should be_within(0.01).of(4.5)
+      end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
+        let(:vector) { Hamster.vector(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
+        let(:set) { Hamster.set(1, 2, 3, 4, 5, 6).freeze }
+
+        specify do
+          mean = ProbabilityMassFunction.probability_mean(list)
+          mean.should be_within(0.01).of(4.5)
+        end
+
+        specify do
+          mean = ProbabilityMassFunction.probability_mean(vector)
+          mean.should be_within(0.01).of(4.5)
+        end
+
+        specify do
+          mean = ProbabilityMassFunction.probability_mean(set)
+          mean.should be_within(0.01).of(3.5)
+        end
       end
     end
 
@@ -260,13 +282,13 @@ module Ratistics
       end
 
       it 'calculates the variance for a one-element sample' do
-        sample = [1]
+        sample = [1].freeze
         variance = ProbabilityMassFunction.probability_variance(sample)
         variance.should be_within(0.01).of(0.0)
       end
 
       it 'calculates the variance for a multi-element sample' do
-        sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6]
+        sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6].freeze
         variance = ProbabilityMassFunction.probability_variance(sample)
         variance.should be_within(0.01).of(3.25)
       end
@@ -283,10 +305,32 @@ module Ratistics
           {:count => 6},
           {:count => 6},
           {:count => 6},
-        ]
+        ].freeze
 
         variance = ProbabilityMassFunction.probability_variance(sample){|item| item[:count]}
         variance.should be_within(0.01).of(3.25)
+      end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
+        let(:vector) { Hamster.vector(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
+        let(:set) { Hamster.set(1, 2, 3, 4, 5, 6).freeze }
+
+        specify do
+          mean = ProbabilityMassFunction.probability_variance(list)
+          mean.should be_within(0.01).of(3.25)
+        end
+
+        specify do
+          mean = ProbabilityMassFunction.probability_variance(vector)
+          mean.should be_within(0.01).of(3.25)
+        end
+
+        specify do
+          mean = ProbabilityMassFunction.probability_variance(set)
+          mean.should be_within(0.01).of(2.91)
+        end
       end
     end
   end
