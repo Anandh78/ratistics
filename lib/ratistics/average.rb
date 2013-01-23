@@ -35,6 +35,33 @@ module Ratistics
     alias :avg :mean
     alias :average :mean
 
+    def delta(v1, v2)
+      return (v1 - v2).abs
+    end
+
+    def truncated_mean(data, truncation, sorted=false, &block)
+      return 0 if data.nil? || data.empty?
+      data = data.sort unless block_given? || sorted
+
+      truncation = truncation * 100.0 if truncation < 1.0
+      raise ArgumentError if truncation >= 50.0
+
+      interval = 100.0 / data.count
+      steps = truncation / interval
+
+      if delta(steps, steps.to_i) < 0.1
+        # exact truncation
+        mean = Average.mean(data.slice(steps.floor..(data.count-steps.floor-1)), &block)
+      else
+        # interpolation truncation
+        m1 = Average.mean(data.slice(steps.floor..(data.count-steps.floor-1)), &block)
+        m2 = mean(data.slice(steps.ceil..(data.count-steps.ceil-1)), &block)
+        mean = mean([m1, m2])
+      end
+
+      return mean
+    end
+
     # Calculates the statistical median.
     #
     # Will sort the data set using natural sort order unless

@@ -76,6 +76,128 @@ module Ratistics
       #end
     end
 
+    context '#truncated_mean' do
+
+      it 'returns zero for a nil sample' do
+        Average.truncated_mean(nil, 10).should eq 0
+      end
+
+      it 'returns zero for an empty sample' do
+        Average.truncated_mean([].freeze, 10).should eq 0
+      end
+
+      it 'raises an exception for truncation equal to or greater than 50%' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
+        lambda {
+          Average.truncated_mean(sample, 50)
+        }.should raise_error ArgumentError
+      end
+
+      it 'calculates the statistical mean for truncation equal to 0%' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
+        mean = Average.truncated_mean(sample, 0)
+        mean.should be_within(0.01).of(14.85)
+      end
+
+      it 'calculates the truncated mean when the truncation can be exact' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
+        mean = Average.truncated_mean(sample, 10)
+        mean.should be_within(0.01).of(14.625)
+      end
+
+      it 'it rounds truncation to one decimal place' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
+        mean = Average.truncated_mean(sample, 10.04)
+        mean.should be_within(0.01).of(14.625)
+      end
+
+      it 'it accepts truncation as a decimal' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
+        mean = Average.truncated_mean(sample, 0.10)
+        mean.should be_within(0.01).of(14.625)
+      end
+
+      it 'calculates the interpolated mean when the truncation cannot be exact' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
+        mean = Average.truncated_mean(sample, 12.5)
+        mean.should be_within(0.01).of(14.5625)
+      end
+
+      it 'does not sort a sample that is already sorted' do
+        sample = [11, 11, 12, 12, 12, 13, 13, 13, 13, 13, 14, 14, 16, 16, 17, 18, 19, 19, 20, 21]
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        mean = Average.truncated_mean(sample, 10, true)
+      end
+
+      it 'calculates the truncated mean with a block' do
+        sample = [
+          {:count => 11},
+          {:count => 11}, 
+          {:count => 12},
+          {:count => 12},
+          {:count => 12},
+          {:count => 13},
+          {:count => 13},
+          {:count => 13},
+          {:count => 13},
+          {:count => 13},
+          {:count => 14},
+          {:count => 14},
+          {:count => 16},
+          {:count => 16},
+          {:count => 17},
+          {:count => 18},
+          {:count => 19},
+          {:count => 19},
+          {:count => 20},
+          {:count => 21},
+        ].freeze
+
+        mean = Average.truncated_mean(sample, 10){|item| item[:count]}
+        mean.should be_within(0.01).of(14.625)
+      end
+
+      it 'calculates the interpolated truncated mean with a block' do
+        sample = [
+          {:count => 11},
+          {:count => 11}, 
+          {:count => 12},
+          {:count => 12},
+          {:count => 12},
+          {:count => 13},
+          {:count => 13},
+          {:count => 13},
+          {:count => 13},
+          {:count => 13},
+          {:count => 14},
+          {:count => 14},
+          {:count => 16},
+          {:count => 16},
+          {:count => 17},
+          {:count => 18},
+          {:count => 19},
+          {:count => 19},
+          {:count => 20},
+          {:count => 21},
+        ].freeze
+
+        mean = Average.truncated_mean(sample, 12.5){|item| item[:count]}
+        mean.should be_within(0.01).of(14.5625)
+      end
+
+      it 'does not sort a sample with a block' do
+        sample = [
+          {:count => 13},
+        ]
+
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        mean = Average.truncated_mean(sample, 10){|item| item[:count]}
+      end
+
+    end
+
     context '#median' do
 
       it 'returns zero for a nil sample' do
