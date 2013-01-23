@@ -1,7 +1,7 @@
 module Ratistics
 
-  # Various histogram computation functions.
-  module Histogram
+  # Various probability_mass_function computation functions.
+  module ProbabilityMassFunction
     extend self
 
     # Calculates the statistical frequency.

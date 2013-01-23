@@ -1,28 +1,28 @@
 require 'spec_helper'
 
 module Ratistics
-  describe Histogram do
+  describe ProbabilityMassFunction do
 
     context '#frequency' do
 
       it 'returns nil for a nil sample' do
-        Histogram.frequency(nil).should be_nil 
+        ProbabilityMassFunction.frequency(nil).should be_nil 
       end
 
       it 'returns nil for an empty sample' do
-        Histogram.frequency([].freeze).should be_nil 
+        ProbabilityMassFunction.frequency([].freeze).should be_nil 
       end
 
       it 'returns a one-element hash for a one-item sample' do
         sample = [10].freeze
-        frequency = Histogram.frequency(sample)
+        frequency = ProbabilityMassFunction.frequency(sample)
         frequency.should == {10 => 1}
       end
 
       it 'returns a multi-element hash for a multi-element sample' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 
-        frequency = Histogram.frequency(sample)
+        frequency = ProbabilityMassFunction.frequency(sample)
 
         frequency.count.should eq 5
         frequency[13].should eq 4
@@ -37,7 +37,7 @@ module Ratistics
           {:count => 10},
         ].freeze
 
-        frequency = Histogram.frequency(sample){|item| item[:count]}
+        frequency = ProbabilityMassFunction.frequency(sample){|item| item[:count]}
         frequency.should == {10 => 1}
       end
 
@@ -54,7 +54,7 @@ module Ratistics
           {:count => 13},
         ].freeze
 
-        frequency = Histogram.frequency(sample){|item| item[:count]}
+        frequency = ProbabilityMassFunction.frequency(sample){|item| item[:count]}
 
         frequency.count.should eq 5
         frequency[13].should eq 4
@@ -71,7 +71,7 @@ module Ratistics
         let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
 
         specify do
-          frequency = Histogram.frequency(list)
+          frequency = ProbabilityMassFunction.frequency(list)
 
           frequency.count.should eq 5
           frequency[13].should eq 4
@@ -82,7 +82,7 @@ module Ratistics
         end
 
         specify do
-          frequency = Histogram.frequency(vector)
+          frequency = ProbabilityMassFunction.frequency(vector)
 
           frequency.count.should eq 5
           frequency[13].should eq 4
@@ -93,7 +93,7 @@ module Ratistics
         end
 
         specify do
-          frequency = Histogram.frequency(set)
+          frequency = ProbabilityMassFunction.frequency(set)
 
           frequency.count.should eq 5
           frequency[13].should eq 1
@@ -108,23 +108,23 @@ module Ratistics
     context '#probability' do
 
       it 'returns nil for a nil sample' do
-        Histogram.probability(nil).should be_nil 
+        ProbabilityMassFunction.probability(nil).should be_nil 
       end
 
       it 'returns nil for an empty sample' do
-        Histogram.probability([].freeze).should be_nil 
+        ProbabilityMassFunction.probability([].freeze).should be_nil 
       end
 
       it 'returns a one-element hash for a one-item sample' do
         sample = [10].freeze
-        probability = Histogram.probability(sample)
+        probability = ProbabilityMassFunction.probability(sample)
         probability.should == {10 => 1}
       end
 
       it 'returns a multi-element hash for a multi-element sample' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 
-        probability = Histogram.probability(sample)
+        probability = ProbabilityMassFunction.probability(sample)
 
         probability.count.should eq 5
         probability[13].should be_within(0.01).of(0.444)
@@ -139,7 +139,7 @@ module Ratistics
           {:count => 10},
         ].freeze
 
-        probability = Histogram.probability(sample){|item| item[:count]}
+        probability = ProbabilityMassFunction.probability(sample){|item| item[:count]}
         probability.should == {10 => 1}
       end
 
@@ -156,7 +156,7 @@ module Ratistics
           {:count => 13},
         ].freeze
 
-        probability = Histogram.probability(sample){|item| item[:count]}
+        probability = ProbabilityMassFunction.probability(sample){|item| item[:count]}
 
         probability.count.should eq 5
         probability[13].should be_within(0.01).of(0.444)
@@ -173,7 +173,7 @@ module Ratistics
         let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
 
         specify do
-          probability = Histogram.probability(list)
+          probability = ProbabilityMassFunction.probability(list)
 
           probability.count.should eq 5
           probability[13].should be_within(0.01).of(0.444)
@@ -184,7 +184,7 @@ module Ratistics
         end
 
         specify do
-          probability = Histogram.probability(vector)
+          probability = ProbabilityMassFunction.probability(vector)
 
           probability.count.should eq 5
           probability[13].should be_within(0.01).of(0.444)
@@ -195,7 +195,7 @@ module Ratistics
         end
 
         specify do
-          probability = Histogram.probability(set)
+          probability = ProbabilityMassFunction.probability(set)
 
           probability.count.should eq 5
           probability[13].should be_within(0.01).of(0.2)
