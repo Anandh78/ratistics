@@ -207,5 +207,45 @@ module Ratistics
 
       end
     end
+
+    context '#probability_mean' do
+
+      it 'returns zero for a nil sample' do
+        ProbabilityMassFunction.probability_mean(nil).should eq 0
+      end
+
+      it 'returns zero for an empty sample' do
+        ProbabilityMassFunction.probability_mean([]).should eq 0
+      end
+
+      it 'calculates the mean for a one-element sample' do
+        sample = [1]
+        mean = ProbabilityMassFunction.probability_mean(sample)
+        mean.should eq 0
+      end
+
+      it 'calculates the mean for a multi-element sample' do
+        sample = [2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5]
+        mean = ProbabilityMassFunction.probability_mean(sample)
+        mean.should eq 0
+      end
+
+      it 'calculates the mean for a sample with a block' do
+        sample = [
+          {:count => 1},
+          {:count => 2},
+          {:count => 3},
+          {:count => 4},
+          {:count => 5},
+          {:count => 6},
+          {:count => 7},
+          {:count => 8},
+        ]
+
+        mean = ProbabilityMassFunction.probability_mean(sample){|item| item[:count]}
+        mean.should eq 0
+      end
+
+    end
   end
 end

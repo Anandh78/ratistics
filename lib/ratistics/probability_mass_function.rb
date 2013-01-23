@@ -61,5 +61,17 @@ module Ratistics
 
       return prob
     end
+
+    alias :pmf :probability
+
+    def probability_mean(data, &block)
+    end
+
+    alias :pmf_mean :probability_mean
+
+    def probability_variance(data, &block)
+    end
+
+    alias :pmf_variance :probability_variance
   end
 end
