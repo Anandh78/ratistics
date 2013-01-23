@@ -1,4 +1,4 @@
-# Ratistics - Ruby Statistics Gem
+# Ratistics - Ruby Statistics Gem [![Build Status](https://secure.travis-ci.org/jdantonio/ratistics.png)](http://travis-ci.org/jdantonio/ratistics?branch=master) [![Dependency Status](https://gemnasium.com/jdantonio/ratistics.png)](https://gemnasium.com/jdantonio/ratistics)
 
 Ratistics is a purely functional library that provides basic
 statistical computation functions to Ruby programmers. It is
