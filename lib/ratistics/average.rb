@@ -6,12 +6,10 @@ module Ratistics
 
     # Calculates the statistical mean.
     #
-    # When no block is given every element in the data set will be
-    # cast to a float before computation. When a block is given
-    # the block will be applied to every element in the data set
-    # and the result of the block will be cast to a float. Using
-    # a block in this way allows the mean to be computed against
-    # a specific field in a data set of hashes or objects.
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
     #
     # For a block {|item| ... }
     # @yield iterates over each element in the data set
@@ -42,12 +40,10 @@ module Ratistics
     # Will sort the data set using natural sort order unless
     # the #sorted argument is true or a block is given.
     #
-    # When no block is given every element in the data set will be
-    # cast to a float before computation. When a block is given
-    # the block will be applied to every element in the data set
-    # and the result of the block will be cast to a float. Using
-    # a block in this way allows the median to be computed against
-    # a specific field in a data set of hashes or objects.
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
     #
     # For a block {|item| ... }
     # @yield iterates over each element in the data set
@@ -86,11 +82,10 @@ module Ratistics
 
     # Calculates the statistical modes.
     #
-    # When a block is given # the block will be applied to every
-    # element in the data set and the result of the block will be
-    # used to calculate the modes. Using a block in this way
-    # allows modes to be computed against a specific field
-    # in a data set of hashes or objects.
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
     #
     # For a block {|item| ... }
     # @yield iterates over each element in the data set
