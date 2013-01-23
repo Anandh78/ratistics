@@ -50,30 +50,30 @@ module Ratistics
 
       end
 
-      context 'with test sample' do
+      #context 'with test sample' do
 
-        before(:all) do
-          @pregnancies = Survey.get_pregnancy_data
-        end
+        #before(:all) do
+          #@pregnancies = Survey.get_pregnancy_data
+        #end
 
-        it 'calculates the mean pregnancy length' do
-          sample = @pregnancies.filter{|item| item[:birthord] > 0}.freeze
-          mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
-          mean.should be_within(0.01).of(38.56055968517709)
-        end
+        #it 'calculates the mean pregnancy length' do
+          #sample = @pregnancies.filter{|item| item[:birthord] > 0}.freeze
+          #mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
+          #mean.should be_within(0.01).of(38.56055968517709)
+        #end
 
-        it 'calculates the mean pregnancy length for first babies' do
-          sample = @pregnancies.filter{|item| item[:birthord] == 1}.freeze
-          mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
-          mean.should be_within(0.01).of(38.60095173351461)
-        end
+        #it 'calculates the mean pregnancy length for first babies' do
+          #sample = @pregnancies.filter{|item| item[:birthord] == 1}.freeze
+          #mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
+          #mean.should be_within(0.01).of(38.60095173351461)
+        #end
 
-        it 'calculates the mean pregnancy length for not first babies' do
-          sample = @pregnancies.filter{|item| item[:birthord] > 1}.freeze
-          mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
-          mean.should be_within(0.01).of(38.52291446673706)
-        end
-      end
+        #it 'calculates the mean pregnancy length for not first babies' do
+          #sample = @pregnancies.filter{|item| item[:birthord] > 1}.freeze
+          #mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
+          #mean.should be_within(0.01).of(38.52291446673706)
+        #end
+      #end
     end
 
     context '#median' do
