@@ -305,7 +305,109 @@ module Ratistics
           frequency[18].should eq 1
           frequency[21].should eq 1
         end
+      end
 
+      context '#probability' do
+
+        it 'returns nil for a nil sample' do
+          Distribution.probability(nil).should be_nil 
+        end
+
+        it 'returns nil for an empty sample' do
+          Distribution.probability([].freeze).should be_nil 
+        end
+
+        it 'returns a one-element hash for a one-item sample' do
+          sample = [10].freeze
+          probability = Distribution.probability(sample)
+          probability.should == {10 => 1}
+        end
+
+        it 'returns a multi-element hash for a multi-element sample' do
+          sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
+
+          probability = Distribution.probability(sample)
+
+          probability.count.should eq 5
+          probability[13].should be_within(0.01).of(0.444)
+          probability[14].should be_within(0.01).of(0.222) 
+          probability[16].should be_within(0.01).of(0.111) 
+          probability[18].should be_within(0.01).of(0.111) 
+          probability[21].should be_within(0.01).of(0.111) 
+        end
+
+        it 'returns a one-element hash for a one-item sample with a block' do
+          sample = [
+            {:count => 10},
+          ].freeze
+
+          probability = Distribution.probability(sample){|item| item[:count]}
+          probability.should == {10 => 1}
+        end
+
+        it 'returns a multi-element hash for a multi-element sample with a block' do
+          sample = [
+            {:count => 13},
+            {:count => 18},
+            {:count => 13},
+            {:count => 14},
+            {:count => 13},
+            {:count => 16},
+            {:count => 14},
+            {:count => 21},
+            {:count => 13},
+          ].freeze
+
+          probability = Distribution.probability(sample){|item| item[:count]}
+
+          probability.count.should eq 5
+          probability[13].should be_within(0.01).of(0.444)
+          probability[14].should be_within(0.01).of(0.222) 
+          probability[16].should be_within(0.01).of(0.111) 
+          probability[18].should be_within(0.01).of(0.111) 
+          probability[21].should be_within(0.01).of(0.111) 
+        end
+
+        context 'with Hamster' do
+
+          let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+          let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
+          let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
+
+          specify do
+            probability = Distribution.probability(list)
+
+            probability.count.should eq 5
+            probability[13].should be_within(0.01).of(0.444)
+            probability[14].should be_within(0.01).of(0.222) 
+            probability[16].should be_within(0.01).of(0.111) 
+            probability[18].should be_within(0.01).of(0.111) 
+            probability[21].should be_within(0.01).of(0.111) 
+          end
+
+          specify do
+            probability = Distribution.probability(vector)
+
+            probability.count.should eq 5
+            probability[13].should be_within(0.01).of(0.444)
+            probability[14].should be_within(0.01).of(0.222) 
+            probability[16].should be_within(0.01).of(0.111) 
+            probability[18].should be_within(0.01).of(0.111) 
+            probability[21].should be_within(0.01).of(0.111) 
+          end
+
+          specify do
+            probability = Distribution.probability(set)
+
+            probability.count.should eq 5
+            probability[13].should be_within(0.01).of(0.2)
+            probability[14].should be_within(0.01).of(0.2) 
+            probability[16].should be_within(0.01).of(0.2) 
+            probability[18].should be_within(0.01).of(0.2) 
+            probability[21].should be_within(0.01).of(0.2) 
+          end
+
+        end
       end
     end
   end

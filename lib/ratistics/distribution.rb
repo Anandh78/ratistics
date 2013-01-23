@@ -8,12 +8,10 @@ module Ratistics
 
     # Calculates the statistical variance.
     #
-    # When no block is given every element in the data set will be
-    # cast to a float before computation. When a block is given
-    # the block will be applied to every element in the data set
-    # and the result of the block will be cast to a float. Using
-    # a block in this way allows the variance to be computed against
-    # a specific field in a data set of hashes or objects.
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
     #
     # For a block {|item| ... }
     # @yield iterates over each element in the data set
@@ -42,13 +40,10 @@ module Ratistics
 
     # Calculates the statistical standard deviation.
     #
-    # When no block is given every element in the data set will be
-    # cast to a float before computation. When a block is given
-    # the block will be applied to every element in the data set
-    # and the result of the block will be cast to a float. Using
-    # a block in this way allows the standard deviation to be
-    # computed against a specific field in a data set of hashes
-    # or objects.
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
     #
     # For a block {|item| ... }
     # @yield iterates over each element in the data set
@@ -75,12 +70,10 @@ module Ratistics
     # Will sort the data set using natural sort order unless
     # the #sorted argument is true or a block is given.
     #
-    # When no block is given every element in the data set will be
-    # cast to a float before computation. When a block is given
-    # the block will be applied to every element in the data set
-    # and the result of the block will be cast to a float. Using
-    # a block in this way allows the range to be computed against
-    # a specific field in a data set of hashes or objects.
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
     #
     # For a block {|item| ... }
     # @yield iterates over each element in the data set
@@ -108,9 +101,8 @@ module Ratistics
     # Calculates the statistical frequency.
     #
     # When a block is given the block will be applied to every
-    # element in the data set and the result of the block will
-    # be cast to a float. Using a block in this way allows the
-    # frequency to be computed against a specific field in a
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
     # data set of hashes or objects.
     #
     # For a block {|item| ... }
@@ -125,13 +117,43 @@ module Ratistics
     def frequency(data, &block)
       return nil if data.nil? || data.empty?
 
-      frequency = data.reduce({}) do |memo, datum|
+      freq = data.reduce({}) do |memo, datum|
         datum = yield(datum) if block_given?
         memo[datum] = memo[datum].to_i + 1
         memo
       end
 
-      return frequency
+      return freq
+    end
+
+    # Calculates the statistical probability.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # For a block {|item| ... }
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to compute the probability of
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Hash, nil] the statistical probability of the given data set
+    #   or nil if the data set is empty
+    def probability(data, &block)
+      return nil if data.nil? || data.empty?
+
+      freq = frequency(data, &block)
+      count = data.count
+
+      prob = freq.reduce({}) do |memo, datum|
+        memo[datum[0]] = datum[1].to_f / count.to_f
+        memo
+      end
+
+      return prob
     end
   end
 end
