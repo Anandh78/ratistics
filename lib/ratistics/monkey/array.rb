@@ -15,8 +15,8 @@ module Ratistics
       return Ratistics.truncated_mean(self, truncation, sorted, &block)
     end
 
-    def median(sorted=false, &block)
-      return Ratistics.median(self, sorted, &block)
+    def median(&block)
+      return Ratistics.median(self, false, &block)
     end
 
     def mode(&block)
@@ -36,8 +36,8 @@ module Ratistics
     alias :std_dev :standard_deviation
     alias :stddev :standard_deviation
 
-    def range(sorted=false, &block)
-      return Ratistics.range(self, sorted, &block)
+    def range(&block)
+      return Ratistics.range(self, false, &block)
     end
 
     def frequency(&block)
