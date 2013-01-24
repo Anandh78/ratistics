@@ -4,8 +4,8 @@ require 'hamster/vector'
 module Survey
   extend self
 
-  FEMRESP = File.expand_path(File.join(File.dirname(__FILE__), '../data', '2002FemResp.dat.gz'))
-  FEMPREG = File.expand_path(File.join(File.dirname(__FILE__), '../data', '2002FemPreg.dat.gz'))
+  FEMRESP = File.expand_path(File.join(File.dirname(__FILE__), '2002FemResp.dat.gz'))
+  FEMPREG = File.expand_path(File.join(File.dirname(__FILE__), '2002FemPreg.dat.gz'))
 
   RESPONDENT_FIELDS = [
     [:caseid, 1, 12, :to_i].freeze,
