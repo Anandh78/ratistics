@@ -1,3 +1,5 @@
+require 'ratistics/functions'
+
 module Ratistics
 
   # Various probability_mass_function computation functions.
@@ -63,6 +65,35 @@ module Ratistics
     end
 
     alias :pmf :probability
+
+    # Normalize a probability distribution sample.
+    #
+    # The data set must be formatted as output by the #probability
+    # method. Specifically, a hash where each hash key is a datum from
+    # the original data set and each hash value is the probability
+    # associated with that datum. A probability hash may become
+    # denormalized when performing conditional probability.
+    #
+    # @see #probability
+    #
+    # @param [Hash] pmf the probability curve to normalize
+    # 
+    # @attr_reader :attr_nameseturn [Hash] a new, normalized probability distribution.
+    def normalize_probability(pmf)
+      total = pmf.values.reduce(0.0){|n, value| n + value} 
+
+      return { pmf.keys.first => 1 } if pmf.count == 1
+      return pmf if Functions.delta(total, 1.0) < 0.01
+
+      factor = 1.0 / total.to_f
+      normalized = pmf.reduce({}) do |memo, pair|
+        memo[pair[0]] = pair[1] * factor
+        memo
+      end
+      return normalized
+    end
+
+    alias :normalize_pmf :normalize_probability
 
     # Calculates the statistical mean of a probability distribution.
     #

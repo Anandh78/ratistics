@@ -144,6 +144,7 @@ Then you can go to town:
 * range
 * frequency
 * probability (pmf)
+* normalize_probability (normalize_pmf)
 * probability_mean (pmf_mean)
 * probability_variance (pmf_variance)
 

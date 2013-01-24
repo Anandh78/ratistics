@@ -208,6 +208,75 @@ module Ratistics
       end
     end
 
+    context '#normalize_probability' do
+
+      it 'sets the probability to one for a one-element distribution' do
+        sample = { 10 => 0.5 }
+        probability = ProbabilityMassFunction.normalize_probability(sample)
+
+        probability.count.should eq 1
+        probability[10].should eq 1
+      end
+
+      it 'does not change the probabilities of a normalized distribution' do
+        sample = {
+          13 => 0.4444444444444444,
+          18 => 0.1111111111111111,
+          14 => 0.2222222222222222,
+          16 => 0.1111111111111111,
+          21 => 0.1111111111111111,
+        }
+
+        probability = ProbabilityMassFunction.normalize_probability(sample)
+
+        probability.count.should eq 5
+        probability[13].should be_within(0.01).of(0.444)
+        probability[14].should be_within(0.01).of(0.222) 
+        probability[16].should be_within(0.01).of(0.111) 
+        probability[18].should be_within(0.01).of(0.111) 
+        probability[21].should be_within(0.01).of(0.111) 
+      end
+
+      it 'normalizes a distribution greater than 1.0' do
+        sample = {
+          13 => 88.8888888888888888,
+          18 => 22.2222222222222222,
+          14 => 44.4444444444444444,
+          16 => 22.2222222222222222,
+          21 => 22.2222222222222222,
+        }
+
+        probability = ProbabilityMassFunction.normalize_probability(sample)
+
+        probability.count.should eq 5
+        probability[13].should be_within(0.01).of(0.444)
+        probability[14].should be_within(0.01).of(0.222) 
+        probability[16].should be_within(0.01).of(0.111) 
+        probability[18].should be_within(0.01).of(0.111) 
+        probability[21].should be_within(0.01).of(0.111) 
+      end
+
+      it 'normalizes a distribution less than 1.0' do
+        sample = {
+          13 => 0.0044444444444444,
+          18 => 0.0011111111111111,
+          14 => 0.0022222222222222,
+          16 => 0.0011111111111111,
+          21 => 0.0011111111111111,
+        }
+
+        probability = ProbabilityMassFunction.normalize_probability(sample)
+
+        probability.count.should eq 5
+        probability[13].should be_within(0.01).of(0.444)
+        probability[14].should be_within(0.01).of(0.222) 
+        probability[16].should be_within(0.01).of(0.111) 
+        probability[18].should be_within(0.01).of(0.111) 
+        probability[21].should be_within(0.01).of(0.111) 
+      end
+
+    end
+
     context '#probability_mean' do
 
       it 'returns zero for a nil sample' do
