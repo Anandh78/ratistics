@@ -1,3 +1,5 @@
+require 'ratistics/functions'
+
 module Ratistics
 
   # Various average computation functions.
@@ -35,10 +37,37 @@ module Ratistics
     alias :avg :mean
     alias :average :mean
 
-    def delta(v1, v2)
-      return (v1 - v2).abs
-    end
-
+    # Calculates a truncated statistical mean.
+    #
+    # The truncation value represents the number of high and low
+    # outliers to remove from the sample before calculating the
+    # mean. It is a percentage of the sample size. This percent
+    # will be removed from both the high end and the low end of
+    # the sample. Therefore the total sample size will be reduced
+    # by double the truncation value. A truncation value of 50%
+    # or greater will cause an exception to be raised. The
+    # truncation value can be expressed as a percentage (10.0)
+    # or a decimal (0.10). When an exact truncation is not
+    # possible (with one-tenth of one percent precision) the mean
+    # will be calculated using interpolation.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # For a block {|item| ... }
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to compute the mean of
+    # @param [Float] truncation the percentage value of truncation of
+    #   both high and low outliers
+    # @param [Boolean] sorted indicates of the list is already sorted
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Float, 0] the statistical mean of the given data set
+    #   or zero if the data set is empty
     def truncated_mean(data, truncation, sorted=false, &block)
       return 0 if data.nil? || data.empty?
       data = data.sort unless block_given? || sorted
@@ -49,13 +78,13 @@ module Ratistics
       interval = 100.0 / data.count
       steps = truncation / interval
 
-      if delta(steps, steps.to_i) < 0.1
+      if Functions.delta(steps, steps.to_i) < 0.1
         # exact truncation
-        mean = Average.mean(data.slice(steps.floor..(data.count-steps.floor-1)), &block)
+        mean = Average.mean(data.slice(steps.floor, data.count-(steps.floor * 2)), &block)
       else
         # interpolation truncation
-        m1 = Average.mean(data.slice(steps.floor..(data.count-steps.floor-1)), &block)
-        m2 = mean(data.slice(steps.ceil..(data.count-steps.ceil-1)), &block)
+        m1 = Average.mean(data.slice(steps.floor, data.count-(steps.floor * 2)), &block)
+        m2 = mean(data.slice(steps.ceil, data.count-(steps.ceil * 2)), &block)
         mean = mean([m1, m2])
       end
 

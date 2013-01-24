@@ -47,33 +47,7 @@ module Ratistics
         specify { Average.mean(vector).should be_within(0.01).of(15.0) }
 
         specify { Average.mean(set).should be_within(0.01).of(16.4) }
-
       end
-
-      #context 'with test sample' do
-
-        #before(:all) do
-          #@pregnancies = Survey.get_pregnancy_data
-        #end
-
-        #it 'calculates the mean pregnancy length' do
-          #sample = @pregnancies.filter{|item| item[:birthord] > 0}.freeze
-          #mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
-          #mean.should be_within(0.01).of(38.56055968517709)
-        #end
-
-        #it 'calculates the mean pregnancy length for first babies' do
-          #sample = @pregnancies.filter{|item| item[:birthord] == 1}.freeze
-          #mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
-          #mean.should be_within(0.01).of(38.60095173351461)
-        #end
-
-        #it 'calculates the mean pregnancy length for not first babies' do
-          #sample = @pregnancies.filter{|item| item[:birthord] > 1}.freeze
-          #mean = Ratistics::Average.mean(sample) {|birth| birth[:prglength]}
-          #mean.should be_within(0.01).of(38.52291446673706)
-        #end
-      #end
     end
 
     context '#truncated_mean' do
@@ -196,6 +170,19 @@ module Ratistics
         mean = Average.truncated_mean(sample, 10){|item| item[:count]}
       end
 
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(11, 11, 12, 12, 12, 13, 13, 13, 13, 13, 14, 14, 16, 16, 17, 18, 19, 19, 20, 21).freeze }
+        let(:vector) { Hamster.vector(11, 11, 12, 12, 12, 13, 13, 13, 13, 13, 14, 14, 16, 16, 17, 18, 19, 19, 20, 21).freeze }
+        let(:set) { Hamster.set(11, 11, 12, 12, 12, 13, 13, 13, 13, 13, 14, 14, 16, 16, 17, 18, 19, 19, 20, 21).freeze }
+
+        specify { Average.truncated_mean(list, 10).should be_within(0.01).of(14.625) }
+
+        # Hamster::Vector does not have a slice method
+        #specify { Average.truncated_mean(vector, 10, true).should be_within(0.01).of(14.625) }
+
+        specify { Average.truncated_mean(set, 10).should be_within(0.01).of(16.125) }
+      end
     end
 
     context '#median' do
