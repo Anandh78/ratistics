@@ -53,11 +53,19 @@ module Ratistics
     def probability(data, &block)
       return nil if data.nil? || data.empty?
 
-      freq = frequency(data, &block)
-      count = data.count
+      if data.respond_to? :keys
+        count = data.reduce(0) do |n, key, value|
+          key, value = key if key.is_a? Array
+          n + value
+        end
+      else
+        count = data.count
+        data = frequency(data, &block)
+      end
 
-      prob = freq.reduce({}) do |memo, datum|
-        memo[datum[0]] = datum[1].to_f / count.to_f
+      prob = data.reduce({}) do |memo, key, value|
+        key, value = key if key.is_a? Array
+        memo[key] = value.to_f / count.to_f
         memo
       end
 
@@ -114,8 +122,14 @@ module Ratistics
     def probability_mean(data, &block)
       return 0 if data.nil? || data.empty?
 
-      pmf = probability(data, &block)
-      return pmf.reduce(0.0){|n, item| n + (item[0] * item[1]) }
+      data = probability(data, &block) unless data.respond_to? :keys
+
+      mean = data.reduce(0.0) do |n, key, value|
+        key, value = key if key.is_a? Array
+        n + (key * value)
+      end
+
+      return mean
     end
 
     alias :pmf_mean :probability_mean
@@ -139,10 +153,18 @@ module Ratistics
     def probability_variance(data, &block)
       return 0 if data.nil? || data.empty?
 
-      pmf = probability(data, &block)
-      mean = pmf.reduce(0.0){|n, item| n + (item[0] * item[1]) }
+      data = probability(data, &block) unless data.respond_to? :keys
+      mean = data.reduce(0.0) do |n, key, value|
+        key, value = key if key.is_a? Array
+        n + (key * value)
+      end
 
-      return pmf.reduce(0.0){|n, item| n + (item[1] * ((item[0] - mean) ** 2)) }
+      variance = data.reduce(0.0) do |n, key, value|
+        key, value = key if key.is_a? Array
+        n + (value * ((key - mean) ** 2))
+      end
+
+      return variance
     end
 
     alias :pmf_variance :probability_variance
