@@ -2,8 +2,8 @@ require 'ratistics/functions'
 
 module Ratistics
 
-  # Various probability_mass_function computation functions.
-  module ProbabilityMassFunction
+  # Various probability computation functions.
+  module Probability
     extend self
 
     # Calculates the statistical frequency.

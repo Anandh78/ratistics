@@ -47,26 +47,26 @@ module Ratistics
       return Ratistics.range(self, false, &block)
     end
 
-    # @see ProbabilityMassFunction::frequency
+    # @see Probability::frequency
     def frequency(&block)
       return Ratistics.frequency(self, &block)
     end
 
-    # @see ProbabilityMassFunction::probability
+    # @see Probability::probability
     def probability(&block)
       return Ratistics.probability(self, &block)
     end
 
     alias :pmf :probability
 
-    # @see ProbabilityMassFunction::probability_mean
+    # @see Probability::probability_mean
     def probability_mean(&block)
       return Ratistics.probability_mean(self, &block)
     end
 
     alias :pmf_mean :probability_mean
 
-    # @see ProbabilityMassFunction::probability_variance
+    # @see Probability::probability_variance
     def probability_variance(&block)
       return Ratistics.probability_variance(self, &block)
     end

@@ -1,28 +1,28 @@
 require 'spec_helper'
 
 module Ratistics
-  describe ProbabilityMassFunction do
+  describe Probability do
 
     context '#frequency' do
 
       it 'returns nil for a nil sample' do
-        ProbabilityMassFunction.frequency(nil).should be_nil 
+        Probability.frequency(nil).should be_nil 
       end
 
       it 'returns nil for an empty sample' do
-        ProbabilityMassFunction.frequency([].freeze).should be_nil 
+        Probability.frequency([].freeze).should be_nil 
       end
 
       it 'returns a one-element hash for a one-item sample' do
         sample = [10].freeze
-        frequency = ProbabilityMassFunction.frequency(sample)
+        frequency = Probability.frequency(sample)
         frequency.should == {10 => 1}
       end
 
       it 'returns a multi-element hash for a multi-element sample' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 
-        frequency = ProbabilityMassFunction.frequency(sample)
+        frequency = Probability.frequency(sample)
 
         frequency.count.should eq 5
         frequency[13].should eq 4
@@ -37,7 +37,7 @@ module Ratistics
           {:count => 10},
         ].freeze
 
-        frequency = ProbabilityMassFunction.frequency(sample){|item| item[:count]}
+        frequency = Probability.frequency(sample){|item| item[:count]}
         frequency.should == {10 => 1}
       end
 
@@ -54,7 +54,7 @@ module Ratistics
           {:count => 13},
         ].freeze
 
-        frequency = ProbabilityMassFunction.frequency(sample){|item| item[:count]}
+        frequency = Probability.frequency(sample){|item| item[:count]}
 
         frequency.count.should eq 5
         frequency[13].should eq 4
@@ -71,7 +71,7 @@ module Ratistics
         let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
 
         specify do
-          frequency = ProbabilityMassFunction.frequency(list)
+          frequency = Probability.frequency(list)
 
           frequency.count.should eq 5
           frequency[13].should eq 4
@@ -82,7 +82,7 @@ module Ratistics
         end
 
         specify do
-          frequency = ProbabilityMassFunction.frequency(vector)
+          frequency = Probability.frequency(vector)
 
           frequency.count.should eq 5
           frequency[13].should eq 4
@@ -93,7 +93,7 @@ module Ratistics
         end
 
         specify do
-          frequency = ProbabilityMassFunction.frequency(set)
+          frequency = Probability.frequency(set)
 
           frequency.count.should eq 5
           frequency[13].should eq 1
@@ -108,23 +108,23 @@ module Ratistics
     context '#probability' do
 
       it 'returns nil for a nil sample' do
-        ProbabilityMassFunction.probability(nil).should be_nil 
+        Probability.probability(nil).should be_nil 
       end
 
       it 'returns nil for an empty sample' do
-        ProbabilityMassFunction.probability([].freeze).should be_nil 
+        Probability.probability([].freeze).should be_nil 
       end
 
       it 'returns a one-element hash for a one-item sample' do
         sample = [10].freeze
-        probability = ProbabilityMassFunction.probability(sample)
+        probability = Probability.probability(sample)
         probability.should == {10 => 1}
       end
 
       it 'returns a multi-element hash for a multi-element sample' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 
-        probability = ProbabilityMassFunction.probability(sample)
+        probability = Probability.probability(sample)
 
         probability.count.should eq 5
         probability[13].should be_within(0.01).of(0.444)
@@ -139,7 +139,7 @@ module Ratistics
           {:count => 10},
         ].freeze
 
-        probability = ProbabilityMassFunction.probability(sample){|item| item[:count]}
+        probability = Probability.probability(sample){|item| item[:count]}
         probability.should == {10 => 1}
       end
 
@@ -156,7 +156,7 @@ module Ratistics
           {:count => 13},
         ].freeze
 
-        probability = ProbabilityMassFunction.probability(sample){|item| item[:count]}
+        probability = Probability.probability(sample){|item| item[:count]}
 
         probability.count.should eq 5
         probability[13].should be_within(0.01).of(0.444)
@@ -173,7 +173,7 @@ module Ratistics
         let(:set) { Hamster.set(13, 18, 14, 16, 21).freeze }
 
         specify do
-          probability = ProbabilityMassFunction.probability(list)
+          probability = Probability.probability(list)
 
           probability.count.should eq 5
           probability[13].should be_within(0.01).of(0.444)
@@ -184,7 +184,7 @@ module Ratistics
         end
 
         specify do
-          probability = ProbabilityMassFunction.probability(vector)
+          probability = Probability.probability(vector)
 
           probability.count.should eq 5
           probability[13].should be_within(0.01).of(0.444)
@@ -195,7 +195,7 @@ module Ratistics
         end
 
         specify do
-          probability = ProbabilityMassFunction.probability(set)
+          probability = Probability.probability(set)
 
           probability.count.should eq 5
           probability[13].should be_within(0.01).of(0.2)
@@ -212,7 +212,7 @@ module Ratistics
 
       it 'sets the probability to one for a one-element distribution' do
         sample = { 10 => 0.5 }
-        probability = ProbabilityMassFunction.normalize_probability(sample)
+        probability = Probability.normalize_probability(sample)
 
         probability.count.should eq 1
         probability[10].should eq 1
@@ -227,7 +227,7 @@ module Ratistics
           21 => 0.1111111111111111,
         }
 
-        probability = ProbabilityMassFunction.normalize_probability(sample)
+        probability = Probability.normalize_probability(sample)
 
         probability.count.should eq 5
         probability[13].should be_within(0.01).of(0.444)
@@ -246,7 +246,7 @@ module Ratistics
           21 => 22.2222222222222222,
         }
 
-        probability = ProbabilityMassFunction.normalize_probability(sample)
+        probability = Probability.normalize_probability(sample)
 
         probability.count.should eq 5
         probability[13].should be_within(0.01).of(0.444)
@@ -265,7 +265,7 @@ module Ratistics
           21 => 0.0011111111111111,
         }
 
-        probability = ProbabilityMassFunction.normalize_probability(sample)
+        probability = Probability.normalize_probability(sample)
 
         probability.count.should eq 5
         probability[13].should be_within(0.01).of(0.444)
@@ -280,22 +280,22 @@ module Ratistics
     context '#probability_mean' do
 
       it 'returns zero for a nil sample' do
-        ProbabilityMassFunction.probability_mean(nil).should eq 0
+        Probability.probability_mean(nil).should eq 0
       end
 
       it 'returns zero for an empty sample' do
-        ProbabilityMassFunction.probability_mean([]).should eq 0
+        Probability.probability_mean([]).should eq 0
       end
 
       it 'calculates the mean for a one-element sample' do
         sample = [1].freeze
-        mean = ProbabilityMassFunction.probability_mean(sample)
+        mean = Probability.probability_mean(sample)
         mean.should be_within(0.01).of(1.0)
       end
 
       it 'calculates the mean for a multi-element sample' do
         sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6].freeze
-        mean = ProbabilityMassFunction.probability_mean(sample)
+        mean = Probability.probability_mean(sample)
         mean.should be_within(0.01).of(4.5)
       end
 
@@ -313,7 +313,7 @@ module Ratistics
           {:count => 6},
         ].freeze
 
-        mean = ProbabilityMassFunction.probability_mean(sample){|item| item[:count]}
+        mean = Probability.probability_mean(sample){|item| item[:count]}
         mean.should be_within(0.01).of(4.5)
       end
 
@@ -324,17 +324,17 @@ module Ratistics
         let(:set) { Hamster.set(1, 2, 3, 4, 5, 6).freeze }
 
         specify do
-          mean = ProbabilityMassFunction.probability_mean(list)
+          mean = Probability.probability_mean(list)
           mean.should be_within(0.01).of(4.5)
         end
 
         specify do
-          mean = ProbabilityMassFunction.probability_mean(vector)
+          mean = Probability.probability_mean(vector)
           mean.should be_within(0.01).of(4.5)
         end
 
         specify do
-          mean = ProbabilityMassFunction.probability_mean(set)
+          mean = Probability.probability_mean(set)
           mean.should be_within(0.01).of(3.5)
         end
       end
@@ -343,22 +343,22 @@ module Ratistics
     context '#probability_variance' do
 
       it 'returns zero for a nil sample' do
-        ProbabilityMassFunction.probability_variance(nil).should eq 0
+        Probability.probability_variance(nil).should eq 0
       end
 
       it 'returns zero for an empty sample' do
-        ProbabilityMassFunction.probability_variance([]).should eq 0
+        Probability.probability_variance([]).should eq 0
       end
 
       it 'calculates the variance for a one-element sample' do
         sample = [1].freeze
-        variance = ProbabilityMassFunction.probability_variance(sample)
+        variance = Probability.probability_variance(sample)
         variance.should be_within(0.01).of(0.0)
       end
 
       it 'calculates the variance for a multi-element sample' do
         sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6].freeze
-        variance = ProbabilityMassFunction.probability_variance(sample)
+        variance = Probability.probability_variance(sample)
         variance.should be_within(0.01).of(3.25)
       end
 
@@ -376,7 +376,7 @@ module Ratistics
           {:count => 6},
         ].freeze
 
-        variance = ProbabilityMassFunction.probability_variance(sample){|item| item[:count]}
+        variance = Probability.probability_variance(sample){|item| item[:count]}
         variance.should be_within(0.01).of(3.25)
       end
 
@@ -387,17 +387,17 @@ module Ratistics
         let(:set) { Hamster.set(1, 2, 3, 4, 5, 6).freeze }
 
         specify do
-          mean = ProbabilityMassFunction.probability_variance(list)
+          mean = Probability.probability_variance(list)
           mean.should be_within(0.01).of(3.25)
         end
 
         specify do
-          mean = ProbabilityMassFunction.probability_variance(vector)
+          mean = Probability.probability_variance(vector)
           mean.should be_within(0.01).of(3.25)
         end
 
         specify do
-          mean = ProbabilityMassFunction.probability_variance(set)
+          mean = Probability.probability_variance(set)
           mean.should be_within(0.01).of(2.91)
         end
       end
