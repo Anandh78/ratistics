@@ -90,11 +90,11 @@ the test suite explicitly tests Hamster compatibality.
 
 Install from RubyGems:
 
-> gem install ratistics
+    gem install ratistics
 
 or add the following line to Gemfile:
 
-> gem 'ratistics'
+    gem 'ratistics'
 
 and run bundle install from your shell.
 
@@ -102,19 +102,35 @@ and run bundle install from your shell.
 
 Require Ratistics within your Ruby project:
 
-> require 'ratistics'
+    require 'ratistics'
 
 then use it:
 
-> sample = [2, 3, 4, 5, 6]
-> 
-> mean = Ratistics.mean(sample)
+    sample = [2, 3, 4, 5, 6]
+    
+    mean = Ratistics.mean(sample)
 
 When working with sets of complex data use blocks to process the data without copying:
 
-> people = Person.all
-> 
-> mean = Ratistics.mean(people){|person| person.age}
+    people = Person.all
+    
+    mean = Ratistics.mean(people){|person| person.age}
+
+### Shock the Monkey
+
+I'm normally not a fan of monkey-patching classes from the Ruby standard library.
+But there could be times when it would be convenient to have statistics functions
+as instance methods on Array. I've provided this monkey-patching, but not by default.
+Simply requiring 'ratistics' will not mess with any of the Ruby collection classes.
+For that fun you must
+
+    require 'ratistics/monkey'
+
+Then you can go to town:
+
+    sample = [2, 3, 4, 5, 6]
+    
+    mean = sample.mean
 
 ### Available Functions
 
