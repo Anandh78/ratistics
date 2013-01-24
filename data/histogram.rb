@@ -2,7 +2,7 @@ require 'ratistics'
 #require 'rmagick'
 require 'gruff'
 
-load File.join(File.dirname(__FILE__), '../support/survey.rb')
+load File.join(File.dirname(__FILE__), 'survey.rb')
 
 sample = Survey.get_pregnancy_data
 
