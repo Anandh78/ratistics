@@ -1,3 +1,5 @@
+#!/bin/bash --login
+
 rvm use ruby-1.8.7-p371@ratistics --create
 gem install bundler &>/dev/null 
 bundle install &>/dev/null

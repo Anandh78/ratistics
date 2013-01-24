@@ -116,7 +116,7 @@ When working with sets of complex data use blocks to process the data without co
 > 
 > mean = Ratistics.mean(people){|person| person.age}
 
-## Available Functions
+### Available Functions
 
 * delta
 * mean
@@ -131,7 +131,69 @@ When working with sets of complex data use blocks to process the data without co
 * probability_variance
 * truncated_mean
 
-### Test Data
+### A Worked Example
+
+The following code answers the big question from page 2 of *Think Stats*: Do first babies arrive late?
+
+The first step in this solution is to load the NSFG test data (see below). The file
+[survey.rb](https://github.com/jdantonio/ratistics/blob/master/spec/support/survey.rb)
+provides utilities for reading and processing the data. The function `Survey.get_pregnancy_data`
+returns an array of hashes. Each hash represents a single pregnancy and has the following
+structure:
+
+    {:caseid => 1,
+     :nbrnaliv => 1,
+     :babysex => 1,
+     :birthwgt_lb => 8,
+     :birthwgt_oz => 13,
+     :prglength => 39,
+     :outcome => 1,
+     :birthord => 1,
+     :agepreg => 3316,
+     :finalwgt => 6448.271111704751}
+
+Once the data is loaded it can be easily processed:
+
+    # load the data
+    sample = Survey.get_pregnancy_data
+    sample.count #=> 13593 
+
+    # filter for first-borns
+    first = sample.filter{|item| item[:birthord] == 1}
+    first.count #=> 4413
+
+    # filter for non-first-borns
+    not_first = sample.filter{|item| item[:birthord] > 1}
+    not_first.count #=> 4735
+
+    # calculate mean pregnancy lengths
+    Ratistics.mean(sample){|item| item[:prglength]} #=> 29.531229309203265 
+    Ratistics.mean(first){|item| item[:prglength]} #=> 38.60095173351461 
+    Ratistics.mean(not_first){|item| item[:prglength]} #=> 38.52291446673706
+
+    # calculate the variance of pregnancy lengths
+    Ratistics.variance(sample){|item| item[:prglength]} #=> 190.49562224367648 
+    Ratistics.variance(first){|item| item[:prglength]} #=> 7.792947202066306 
+    Ratistics.variance(not_first){|item| item[:prglength]} #=> 6.84123839078341
+
+    # calculate the standard deviation of pregnancy lengths
+    Ratistics.standard_deviation(sample){|item| item[:prglength]} #=> 13.8020151515522 
+    Ratistics.standard_deviation(first){|item| item[:prglength]} #=> 2.7915850698243654 
+    Ratistics.standard_deviation(not_first){|item| item[:prglength]} #=> 2.6155761106844913
+
+    # calculate the frequency of pregnancy lengths
+    sample_freq = Ratistics.frequency(sample){|item| item[:prglength]} #=> {39=>4744, 38=>609, ...} 
+    first_freq = Ratistics.frequency(first){|item| item[:prglength]} #=> {39=>2114, 38=>272, ...} 
+    not_first_freq = Ratistics.frequency(not_first){|item| item[:prglength]} #=> {39=>2579, 40=>580, ...} 
+
+Once you have the frequency data you can use any charting/graphing library to
+create a histogram to compare birth rates. The file
+[histogram.rb](https://github.com/jdantonio/ratistics/blob/master/spec/data/histogram.rb)
+shows how to use [Gruff](https://github.com/topfunky/gruff) to create this:
+
+![histogram](https://raw.github.com/jdantonio/ratistics/master/spec/data/histogram.png)
+
+## Test Data
 
 The test data shipped with this gem is freely available from
 the Centers for Disease Control and Prevention
