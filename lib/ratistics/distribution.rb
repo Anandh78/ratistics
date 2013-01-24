@@ -38,6 +38,8 @@ module Ratistics
       return variance
     end
 
+    alias :var :variance
+
     # Calculates the statistical standard deviation.
     #
     # When a block is given the block will be applied to every

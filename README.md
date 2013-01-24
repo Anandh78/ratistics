@@ -119,17 +119,17 @@ When working with sets of complex data use blocks to process the data without co
 ### Available Functions
 
 * delta
-* mean
+* mean (average, avg)
+* truncated_mean
 * median
 * mode
-* variance
-* standard_deviation
+* variance (var)
+* standard_deviation (std_dev, stddev)
 * range
 * frequency
-* probability
-* probability_mean
-* probability_variance
-* truncated_mean
+* probability (pmf)
+* probability_mean (pmf_mean)
+* probability_variance (pmf_variance)
 
 ### A Worked Example
 
