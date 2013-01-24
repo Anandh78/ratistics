@@ -52,6 +52,27 @@ good results with any of the following:
 * jruby-1.7.0
 * ree-1.8.7
 
+### Sorting
+
+Some statistical computations require sorted data. In these cases
+this library assumes the data is unsorted and calls the *#sort*
+method on the data set. If the data passed to the function is
+already sorted then an unnecessary performace penalty will occur.
+To mitigate this, every function that requires sorted data provides
+an optional *sorted* parameter which defaults to false. When set
+to *true* it indicates the data is already sorting and the sort
+step is skipped.
+
+A problem occurs when the data set does not support a natural sort
+order. The Ruby idiom for this situation is to accept a block which
+specifies the sort operation. Unfortunately, passing two blocks to
+a function is cumbersome in Ruby so the functions that require sorting
+must depend on the natural sort order only. For simplicity and
+consistency, when a block is passed to a function that requires
+sorted data it is assumed that natural sorting is impossible.
+Subsequently the sort operation is skipped regardless of the value
+of the *sorted* parameter.
+
 #### Hamster
 
 The main drawback of side-effect free functions is that in
@@ -97,6 +118,7 @@ When working with sets of complex data use blocks to process the data without co
 
 ## Available Functions
 
+* delta
 * mean
 * median
 * mode
@@ -107,6 +129,7 @@ When working with sets of complex data use blocks to process the data without co
 * probability
 * probability_mean
 * probability_variance
+* truncated_mean
 
 ### Test Data
 
