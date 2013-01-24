@@ -4,7 +4,5 @@ module Ratistics
 
   describe Monkey do
 
-    pending
-
   end
 end
