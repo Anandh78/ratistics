@@ -34,6 +34,12 @@ module Ratistics
       return freq
     end
 
+    def frequency_mean(data, &block)
+      pmf = probability(data, &block)
+      mean = probability_mean(pmf)
+      return mean
+    end
+
     # Calculates the statistical probability.
     #
     # When a block is given the block will be applied to every

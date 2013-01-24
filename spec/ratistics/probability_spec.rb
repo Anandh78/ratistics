@@ -105,6 +105,71 @@ module Ratistics
       end
     end
 
+    context '#frequency_mean' do
+
+      it 'returns zero for a nil sample' do
+        Probability.frequency_mean(nil).should eq 0
+      end
+
+      it 'returns zero for an empty sample' do
+        Probability.frequency_mean({}.freeze).should eq 0
+      end
+
+      it 'calculates the mean of a sample' do
+        sample = {
+          7  => 8,
+          12 => 8,
+          17 => 14,
+          22 => 4,
+          27 => 6,
+          32 => 12,
+          37 => 8,
+          42 => 3,
+          47 => 2,
+        }.freeze
+
+        mean = Probability.frequency_mean(sample)
+        mean.should be_within(0.01).of(23.6923)
+      end
+
+      it 'calculates the mean using a block' do
+        sample = {
+          7  => {:count => 8},
+          12 => {:count => 8},
+          17 => {:count => 14},
+          22 => {:count => 4},
+          27 => {:count => 6},
+          32 => {:count => 12},
+          37 => {:count => 8},
+          42 => {:count => 3},
+          47 => {:count => 2},
+        }.freeze
+
+        mean = Probability.frequency_mean(sample) {|item| item[:count] }
+        mean.should be_within(0.01).of(23.6923)
+      end
+
+      context 'with Hamster' do
+
+        specify do
+          sample = Hamster.hash({
+            7  => 8,
+            12 => 8,
+            17 => 14,
+            22 => 4,
+            27 => 6,
+            32 => 12,
+            37 => 8,
+            42 => 3,
+            47 => 2,
+          }).freeze
+
+          mean = Probability.frequency_mean(sample)
+          mean.should be_within(0.01).of(23.6923)
+        end
+      end
+    end
+
     context '#probability' do
 
       it 'returns nil for a nil sample' do
