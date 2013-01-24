@@ -205,10 +205,10 @@ Once the data is loaded it can be easily processed:
 
 Once you have the frequency data you can use any charting/graphing library to
 create a histogram to compare birth rates. The file
-[histogram.rb](https://github.com/jdantonio/ratistics/blob/master/spec/data/histogram.rb)
+[histogram.rb](https://github.com/jdantonio/ratistics/blob/master/data/histogram.rb)
 shows how to use [Gruff](https://github.com/topfunky/gruff) to create this:
 
-![histogram](https://raw.github.com/jdantonio/ratistics/master/spec/data/histogram.png)
+![histogram](https://raw.github.com/jdantonio/ratistics/master/data/histogram.png)
 
 ## Test Data
 
