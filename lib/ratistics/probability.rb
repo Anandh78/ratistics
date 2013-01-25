@@ -35,12 +35,16 @@ module Ratistics
     end
 
     def frequency_mean(data, &block)
-      pmf = probability(data, &block)
-      mean = probability_mean(pmf)
-      return mean
+      #pmf = probability(data, &block)
+      #mean = probability_mean(pmf)
+      #return mean
     end
 
-    # Calculates the statistical probability.
+    # Calculates the statistical probability. Will operate on
+    # an array of individual data values or a hash representing
+    # a frequency distribution. The keys of the hash must be
+    # the data values (may be complex data) and the values
+    # must be the frequency values.
     #
     # When a block is given the block will be applied to every
     # element in the data set. Using a block in this way allows
@@ -51,17 +55,19 @@ module Ratistics
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
-    # @param [Enumerable] data the data set to compute the probability of
+    # @param [Enumerable, Hash] data the data set to compute the probability of
     # @param [Block] block optional block for per-item processing
     #
     # @return [Hash, nil] the statistical probability of the given data set
     #   or nil if the data set is empty
     def probability(data, &block)
       return nil if data.nil? || data.empty?
+      from_frequency = data.respond_to? :keys
 
-      if data.respond_to? :keys
+      if from_frequency
         count = data.reduce(0) do |n, key, value|
           key, value = key if key.is_a? Array
+          key = yield(key) if block_given?
           n + value
         end
       else
@@ -71,6 +77,7 @@ module Ratistics
 
       prob = data.reduce({}) do |memo, key, value|
         key, value = key if key.is_a? Array
+        key = yield(key) if from_frequency && block_given?
         memo[key] = value.to_f / count.to_f
         memo
       end
@@ -110,6 +117,10 @@ module Ratistics
     alias :normalize_pmf :normalize_probability
 
     # Calculates the statistical mean of a probability distribution.
+    # Will operate on an array of individual data values or a
+    # hash representing a probability distribution. The keys of
+    # the hash must be the data values (may be complex data)
+    # and the values must be the frequency values.
     #
     # When a block is given the block will be applied to every
     # element in the data set. Using a block in this way allows
@@ -120,18 +131,20 @@ module Ratistics
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
-    # @param [Enumerable] data the data set to compute the mean of
+    # @param [Enumerable, Hash] data the data set to compute the mean of
     # @param [Block] block optional block for per-item processing
     #
     # @return [Float, 0] the statistical mean of the given data set
     #   or zero if the data set is empty
     def probability_mean(data, &block)
       return 0 if data.nil? || data.empty?
+      from_probability = data.respond_to? :keys
 
-      data = probability(data, &block) unless data.respond_to? :keys
+      data = probability(data, &block) unless from_probability
 
       mean = data.reduce(0.0) do |n, key, value|
         key, value = key if key.is_a? Array
+        key = yield(key) if from_probability and block_given?
         n + (key * value)
       end
 
@@ -141,6 +154,10 @@ module Ratistics
     alias :pmf_mean :probability_mean
 
     # Calculates the statistical variance of a probability distribution.
+    # Will operate on an array of individual data values or a
+    # hash representing a probability distribution. The keys of
+    # the hash must be the data values (may be complex data)
+    # and the values must be the frequency values.
     #
     # When a block is given the block will be applied to every
     # element in the data set. Using a block in this way allows
@@ -151,22 +168,25 @@ module Ratistics
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
-    # @param [Enumerable] data the data set to compute the variance of
+    # @param [Enumerable, Hash] data the data set to compute the variance of
     # @param [Block] block optional block for per-item processing
     #
     # @return [Float, 0] the statistical variance of the given data set
     #   or zero if the data set is empty
     def probability_variance(data, &block)
       return 0 if data.nil? || data.empty?
+      from_probability = data.respond_to? :keys
 
-      data = probability(data, &block) unless data.respond_to? :keys
+      data = probability(data, &block) unless from_probability
       mean = data.reduce(0.0) do |n, key, value|
         key, value = key if key.is_a? Array
+        key = yield(key) if from_probability && block_given?
         n + (key * value)
       end
 
       variance = data.reduce(0.0) do |n, key, value|
         key, value = key if key.is_a? Array
+        key = yield(key) if from_probability && block_given?
         n + (value * ((key - mean) ** 2))
       end
 
