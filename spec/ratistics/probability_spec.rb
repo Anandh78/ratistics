@@ -134,15 +134,15 @@ module Ratistics
 
       it 'calculates the mean using a block' do
         sample = {
-          7  => {:count => 8},
-          12 => {:count => 8},
-          17 => {:count => 14},
-          22 => {:count => 4},
-          27 => {:count => 6},
-          32 => {:count => 12},
-          37 => {:count => 8},
-          42 => {:count => 3},
-          47 => {:count => 2},
+          {:count => 7 } => 8,
+          {:count => 12} => 8,
+          {:count => 17} => 14,
+          {:count => 22} => 4,
+          {:count => 27} => 6,
+          {:count => 32} => 12,
+          {:count => 37} => 8,
+          {:count => 42} => 3,
+          {:count => 47} => 2,
         }.freeze
 
         mean = Probability.frequency_mean(sample) {|item| item[:count] }

@@ -34,10 +34,25 @@ module Ratistics
       return freq
     end
 
+    # Calculate the mean from a frequency distribution.
+    #
+    # The data set must be formatted as output by the #frequency
+    # method. Specifically, a hash where each hash key is a datum from
+    # the original data set and each hash value is the frequency
+    # associated with that datum.
+    #
+    # @see #frequency
+    #
+    # @param [Hash] data the frequency distribution to calculate
+    #   the statistical mean of
+    #
+    # @return [Float, 0] the statistical mean of the given data set
+    #   or zero if the data set is empty
     def frequency_mean(data, &block)
-      #pmf = probability(data, &block)
-      #mean = probability_mean(pmf)
-      #return mean
+      return 0 if data.nil? || data.empty?
+      pmf = probability(data, &block)
+      mean = probability_mean(pmf)
+      return mean
     end
 
     # Calculates the statistical probability. Will operate on
@@ -99,7 +114,7 @@ module Ratistics
     #
     # @param [Hash] pmf the probability curve to normalize
     # 
-    # @attr_reader :attr_nameseturn [Hash] a new, normalized probability distribution.
+    # @return [Hash] a new, normalized probability distribution.
     def normalize_probability(pmf)
       total = pmf.values.reduce(0.0){|n, value| n + value} 
 

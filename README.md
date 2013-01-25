@@ -143,6 +143,7 @@ Then you can go to town:
 * standard_deviation (std_dev, stddev)
 * range
 * frequency
+* frequency_mean
 * probability (pmf)
 * normalize_probability (normalize_pmf)
 * probability_mean (pmf_mean)
