@@ -218,6 +218,10 @@ the Centers for Disease Control and Prevention
 [National Survey of Family Growth](http://www.cdc.gov/nchs/nsfg.htm).
 It is the test data used in the aforementioned book *Think Stats*.
 
+## Todo
+
+* Submit a patch adding a #slice function to Hamster::Vector
+
 ## Copyright
 
 Ratistics is Copyright &copy; 2013 Jerry D'Antonio. It is free
