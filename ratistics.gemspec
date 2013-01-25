@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ['jerry.dantonio@gmail.com']
   s.homepage    = 'https://github.com/jdantonio/ratistics/'
   s.summary     = %q{Ruby statistics functions.}
-  s.description = %q{Ratistics provides basic statistical computation functions to Ruby programmers.}
+  s.description = %q{Ratistics provides basic statistics computations and functions to Ruby programmers.}
 
   s.files         = Dir['Rakefile', 'README*', 'LICENSE*']
   s.files        += Dir['{lib,spec,tasks}/**/*']
