@@ -102,7 +102,7 @@ module Survey
     CSV.foreach(path) do |row|
       record = {}
         definition.each_index do |index|
-          record[definition[index][0]] = row[index]
+          record[definition[index][0]] = row[index].send(definition[index][3])
         end
       data = data.cons(record.freeze)
     end
