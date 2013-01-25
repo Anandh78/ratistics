@@ -1,5 +1,4 @@
 tests.txt
-Gemfile.lock
 *.gem
 .rvmrc
 .bundle/*
