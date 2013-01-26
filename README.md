@@ -8,7 +8,7 @@ simplicity. Only basic consideration was given to performance.
 Ratistics is pronounced *ra-tis-tics* Just like "statistics"
 but with an 'R'
 
-    "Statistics".gsub(/^St/i, 'R')
+    "Statistics".gsub(/^St/i, 'R') #=> "Ratistics"
 
 The project is hosted on the following sites:
 
