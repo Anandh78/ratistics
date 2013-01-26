@@ -106,6 +106,37 @@ module Ratistics
           record = Ratistics::Load.csv_record(record_array, csv_definition)
           record.should eq record_hash
         end
+
+        it 'ignores fields not in the definition' do
+          definition = [:place]
+          record = Ratistics::Load.csv_record(csv_row, definition)
+          record.should == {:place => '1'}
+        end
+
+        it 'accepts definition fields as arrays' do
+          definition = [
+            [:place],
+          ]
+          record = Ratistics::Load.csv_record(csv_row, definition)
+          record.should == {:place => '1'}
+        end
+
+        it 'calls the method on every record when the second definition field element is a symbol' do
+          definition = [
+            [:place, :to_i],
+          ]
+          record = Ratistics::Load.csv_record(csv_row, definition)
+          record.should == {:place => 1}
+        end
+
+        it 'applies the second definition field element to every record when it is a lambda' do
+          definition = [
+            [:place, lambda {|i| i.to_i}]
+          ]
+          record = Ratistics::Load.csv_record(record_array, definition)
+          record.should == {:place => 1}
+        end
+
       end
 
       context '#csv_data' do
@@ -176,6 +207,38 @@ module Ratistics
         it 'loads a record with the definition' do
           record = Ratistics::Load.dat_record(dat_row, dat_definition)
           record.should eq record_hash
+        end
+
+        it 'ignores data fields not in the definition' do
+          definition = [{
+            :field => :place,
+            :start => 1,
+            :end => 6,
+          }]
+          record = Ratistics::Load.dat_record(dat_row, definition)
+          record.should == {:place => '1'}
+        end
+
+        it 'calls a method on every record when the :cast field element is a symbol' do
+          definition = [{
+            :field => :place,
+            :start => 1,
+            :end => 6,
+            :cast => :to_i
+          }]
+          record = Ratistics::Load.dat_record(dat_row, definition)
+          record.should == {:place => 1}
+        end
+
+        it 'applies the :cast field element to every record when it is a lambda' do
+          definition = [{
+            :field => :place,
+            :start => 1,
+            :end => 6,
+            :cast => lambda {|i| i.to_i}
+          }]
+          record = Ratistics::Load.dat_record(dat_row, definition)
+          record.should == {:place => 1}
         end
       end
 
