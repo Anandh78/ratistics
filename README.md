@@ -168,29 +168,41 @@ provides utilities for reading and processing the data. The function `Survey.get
 returns an array of hashes. Each hash represents a single pregnancy and has the following
 structure:
 
-    {:caseid => 1,
-     :nbrnaliv => 1,
-     :babysex => 1,
-     :birthwgt_lb => 8,
-     :birthwgt_oz => 13,
-     :prglength => 39,
-     :outcome => 1,
-     :birthord => 1,
-     :agepreg => 3316,
-     :finalwgt => 6448.271111704751}
+    {:caseid => '1',
+     :nbrnaliv => '1',
+     :babysex => '1',
+     :birthwgt_lb => '8',
+     :birthwgt_oz => '13',
+     :prglength => '39',
+     :outcome => '1',
+     :birthord => '1',
+     :agepreg => '3316',
+     :finalwgt => '6448.271111704751'}
 
 Once the data is loaded it can be easily processed:
 
     # load the data
-    sample = Survey.get_pregnancy_data
+    fields = [
+      {:field => :caseid, :start => 1, :end => 12},
+      {:field => :nbrnaliv, :start => 22, :end => 22},
+      {:field => :babysex, :start => 56, :end => 56},
+      {:field => :birthwgt_lb, :start => 57, :end => 58},
+      {:field => :birthwgt_oz, :start => 59, :end => 60},
+      {:field => :prglength, :start => 275, :end => 276},
+      {:field => :outcome, :start => 277, :end => 277},
+      {:field => :birthord, :start => 278, :end => 279},
+      {:field => :agepreg, :start => 284, :end => 287},
+      {:field => :finalwgt, :start => 423, :end => 440},
+    ]
+    sample = Ratistics::Load.dat_gz_file('data/2002FemPreg.dat.gz', fields)
     sample.count #=> 13593 
 
     # filter for first-borns
-    first = sample.filter{|item| item[:birthord] == 1}
+    first = sample.select{|item| item[:birthord].to_i == 1}
     first.count #=> 4413
 
     # filter for non-first-borns
-    not_first = sample.filter{|item| item[:birthord] > 1}
+    not_first = sample.select{|item| item[:birthord].to_i > 1}
     not_first.count #=> 4735
 
     # calculate mean pregnancy lengths
@@ -209,9 +221,9 @@ Once the data is loaded it can be easily processed:
     Ratistics.standard_deviation(not_first){|item| item[:prglength]} #=> 2.6155761106844913
 
     # calculate the frequency of pregnancy lengths
-    sample_freq = Ratistics.frequency(sample){|item| item[:prglength]} #=> {39=>4744, 38=>609, ...} 
-    first_freq = Ratistics.frequency(first){|item| item[:prglength]} #=> {39=>2114, 38=>272, ...} 
-    not_first_freq = Ratistics.frequency(not_first){|item| item[:prglength]} #=> {39=>2579, 40=>580, ...} 
+    sample_freq = Ratistics.frequency(sample){|item| item[:prglength]} #=> {"39"=>4744, "38"=>609, ...}
+    first_freq = Ratistics.frequency(first){|item| item[:prglength]} #=> {"39"=>2114, "38"=>272, ...}
+    not_first_freq = Ratistics.frequency(not_first){|item| item[:prglength]} #=> {"39"=>2579, "40"=>580, ...}
 
 Once you have the frequency data you can use any charting/graphing library to
 create a histogram to compare birth rates. The file
