@@ -3,6 +3,7 @@ $:.push File.join(File.dirname(__FILE__))
 require 'ratistics/average'
 require 'ratistics/distribution'
 require 'ratistics/functions'
+require 'ratistics/load'
 require 'ratistics/probability'
 require 'ratistics/version'
 
