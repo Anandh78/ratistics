@@ -5,11 +5,20 @@ statistical computation functions to Ruby programmers. It is
 intended for small data sets only. This gem was designed for
 simplicity. Only basic consideration was given to performance.
 
+Ratistics is pronounced *ra-tis-tics* Just like "statistics"
+but with an 'R'
+
+    "Statistics".gsub(/^St/i, 'R')
+
+The project is hosted on the following sites:
+
 * [RubyGems project page](https://rubygems.org/gems/ratistics)
 * [Source code on GitHub](https://github.com/jdantonio/ratistics )
 * [YARD documentation on RubyDoc.org](http://rubydoc.info/github/jdantonio/ratistics/master/frames )
+* [Continuous integration on Travis-CI](https://travis-ci.org/jdantonio/ratistics)
+* [Dependency tracking on Gemnasium](https://gemnasium.com/jdantonio/ratistics)
 
-## About
+# About
 
 A [friend](https://github.com/joecannatti) of mine convinced me
 to learn statistics but I'm too lazy to learn [R](http://www.r-project.org/).
