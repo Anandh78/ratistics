@@ -7,6 +7,7 @@ module Ratistics
     let(:record_count) { 1633 }
 
     let(:csv_file) { File.join(File.dirname(__FILE__), '../data/race.csv') }
+    let(:psv_file) { File.join(File.dirname(__FILE__), '../data/race.psv') }
     let(:csv_gz_file) { File.join(File.dirname(__FILE__), '../data/race.csv.gz') }
     let(:dat_file) { File.join(File.dirname(__FILE__), '../data/race.dat') }
     let(:dat_gz_file) { File.join(File.dirname(__FILE__), '../data/race.dat.gz') }
@@ -29,6 +30,10 @@ module Ratistics
 
     let(:csv_row) do
       '1,1/362,M2039,30:43,30:42,4:57,Brian Harvey,22,M,1422,Allston MA'
+    end
+
+    let(:psv_row) do
+      '1|1/362|M2039|30:43|30:42|4:57|Brian Harvey|22|M|1422|Allston MA'
     end
 
     let(:dat_definition) do
@@ -137,6 +142,10 @@ module Ratistics
           record.should == {:place => 1}
         end
 
+        it 'supports CSV class options' do
+          record = Ratistics::Load.csv_record(psv_row, nil, :col_sep => '|')
+          record.should eq record_array
+        end
       end
 
       context '#csv_data' do
@@ -166,6 +175,12 @@ module Ratistics
           record.count.should eq record_count
           record.first.should eq record_hash
         end
+
+        it 'supports CSV class options' do
+          record = Ratistics::Load.csv_data(psv_row, nil, :col_sep => '|')
+          record.count.should eq 1
+          record.first.should eq record_array
+        end
       end
 
       context '#csv_file' do
@@ -180,6 +195,12 @@ module Ratistics
           record = Ratistics::Load.csv_file(csv_file, csv_definition)
           record.count.should eq record_count
           record.first.should eq record_hash
+        end
+
+        it 'supports CSV class options' do
+          record = Ratistics::Load.csv_file(psv_file, nil, :col_sep => '|')
+          record.count.should eq record_count
+          record.first.should eq record_array
         end
       end
 

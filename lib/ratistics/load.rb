@@ -6,9 +6,11 @@ module Ratistics
   module Load
     extend self
 
-    def csv_record(data, definition = nil)
+    def csv_record(data, definition = nil, opts = {})
 
-      data = CSV.parse(data) {|row| break(row) } if data.is_a? String
+      if data.is_a? String
+        data = CSV.parse(data, opts) {|row| break(row) }
+      end
 
       unless definition.nil?
         field = {}
@@ -28,32 +30,32 @@ module Ratistics
       return data
     end
 
-    def csv_data(data, definition = nil)
+    def csv_data(data, definition = nil, opts = {})
       records = []
 
-      CSV.parse(data) do |row|
+      CSV.parse(data, opts) do |row|
         records << csv_record(row, definition)
       end
 
       return records
     end
 
-    def csv_file(path, definition = nil)
+    def csv_file(path, definition = nil, opts = {})
       records = []
 
-      CSV.foreach(path) do |row|
+      CSV.foreach(path, opts) do |row|
         records << csv_record(row, definition)
       end
 
       return records
     end
 
-    def csv_gz_file(path, definition = nil)
+    def csv_gz_file(path, definition = nil, opts = {})
       records = []
 
       Zlib::GzipReader.open(path) do |gz|
         gz.each_line do |line|
-          records << csv_record(line, definition)
+          records << csv_record(line, definition, opts)
         end
       end
 
