@@ -144,19 +144,19 @@ Then you can go to town:
 ### Available Functions
 
 * delta
-* mean (average, avg)
+* mean (alias: average, avg)
 * truncated_mean
 * median
 * mode
-* variance (var)
-* standard_deviation (std_dev, stddev)
+* variance (alias: var)
+* standard_deviation (alias: std_dev, stddev)
 * range
 * frequency
 * frequency_mean
-* probability (pmf)
-* normalize_probability (normalize_pmf)
-* probability_mean (pmf_mean)
-* probability_variance (pmf_variance)
+* probability (alias: pmf)
+* normalize_probability (alias: normalize_pmf)
+* probability_mean (alias: pmf_mean)
+* probability_variance (alias: pmf_variance)
 
 ### A Worked Example
 
