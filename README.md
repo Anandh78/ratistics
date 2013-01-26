@@ -61,27 +61,6 @@ good results with any of the following:
 * jruby-1.7.0
 * ree-1.8.7
 
-### Sorting
-
-Some statistical computations require sorted data. In these cases
-this library assumes the data is unsorted and calls the *#sort*
-method on the data set. If the data passed to the function is
-already sorted then an unnecessary performace penalty will occur.
-To mitigate this, every function that requires sorted data provides
-an optional *sorted* parameter which defaults to false. When set
-to *true* it indicates the data is already sorting and the sort
-step is skipped.
-
-A problem occurs when the data set does not support a natural sort
-order. The Ruby idiom for this situation is to accept a block which
-specifies the sort operation. Unfortunately, passing two blocks to
-a function is cumbersome in Ruby so the functions that require sorting
-must depend on the natural sort order only. For simplicity and
-consistency, when a block is passed to a function that requires
-sorted data it is assumed that natural sorting is impossible.
-Subsequently the sort operation is skipped regardless of the value
-of the *sorted* parameter.
-
 #### Hamster
 
 The main drawback of side-effect free functions is that in
@@ -125,22 +104,6 @@ When working with sets of complex data use blocks to process the data without co
     
     mean = Ratistics.mean(people){|person| person.age}
 
-### Shock the Monkey
-
-I'm normally not a fan of monkey-patching classes from the Ruby standard library.
-But there could be times when it would be convenient to have statistics functions
-as instance methods on Array. I've provided this monkey-patching, but not by default.
-Simply requiring 'ratistics' will not mess with any of the Ruby collection classes.
-For that fun you must
-
-    require 'ratistics/monkey'
-
-Then you can go to town:
-
-    sample = [2, 3, 4, 5, 6]
-    
-    mean = sample.mean
-
 ### Available Functions
 
 * delta
@@ -157,6 +120,73 @@ Then you can go to town:
 * normalize_probability (alias: normalize_pmf)
 * probability_mean (alias: pmf_mean)
 * probability_variance (alias: pmf_variance)
+
+### I can drive that loader
+
+Loading data from CSV and fixed field-width data files is a very common activity
+in statistical computation. The methods in the Load module facilitate these
+data loads. The methods in the Load module provide a robust syntax for
+defining the individual fields in each record and processing the individual
+fields on load.
+
+    definition = [
+      [:place, :to_i],
+      nil,
+      :div,
+      :guntime,
+      :nettime,
+      :pace,
+      nil,
+      [:age, :to_i],
+      :gender,
+      [:race_num, :to_i],
+    ]
+
+    sample = Ratistics::Load.csv_file('data/race.csv', definition)
+    sample.count #=> 1633
+    sample.first #=> :place=>1, :div=>"M2039", :guntime=>"30:43", ... }
+
+Consult the API documentation for the Load module for more information.
+
+*I've got a Class Two rating.*
+
+### Shock the Monkey
+
+I'm normally not a fan of monkey-patching classes from the Ruby standard library.
+But there could be times when it would be convenient to have statistics functions
+as instance methods on Array. I've provided this monkey-patching, but not by default.
+Simply requiring 'ratistics' will not mess with any of the Ruby collection classes.
+For that fun you must
+
+    require 'ratistics/monkey'
+
+Then you can go to town:
+
+    sample = [2, 3, 4, 5, 6]
+    
+    mean = sample.mean #=> 4.0
+
+### Sorting
+
+Some statistical computations require sorted data. In these cases
+this library assumes the data is unsorted and calls the *#sort*
+method on the data set. If the data passed to the function is
+already sorted then an unnecessary performace penalty will occur.
+To mitigate this, every function that requires sorted data provides
+an optional *sorted* parameter which defaults to false. When set
+to *true* it indicates the data is already sorting and the sort
+step is skipped.
+
+A problem occurs when the data set does not support a natural sort
+order. The Ruby idiom for this situation is to accept a block which
+specifies the sort operation. Unfortunately, passing two blocks to
+a function is cumbersome in Ruby so the functions that require sorting
+must depend on the natural sort order only. For simplicity and
+consistency, when a block is passed to a function that requires
+sorted data it is assumed that natural sorting is impossible.
+Subsequently the sort operation is skipped regardless of the value
+of the *sorted* parameter.
+
 
 ### A Worked Example
 
