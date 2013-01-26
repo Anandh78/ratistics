@@ -13,7 +13,14 @@ module Ratistics
       unless definition.nil?
         field = {}
         definition.each_index do |index|
-          field[definition[index]] = data[index]
+          name, cast = definition[index]
+          if cast.is_a? Symbol
+            field[name] = data[index].send(cast)
+          elsif cast.is_a? Proc
+            field[name] = cast.call(data[index])
+          else
+            field[name] = data[index]
+          end
         end
         data = field
       end
@@ -57,7 +64,13 @@ module Ratistics
       record = {}
 
       definition.each do |field|
-        record[field[:field]] = data.slice(field[:start]-1, field[:end]-field[:start]+1).strip
+        name = field[:field]
+        record[name] = data.slice(field[:start]-1, field[:end]-field[:start]+1).strip
+        if field[:cast].is_a? Symbol
+          record[name] = record[name].send(field[:cast])
+        elsif field[:cast].is_a? Proc
+          record[name] = field[:cast].call(record[name])
+        end
       end
 
       return record

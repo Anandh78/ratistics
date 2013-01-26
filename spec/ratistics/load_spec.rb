@@ -13,17 +13,17 @@ module Ratistics
 
     let(:csv_definition) do
       [
-        :place,
+        [:place, lambda {|i| i.to_i}],
         :div_tot,
         :div,
         :guntime,
         :nettime,
         :pace,
-        :name,
-        :age,
-        :gender,
-        :race_num,
-        :city_state
+        [:name],
+        [:age, :to_i],
+        [:gender],
+        [:race_num, :to_i],
+        [:city_state]
       ]
     end
 
@@ -33,16 +33,16 @@ module Ratistics
 
     let(:dat_definition) do
       [
-        {:field => :place, :start => 1, :end => 6},
+        {:field => :place, :start => 1, :end => 6, :cast => lambda {|i| i.to_i} },
         {:field => :div_tot, :start =>  7, :end => 15},
         {:field => :div, :start =>  16, :end => 21},
         {:field => :guntime, :start =>  22, :end => 29},
         {:field => :nettime, :start =>  30, :end => 38},
         {:field => :pace, :start =>  39, :end => 44},
         {:field => :name, :start =>  45, :end => 67},
-        {:field => :age, :start =>  68, :end => 70},
+        {:field => :age, :start =>  68, :end => 70, :cast => :to_i},
         {:field => :gender, :start =>  71, :end => 72},
-        {:field => :race_num, :start =>  73, :end => 78},
+        {:field => :race_num, :start =>  73, :end => 78, :cast => :to_i},
         {:field => :city_state, :start =>  79, :end => 101},
       ]
     end
@@ -69,16 +69,16 @@ module Ratistics
 
     let(:record_hash) do
       {
-        :place => '1',
+        :place => 1,
         :div_tot => '1/362',
         :div => 'M2039',
         :guntime => '30:43',
         :nettime => '30:42',
         :pace => '4:57',
         :name => 'Brian Harvey',
-        :age => '22',
+        :age => 22,
         :gender => 'M',
-        :race_num => '1422',
+        :race_num => 1422,
         :city_state => 'Allston MA',
       }
     end
