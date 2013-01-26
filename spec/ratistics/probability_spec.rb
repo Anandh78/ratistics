@@ -334,7 +334,7 @@ module Ratistics
     context '#normalize_probability' do
 
       it 'sets the probability to one for a one-element distribution' do
-        sample = { 10 => 0.5 }
+        sample = { 10 => 0.5 }.freeze
         probability = Probability.normalize_probability(sample)
 
         probability.count.should eq 1
@@ -348,7 +348,7 @@ module Ratistics
           14 => 0.2222222222222222,
           16 => 0.1111111111111111,
           21 => 0.1111111111111111,
-        }
+        }.freeze
 
         probability = Probability.normalize_probability(sample)
 
@@ -367,7 +367,7 @@ module Ratistics
           14 => 44.4444444444444444,
           16 => 22.2222222222222222,
           21 => 22.2222222222222222,
-        }
+        }.freeze
 
         probability = Probability.normalize_probability(sample)
 
@@ -386,7 +386,7 @@ module Ratistics
           14 => 0.0022222222222222,
           16 => 0.0011111111111111,
           21 => 0.0011111111111111,
-        }
+        }.freeze
 
         probability = Probability.normalize_probability(sample)
 
@@ -407,7 +407,7 @@ module Ratistics
       end
 
       it 'returns zero for an empty sample' do
-        Probability.probability_mean([]).should eq 0
+        Probability.probability_mean([].freeze).should eq 0
       end
 
       it 'calculates the mean for a one-element sample' do
@@ -433,7 +433,7 @@ module Ratistics
           37 => 0.123,
           42 => 0.046,
           47 => 0.030,
-        }
+        }.freeze
 
         mean = Probability.probability_mean(sample)
         mean.should be_within(0.01).of(23.599)
@@ -522,7 +522,7 @@ module Ratistics
       end
 
       it 'returns zero for an empty sample' do
-        Probability.probability_variance([]).should eq 0
+        Probability.probability_variance([].freeze).should eq 0
       end
 
       it 'calculates the variance for a one-element sample' do
