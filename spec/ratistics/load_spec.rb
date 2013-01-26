@@ -112,10 +112,29 @@ module Ratistics
           record.should eq record_hash
         end
 
-        it 'ignores fields not in the definition' do
+        it 'ignores extra fields not in the definition' do
           definition = [:place]
           record = Ratistics::Load.csv_record(csv_row, definition)
           record.should == {:place => '1'}
+        end
+
+        it 'accepts any data type for the field name' do
+          definition = ['place']
+          record = Ratistics::Load.csv_record(csv_row, definition)
+          record.should == {'place' => '1'}
+        end
+
+        it 'ignores fields defined with nil' do
+          definition = [
+            :place,
+            nil,
+            :div,
+          ]
+          record = Ratistics::Load.csv_record(csv_row, definition)
+          record.should == {
+            :place => '1',
+            :div => 'M2039',
+          }
         end
 
         it 'accepts definition fields as arrays' do
@@ -238,6 +257,16 @@ module Ratistics
           }]
           record = Ratistics::Load.dat_record(dat_row, definition)
           record.should == {:place => '1'}
+        end
+
+        it 'supports any data type for the field name' do
+          definition = [{
+            :field => 'place',
+            :start => 1,
+            :end => 6,
+          }]
+          record = Ratistics::Load.dat_record(dat_row, definition)
+          record.should == {'place' => '1'}
         end
 
         it 'calls a method on every record when the :cast field element is a symbol' do
