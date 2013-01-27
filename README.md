@@ -193,7 +193,7 @@ of the *sorted* parameter.
 The following code answers the big question from page 2 of *Think Stats*: Do first babies arrive late?
 
 The first step in this solution is to load the NSFG test data (see below). The file
-[survey.rb](https://github.com/jdantonio/ratistics/blob/master/data/survey.rb)
+[survey.rb](https://github.com/jdantonio/ratistics/blob/master/examples/survey.rb)
 provides utilities for reading and processing the data. The function `Survey.get_pregnancy_data`
 returns an array of hashes. Each hash represents a single pregnancy and has the following
 structure:
@@ -257,10 +257,10 @@ Once the data is loaded it can be easily processed:
 
 Once you have the frequency data you can use any charting/graphing library to
 create a histogram to compare birth rates. The file
-[histogram.rb](https://github.com/jdantonio/ratistics/blob/master/data/histogram.rb)
+[histogram.rb](https://github.com/jdantonio/ratistics/blob/master/examples/histogram.rb)
 shows how to use [Gruff](https://github.com/topfunky/gruff) to create this:
 
-![histogram](https://raw.github.com/jdantonio/ratistics/master/data/histogram.png)
+![histogram](https://raw.github.com/jdantonio/ratistics/master/examples/histogram.png)
 
 ## Test Data
 
