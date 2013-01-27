@@ -279,11 +279,11 @@ module Ratistics
     # @return [Hash] a hash with keys matching the fields in the record definition
     #
     # @see #dat_record
-    def dat_data(data, definition)
-      records = []
+    def dat_data(data, definition, opts = {})
+      records = array_new(opts[:hamster] || opts['hamster'])
 
       data.lines do |line|
-        records << dat_record(line, definition)
+        records = array_push(records, dat_record(line, definition))
       end
 
       return records
@@ -303,7 +303,7 @@ module Ratistics
     # @return [Hash] a hash with keys matching the fields in the record definition
     #
     # @see #dat_record
-    def dat_file(path, definition)
+    def dat_file(path, definition, opts = {})
       records = []
 
       File.open(path).each do |line|
@@ -327,7 +327,7 @@ module Ratistics
     # @return [Hash] a hash with keys matching the fields in the record definition
     #
     # @see #dat_record
-    def dat_gz_file(path, definition)
+    def dat_gz_file(path, definition, opts = {})
       records = []
 
       Zlib::GzipReader.open(path) do |gz|
@@ -339,5 +339,37 @@ module Ratistics
       return records
     end
 
+    private
+
+    # :nodoc:
+    # @private
+    def array_new(type)
+      type = type.to_sym if type.is_a? String
+      case type
+      when nil, false
+        array = Array.new
+      when :list
+        array = Hamster.list
+      when :stack
+        array = Hamster.stack
+      when :queue
+        array = Hamster.queue
+      when :set
+        array = Hamster.set
+      else
+        array = Hamster.vector
+      end
+      return array
+    end
+
+    # :nodoc:
+    # @private
+    def array_push(array, item)
+      if array.respond_to? :cons
+        return array.cons(item)
+      else
+        return array << item
+      end
+    end
   end
 end
