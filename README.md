@@ -5,7 +5,7 @@ statistical computation functions to Ruby programmers. It is
 intended for small data sets only. This gem was designed for
 simplicity. Only basic consideration was given to performance.
 
-Ratistics is pronounced *ra-tis-tics* Just like "statistics"
+Ratistics is pronounced *ra-tis-tics*. Just like "statistics"
 but with an 'R'
 
     "Statistics".gsub(/^St/i, 'R') #=> "Ratistics"
