@@ -107,6 +107,7 @@ When working with sets of complex data use blocks to process the data without co
 ### Available Functions
 
 * delta
+* relative_risk (alias: risk_ratio)
 * mean (alias: average, avg)
 * truncated_mean
 * median
