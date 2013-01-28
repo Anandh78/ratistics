@@ -193,11 +193,9 @@ of the *sorted* parameter.
 
 The following code answers the big question from page 2 of *Think Stats*: Do first babies arrive late?
 
-The first step in this solution is to load the NSFG test data (see below). The file
-[survey.rb](https://github.com/jdantonio/ratistics/blob/master/examples/survey.rb)
-provides utilities for reading and processing the data. The function `Survey.get_pregnancy_data`
-returns an array of hashes. Each hash represents a single pregnancy and has the following
-structure:
+The first step in this solution is to load the NSFG test data from the 'examples'
+directory. The Ratistic::Load module is used to load a subset of the fields from each
+record. Each record represents a single pregnancy and has the following structure:
 
     {:caseid => '1',
      :nbrnaliv => '1',
