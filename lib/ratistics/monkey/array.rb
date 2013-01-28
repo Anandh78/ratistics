@@ -5,70 +5,70 @@ module Ratistics
   class ::Array
 
     # @see Average::mean
-    def mean(&block)
-      return Ratistics.mean(self, &block)
+    def mean(*args, &block)
+      return Ratistics.mean(self, *args, &block)
     end
 
     alias :avg :mean
     alias :average :mean
 
     # @see Average::truncated_mean
-    def truncated_mean(truncation, sorted=false, &block)
-      return Ratistics.truncated_mean(self, truncation, sorted, &block)
+    def truncated_mean(*args, &block)
+      return Ratistics.truncated_mean(self, *args, &block)
     end
 
     # @see Average::median
-    def median(&block)
-      return Ratistics.median(self, false, &block)
+    def median(*args, &block)
+      return Ratistics.median(self, *args, &block)
     end
 
     # @see Average::mode
-    def mode(&block)
-      return Ratistics.mode(self, &block)
+    def mode(*args, &block)
+      return Ratistics.mode(self, *args, &block)
     end
 
     # @see Distribution::variance
-    def variance(mu=nil, &block)
-      return Ratistics.variance(self, mu, &block)
+    def variance(*args, &block)
+      return Ratistics.variance(self, *args, &block)
     end
 
     alias :var :variance
 
     # @see Distribution::standard_deviation
-    def standard_deviation(mu=nil, &block)
-      return Ratistics.standard_deviation(self, mu, &block)
+    def standard_deviation(*args, &block)
+      return Ratistics.standard_deviation(self, *args, &block)
     end
 
     alias :std_dev :standard_deviation
     alias :stddev :standard_deviation
 
     # @see Distribution::range
-    def range(&block)
-      return Ratistics.range(self, false, &block)
+    def range(*args, &block)
+      return Ratistics.range(self, *args, &block)
     end
 
     # @see Probability::frequency
-    def frequency(&block)
-      return Ratistics.frequency(self, &block)
+    def frequency(*args, &block)
+      return Ratistics.frequency(self, *args, &block)
     end
 
     # @see Probability::probability
-    def probability(&block)
-      return Ratistics.probability(self, &block)
+    def probability(*args, &block)
+      return Ratistics.probability(self, *args, &block)
     end
 
     alias :pmf :probability
 
     # @see Probability::probability_mean
-    def probability_mean(&block)
-      return Ratistics.probability_mean(self, &block)
+    def probability_mean(*args, &block)
+      return Ratistics.probability_mean(self, *args, &block)
     end
 
     alias :pmf_mean :probability_mean
 
     # @see Probability::probability_variance
-    def probability_variance(&block)
-      return Ratistics.probability_variance(self, &block)
+    def probability_variance(*args, &block)
+      return Ratistics.probability_variance(self, *args, &block)
     end
 
     alias :pmf_variance :probability_variance
