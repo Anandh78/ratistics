@@ -185,6 +185,78 @@ module Ratistics
       end
     end
 
+    context '#midrange' do
+
+      it 'returns zero for a nil sample' do
+        Average.midrange(nil).should eq 0
+      end
+
+      it 'returns zero for an empty sample' do
+        Average.midrange([].freeze).should eq 0
+      end
+
+      it 'returns the value for a one-element sample' do
+        Average.midrange([10].freeze).should eq 10
+      end
+
+      it 'returns the mean for a two-element sample' do
+        Average.midrange([5, 15].freeze).should eq 10
+      end
+
+      it 'returns the correct midrange for a multi-element sample' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
+        mean = Average.midrange(sample)
+        mean.should eq 17
+      end
+
+      it 'does not sort a sample that is already sorted' do
+        sample = [13, 13, 13, 13, 14, 14, 16, 18, 21]
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        mean = Average.midrange(sample, true)
+      end
+
+      it 'calculates the midrange using a block' do
+        sample = [
+          {:count => 13},
+          {:count => 13},
+          {:count => 13},
+          {:count => 13},
+          {:count => 14},
+          {:count => 14},
+          {:count => 16},
+          {:count => 18},
+          {:count => 21},
+        ].freeze
+
+        mean = Average.midrange(sample){|item| item[:count]}
+        mean.should eq 17
+      end
+
+      it 'does not sort a sample with a block' do
+        sample = [
+          {:count => 13},
+        ]
+
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        mean = Average.midrange(sample){|item| item[:count]}
+      end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(13, 13, 13, 13, 14, 14, 16, 18, 21).freeze }
+        let(:vector) { Hamster.vector(13, 13, 13, 13, 14, 14, 16, 18, 21).freeze }
+        let(:set) { Hamster.set(13, 13, 13, 13, 14, 14, 16, 18, 21).freeze }
+
+        specify { Average.midrange(list).should eq 17 }
+
+        specify { Average.midrange(vector, true).should eq 17 }
+
+        specify { Average.midrange(set).should eq 17 }
+      end
+    end
+
     context '#median' do
 
       it 'returns zero for a nil sample' do

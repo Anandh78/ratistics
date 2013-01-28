@@ -112,6 +112,7 @@ When working with sets of complex data use blocks to process the data without co
 * truncated_mean (alias: trimmed_mean)
 * median
 * mode
+* midrange (alias: midextreme)
 * variance (alias: var)
 * standard_deviation (alias: std_dev, stddev)
 * range

@@ -93,6 +93,43 @@ module Ratistics
 
     alias :trimmed_mean :truncated_mean
 
+    # Calculates the statistical midrange.
+    #
+    # Will sort the data set using natural sort order unless
+    # the #sorted argument is true or a block is given.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # For a block {|item| ... }
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to compute the midrange of
+    # @param [Boolean] sorted indicates of the list is already sorted
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Float, 0] the statistical midrange of the given data set
+    #   or zero if the data set is empty
+    def midrange(data, sorted=false, &block)
+      return 0 if data.nil? || data.empty?
+      data = data.sort unless block_given? || sorted
+
+      min = data[0]
+      max = data[data.count-1]
+
+      if block_given?
+        min = yield(min)
+        max = yield(max)
+      end
+
+      return Average.mean([min, max])
+    end
+
+    alias :midextreme :midrange
+
     # Calculates the statistical median.
     #
     # Will sort the data set using natural sort order unless
