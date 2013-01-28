@@ -404,10 +404,10 @@ module Ratistics
     # :nodoc:
     # @private
     def add_to_collection(array, item)
-      if array.respond_to? :cons
-        return array.cons(item)
-      else
+      if array.respond_to? :<<
         return array << item
+      else
+        return array.cons(item)
       end
     end
   end
