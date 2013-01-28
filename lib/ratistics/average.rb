@@ -91,6 +91,8 @@ module Ratistics
       return mean
     end
 
+    alias :trimmed_mean :truncated_mean
+
     # Calculates the statistical median.
     #
     # Will sort the data set using natural sort order unless

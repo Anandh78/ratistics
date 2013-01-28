@@ -109,7 +109,7 @@ When working with sets of complex data use blocks to process the data without co
 * delta
 * relative_risk (alias: risk_ratio)
 * mean (alias: average, avg)
-* truncated_mean
+* truncated_mean (alias: trimmed_mean)
 * median
 * mode
 * variance (alias: var)
