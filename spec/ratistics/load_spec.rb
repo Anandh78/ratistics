@@ -375,18 +375,40 @@ module Ratistics
       context '#dat_file' do
 
         it 'loads records with the definition' do
-          record = Ratistics::Load.dat_file(dat_file, dat_definition)
-          record.count.should eq record_count
-          record.first.should eq record_hash
+          records = Ratistics::Load.dat_file(dat_file, dat_definition)
+          records.count.should eq record_count
+          records.first.should eq record_hash
+        end
+
+        it 'returns a Ruby Array' do
+          records = Ratistics::Load.dat_file(dat_file, dat_definition)
+          records.should be_kind_of Array
+        end
+
+        it 'supports the :hamster option' do
+          records = Ratistics::Load.dat_file(dat_file, dat_definition, :hamster => true)
+          records.should be_kind_of Hamster::Vector
+          records.size.should eq record_count
         end
       end
 
       context '#dat_gz_file' do
 
         it 'loads records with the definition' do
-          record = Ratistics::Load.dat_gz_file(dat_gz_file, dat_definition)
-          record.count.should eq record_count
-          record.first.should eq record_hash
+          records = Ratistics::Load.dat_gz_file(dat_gz_file, dat_definition)
+          records.count.should eq record_count
+          records.first.should eq record_hash
+        end
+
+        it 'returns a Ruby Array' do
+          records = Ratistics::Load.dat_gz_file(dat_gz_file, dat_definition)
+          records.should be_kind_of Array
+        end
+
+        it 'supports the :hamster option' do
+          records = Ratistics::Load.dat_gz_file(dat_gz_file, dat_definition, :hamster => true)
+          records.should be_kind_of Hamster::Vector
+          records.size.should eq record_count
         end
       end
 

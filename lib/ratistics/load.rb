@@ -189,7 +189,7 @@ module Ratistics
     # hash suitable for further processing. Leading and trailing
     # whitespace will be trimmed from all record values.
     #
-    # The second parameter is a record definition whice describes
+    # The second parameter is a record definition which describes
     # individual fields in the record. Only fields defined in the 
     # record definition will be included in the returned hash. A
     # record definition is an array of hashes where each individual
@@ -266,8 +266,17 @@ module Ratistics
       return record
     end
 
-    # Convert a string representing multiple data records into an
-    # array of Ruby data structures suitable for further processing.
+    # Convert a string representing multiple data records into a
+    # collection of Ruby data structures suitable for further processing.
+    #
+    # By default the return value is a Ruby Array. If the Hamster gem
+    # is installed a Hamster collection can be returned instead.
+    # To return a Hamster collection set the *:hamster* option
+    # to *true*. Optionally, a specific Hamster class can be specified
+    # by setting the *:hamster* option to a symbol specifying the type
+    # to return. For example, *:hamster => :set* will set the return
+    # type to Hamster::Set. The default Hamster return type is
+    # Hamster::Vector.
     #
     # @note
     #   Record definitions work identically to #dat_record
@@ -275,64 +284,75 @@ module Ratistics
     # @param [String] data the data to be processed
     # @param [Array] definition the record definition for processing
     #   individual fields (see above)
+    # @param [Hash] opts processing options
     #
-    # @return [Hash] a hash with keys matching the fields in the record definition
+    # @option opts [Symbol] :hamster (false) set to *true* to return a
+    #   Hamster collection, or indicate a specific Hamster return type
+    #
+    # @example
+    #   data = Ratistics::Load.dat_data(path, definition)
+    #   data = Ratistics::Load.dat_data(path, definition, :hamster => true)
+    #   data = Ratistics::Load.dat_data(path, definition, :hamster => :set)
+    #
+    # @return [Array, Hamster] An array or Hamster collection containing
+    #   all the records
     #
     # @see #dat_record
     def dat_data(data, definition, opts = {})
-      records = array_new(opts[:hamster] || opts['hamster'])
+      records = new_collection(opts[:hamster] || opts['hamster'])
 
       data.lines do |line|
-        records = array_push(records, dat_record(line, definition))
+        records = add_to_collection(records, dat_record(line, definition))
       end
 
       return records
     end
 
     # Convert a fixed field width data file representing multiple data
-    # records into an array of Ruby data structures suitable for further
+    # records into a collection of Ruby data structures suitable for further
     # processing.
     #
-    # @note
-    #   Record definitions work identically to #dat_record
+    # @note (see #dat_data)
     #
     # @param [String] path path to the data file
     # @param [Array] definition the record definition for processing
     #   individual fields (see above)
+    # @param [Hash] opts processing options
     #
-    # @return [Hash] a hash with keys matching the fields in the record definition
+    # @option (see #dat_data)
+    #
+    # @return (see #dat_data)
     #
     # @see #dat_record
     def dat_file(path, definition, opts = {})
-      records = []
+      records = new_collection(opts[:hamster] || opts['hamster'])
 
       File.open(path).each do |line|
-        records << dat_record(line, definition)
+        records = add_to_collection(records, dat_record(line, definition))
       end
 
       return records
     end
 
     # Convert a gzipped fixed field width data file representing multiple
-    # data records into an array of Ruby data structures suitable for
+    # data records into a collection of Ruby data structures suitable for
     # further processing.
     #
-    # @note
-    #   Record definitions work identically to #dat_record
+    # @note (see #dat_data)
     #
-    # @param [String] path path to the gzipped data file
-    # @param [Array] definition the record definition for processing
-    #   individual fields (see above)
+    # @param (see #dat_file)
     #
-    # @return [Hash] a hash with keys matching the fields in the record definition
+    # @option (see #dat_data)
+    #
+    # @return (see #dat_data)
     #
     # @see #dat_record
     def dat_gz_file(path, definition, opts = {})
-      records = []
+      records = new_collection(opts[:hamster] || opts['hamster'])
 
       Zlib::GzipReader.open(path) do |gz|
         gz.each_line do |line|
-          records << dat_record(line, definition)
+        records = add_to_collection(records, dat_record(line, definition))
         end
       end
 
@@ -343,8 +363,8 @@ module Ratistics
 
     # :nodoc:
     # @private
-    def array_new(type)
-      type = type.to_sym if type.is_a? String
+    def new_collection(type)
+      type = type.downcase.to_sym if type.is_a? String
       case type
       when nil, false
         array = Array.new
@@ -364,7 +384,7 @@ module Ratistics
 
     # :nodoc:
     # @private
-    def array_push(array, item)
+    def add_to_collection(array, item)
       if array.respond_to? :cons
         return array.cons(item)
       else
