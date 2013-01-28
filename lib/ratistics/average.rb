@@ -50,6 +50,11 @@ module Ratistics
     # possible (with one-tenth of one percent precision) the mean
     # will be calculated using interpolation.
     #
+    # If the truncation value is nil then only the highest and
+    # lowest individual values will be dropped. A sample size of
+    # less that three with a nil truncation value will always
+    # return zero.
+    #
     # When a block is given the block will be applied to every
     # element in the data set. Using a block in this way allows
     # probability to be computed against a specific field in a
@@ -67,24 +72,32 @@ module Ratistics
     #
     # @return [Float, 0] the statistical mean of the given data set
     #   or zero if the data set is empty
-    def truncated_mean(data, truncation, sorted=false, &block)
+    def truncated_mean(data, truncation=nil, sorted=false, &block)
       return 0 if data.nil? || data.empty?
       data = data.sort unless block_given? || sorted
 
-      truncation = truncation * 100.0 if truncation < 1.0
-      raise ArgumentError if truncation >= 50.0
-
-      interval = 100.0 / data.count
-      steps = truncation / interval
-
-      if Functions.delta(steps, steps.to_i) < 0.1
-        # exact truncation
-        mean = Average.mean(data.slice(steps.floor, data.count-(steps.floor * 2)), &block)
+      if truncation.nil?
+        if data.count >= 3
+          mean = Average.mean(data.slice(1..data.count-2))
+        else
+          mean = 0
+        end
       else
-        # interpolation truncation
-        m1 = Average.mean(data.slice(steps.floor, data.count-(steps.floor * 2)), &block)
-        m2 = mean(data.slice(steps.ceil, data.count-(steps.ceil * 2)), &block)
-        mean = mean([m1, m2])
+        truncation = truncation * 100.0 if truncation < 1.0
+        raise ArgumentError if truncation >= 50.0
+
+        interval = 100.0 / data.count
+        steps = truncation / interval
+
+        if Functions.delta(steps, steps.to_i) < 0.1
+          # exact truncation
+          mean = Average.mean(data.slice(steps.floor, data.count-(steps.floor * 2)), &block)
+        else
+          # interpolation truncation
+          m1 = Average.mean(data.slice(steps.floor, data.count-(steps.floor * 2)), &block)
+          m2 = mean(data.slice(steps.ceil, data.count-(steps.ceil * 2)), &block)
+          mean = mean([m1, m2])
+        end
       end
 
       return mean

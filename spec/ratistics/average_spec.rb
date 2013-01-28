@@ -67,6 +67,16 @@ module Ratistics
         }.should raise_error ArgumentError
       end
 
+      it 'drops the highest and lowest individual values when the truncation is set to nil' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
+        mean = Average.truncated_mean(sample)
+        mean.should be_within(0.01).of(14.722222222222221)
+      end
+
+      it 'returns zero for a sample of less than three when truncation is set to nil' do
+        Average.truncated_mean([1, 2].freeze).should eq 0
+      end
+
       it 'calculates the statistical mean for truncation equal to 0%' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
         mean = Average.truncated_mean(sample, 0)
