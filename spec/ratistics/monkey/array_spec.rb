@@ -69,6 +69,32 @@ module Ratistics
         end
       end
 
+      context '#midrange' do
+
+        it 'returns the correct midrange for a multi-element sample' do
+          sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
+          mean = sample.midrange
+          mean.should be_within(0.01).of(17.0)
+        end
+
+        it 'calculates the midrange using a block' do
+          sample = [
+            {:count => 13},
+            {:count => 18},
+            {:count => 13},
+            {:count => 14},
+            {:count => 13},
+            {:count => 16},
+            {:count => 14},
+            {:count => 21},
+            {:count => 13},
+          ].freeze
+
+          mean = sample.midrange{|item| item[:count]}
+          mean.should be_within(0.01).of(17.0)
+        end
+      end
+
       context '#median' do
 
         it 'calculates the median of an even-number sample' do

@@ -17,6 +17,15 @@ module Ratistics
       return Ratistics.truncated_mean(self, *args, &block)
     end
 
+    alias :trimmed_mean :truncated_mean
+
+    # @see Average::midrange
+    def midrange(*args, &block)
+      return Ratistics.midrange(self, *args, &block)
+    end
+
+    alias :midextreme :midrange
+
     # @see Average::median
     def median(*args, &block)
       return Ratistics.median(self, *args, &block)
