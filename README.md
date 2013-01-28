@@ -107,21 +107,24 @@ When working with sets of complex data use blocks to process the data without co
 ### Available Functions
 
 * delta
-* relative_risk (alias: risk_ratio)
-* mean (alias: average, avg)
-* truncated_mean (alias: trimmed_mean)
-* median
-* mode
-* midrange (alias: midextreme)
-* variance (alias: var)
-* standard_deviation (alias: std_dev, stddev)
-* range
 * frequency
 * frequency_mean
-* probability (alias: pmf)
+* max
+* mean (alias: average, avg)
+* median
+* midrange (alias: midextreme)
+* min
+* minmax
+* mode
 * normalize_probability (alias: normalize_pmf)
+* probability (alias: pmf)
 * probability_mean (alias: pmf_mean)
 * probability_variance (alias: pmf_variance)
+* range
+* relative_risk (alias: risk_ratio)
+* standard_deviation (alias: std_dev, stddev)
+* truncated_mean (alias: trimmed_mean)
+* variance (alias: var)
 
 ### I can drive that loader
 
