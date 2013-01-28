@@ -92,9 +92,9 @@ module Ratistics
       data = data.sort unless block_given? || sorted
 
       if block_given?
-        range = yield(data[data.count-1]) - yield(data[0])
+        range = yield(data.last) - yield(data.first)
       else
-        range = data[data.count-1] - data[0]
+        range = data.last - data.first
       end
 
       return range
