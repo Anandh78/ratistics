@@ -13,7 +13,6 @@ module Ratistics
     # probability to be computed against a specific field in a
     # data set of hashes or objects.
     #
-    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -103,7 +102,14 @@ module Ratistics
     # probability to be computed against a specific field in a
     # data set of hashes or objects.
     #
-    # For a block {|item| ... }
+    # @note
+    #   Unlike other functions with a *sorted* parameter, #midrange
+    #   does not actually sort the data set. Instead it scans it for
+    #   the minimum and maximum elements. Therefore this function
+    #   will work on an unsorted collection even when a block is
+    #   given. When the data is sorted, however, the scan will be
+    #   skipped.
+    #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -115,14 +121,12 @@ module Ratistics
     #   or zero if the data set is empty
     def midrange(data, sorted=false, &block)
       return 0 if data.nil? || data.empty?
-      data = data.sort unless block_given? || sorted
 
-      min = data[0]
-      max = data[data.count-1]
-
-      if block_given?
-        min = yield(min)
-        max = yield(max)
+      if sorted
+        min = block_given? ? yield(data.first) : data.first
+        max = block_given? ? yield(data.last) : data.last
+      else
+        min, max = Functions.minmax(data, &block)
       end
 
       return Average.mean([min, max])
