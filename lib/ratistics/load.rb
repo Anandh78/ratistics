@@ -108,8 +108,25 @@ module Ratistics
     # Convert an string representing multiple CSV records into an
     # array of Ruby data structures suitable for further processing.
     #
+    # By default the return value is a Ruby Array. If the Hamster gem
+    # is installed a Hamster collection can be returned instead.
+    # To return a Hamster collection set the *:hamster* option
+    # to *true*. Optionally, a specific Hamster class can be specified
+    # by setting the *:hamster* option to a symbol specifying the type
+    # to return. For example, *:hamster => :set* will set the return
+    # type to Hamster::Set. The default Hamster return type is
+    # Hamster::Vector.
+    #
     # @note
     #   Record definitions work identically to #csv_record
+    #
+    # @example
+    #   data = Ratistics::Load.csv_data(path)
+    #   data = Ratistics::Load.csv_data(path, definition)
+    #   data = Ratistics::Load.csv_data(path, :hamster => true)
+    #   data = Ratistics::Load.csv_data(path, definition, :hamster => true)
+    #   data = Ratistics::Load.csv_data(path, :hamster => :set)
+    #   data = Ratistics::Load.csv_data(path, definition, :hamster => :set)
     #
     # @param [String] data the CSV data to be processed
     # @param [Array] definition the record definition for processing
@@ -117,15 +134,19 @@ module Ratistics
     # @param [Hash] opts options array compatable with the Ruby
     #   standard library CSV module
     #
-    # @return [Array] an array of values representing individual
-    #   CSV records
+    # @option opts [Symbol] :hamster (false) set to *true* to return a
+    #   Hamster collection, or indicate a specific Hamster return type
+    #
+    # @return [Array, Hamster] An array or Hamster collection containing
+    #   all the records
     # 
     # @see #csv_record
     def csv_data(data, definition = nil, opts = {})
-      records = []
+      records = new_collection(opts[:hamster] || opts['hamster'])
+      opts = opts.select{|key, value| key != :hamster && key != 'hamster'}
 
       CSV.parse(data, opts) do |row|
-        records << csv_record(row, definition)
+        records = add_to_collection(records, csv_record(row, definition))
       end
 
       return records
@@ -134,8 +155,7 @@ module Ratistics
     # Convert a CSV file into an array of Ruby data structures
     # suitable for further processing.
     #
-    # @note
-    #   Record definitions work identically to #csv_record
+    # @note (see #csv_record)
     #
     # @param [String] path path to the CSV file
     # @param [Array] definition the record definition for processing
@@ -143,15 +163,17 @@ module Ratistics
     # @param [Hash] opts options array compatable with the Ruby
     #   standard library CSV module
     #
-    # @return [Array] an array of values representing individual
-    #   CSV records
+    # @option (see #csv_data)
+    #
+    # @return (see #csv_record)
     # 
     # @see #csv_record
     def csv_file(path, definition = nil, opts = {})
-      records = []
+      records = new_collection(opts[:hamster] || opts['hamster'])
+      opts = opts.select{|key, value| key != :hamster && key != 'hamster'}
 
       CSV.foreach(path, opts) do |row|
-        records << csv_record(row, definition)
+        records = add_to_collection(records, csv_record(row, definition))
       end
 
       return records
@@ -160,25 +182,22 @@ module Ratistics
     # Convert a gzipped CSV file into an array of Ruby data structures
     # suitable for further processing.
     #
-    # @note
-    #   Record definitions work identically to #csv_record
+    # @note (see #csv_record)
     #
-    # @param [String] path path to the gzipped CSV file
-    # @param [Array] definition the record definition for processing
-    #   individual fields (see #csv_record)
-    # @param [Hash] opts options array compatable with the Ruby
-    #   standard library CSV module
+    # @param (see #csv_file)
     #
-    # @return [Array] an array of values representing individual
-    #   CSV records
+    # @option (see #csv_data)
+    #
+    # @return (see #csv_record)
     # 
     # @see #csv_record
     def csv_gz_file(path, definition = nil, opts = {})
-      records = []
+      records = new_collection(opts[:hamster] || opts['hamster'])
+      opts = opts.select{|key, value| key != :hamster && key != 'hamster'}
 
       Zlib::GzipReader.open(path) do |gz|
-        gz.each_line do |line|
-          records << csv_record(line, definition, opts)
+        gz.each_line do |row|
+          records = add_to_collection(records, csv_record(row, definition, opts))
         end
       end
 
@@ -281,6 +300,11 @@ module Ratistics
     # @note
     #   Record definitions work identically to #dat_record
     #
+    # @example
+    #   data = Ratistics::Load.dat_data(path, definition)
+    #   data = Ratistics::Load.dat_data(path, definition, :hamster => true)
+    #   data = Ratistics::Load.dat_data(path, definition, :hamster => :set)
+    #
     # @param [String] data the data to be processed
     # @param [Array] definition the record definition for processing
     #   individual fields (see above)
@@ -288,11 +312,6 @@ module Ratistics
     #
     # @option opts [Symbol] :hamster (false) set to *true* to return a
     #   Hamster collection, or indicate a specific Hamster return type
-    #
-    # @example
-    #   data = Ratistics::Load.dat_data(path, definition)
-    #   data = Ratistics::Load.dat_data(path, definition, :hamster => true)
-    #   data = Ratistics::Load.dat_data(path, definition, :hamster => :set)
     #
     # @return [Array, Hamster] An array or Hamster collection containing
     #   all the records

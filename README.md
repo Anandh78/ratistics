@@ -143,9 +143,26 @@ fields on load.
       [:race_num, :to_i],
     ]
 
-    sample = Ratistics::Load.csv_file('data/race.csv', definition)
+    sample = Ratistics::Load.csv_file('examples/race.csv', definition)
     sample.count #=> 1633
     sample.first #=> :place=>1, :div=>"M2039", :guntime=>"30:43", ... }
+
+By default the methods of the Load module return Ruby Arrays. If the Hamster
+gem is installed a Hamster collection can be returned instead. To return a
+Hamster collection set the *:hamster* option to *true* or to a symbol
+specifying the type to return. The default Hamster return type is
+Hamster::Vector.
+
+    require 'hamster'
+
+    sample = Ratistics::Load.csv_file('examples/race.csv', definition)
+    sample.class #=> Array
+
+    sample = Ratistics::Load.csv_file('examples/race.csv', definition, :hamster => true)
+    sample.class #=> Hamster::Vector
+
+    sample = Ratistics::Load.csv_file('examples/race.csv', definition, :hamster => :set)
+    sample.class #=> Hamster::Set
 
 Consult the API documentation for the Load module for more information.
 
