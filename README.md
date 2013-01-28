@@ -122,6 +122,7 @@ When working with sets of complex data use blocks to process the data without co
 * probability_variance (alias: pmf_variance)
 * range
 * relative_risk (alias: risk_ratio)
+* slice
 * standard_deviation (alias: std_dev, stddev)
 * truncated_mean (alias: trimmed_mean)
 * variance (alias: var)
