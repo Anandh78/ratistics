@@ -189,7 +189,7 @@ module Ratistics
         specify { Average.truncated_mean(list, 10).should be_within(0.01).of(14.625) }
 
         # NOTE: Hamster::Vector does not have a slice method
-        #specify { Average.truncated_mean(vector, 10, true).should be_within(0.01).of(14.625) }
+        specify { Average.truncated_mean(vector, 10, true).should be_within(0.01).of(14.625) }
 
         specify { Average.truncated_mean(set, 10).should be_within(0.01).of(16.125) }
       end

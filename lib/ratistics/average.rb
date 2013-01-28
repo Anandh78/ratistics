@@ -90,12 +90,32 @@ module Ratistics
         steps = truncation / interval
 
         if Functions.delta(steps, steps.to_i) < 0.1
+          
           # exact truncation
-          mean = Average.mean(data.slice(steps.floor, data.count-(steps.floor * 2)), &block)
+          index, length = steps.floor, data.count-(steps.floor * 2)
+          if data.respond_to? :slice
+            slice = data.slice(index, length)
+          else
+            slice = Functions.slice(data, index, length)
+          end
+          mean = Average.mean(slice, &block)
+
         else
+
           # interpolation truncation
-          m1 = Average.mean(data.slice(steps.floor, data.count-(steps.floor * 2)), &block)
-          m2 = mean(data.slice(steps.ceil, data.count-(steps.ceil * 2)), &block)
+          index1, length1 = steps.floor, data.count-(steps.floor * 2)
+          index2, length2 = steps.ceil, data.count-(steps.ceil * 2)
+
+          if data.respond_to? :slice
+            slice1 = data.slice(index1, length1)
+            slice2 = data.slice(index2, length2)
+          else
+            slice1 = Functions.slice(data, index1, length2)
+            slice2 = Functions.slice(data, index1, length2)
+          end
+
+          m1 = Average.mean(slice1, &block)
+          m2 = Average.mean(slice2, &block)
           mean = mean([m1, m2])
         end
       end
