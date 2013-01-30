@@ -10,7 +10,7 @@ syntax for accessing complex data. This makes it possible to perform
 statistical computations on a wide range of collections, including
 ActiveRecord record sets.
 
-Ratistics is pronounced *ra-tis-tics*. Just like "statistics" but with an 'R'
+Ratistics is pronounced *ra-TIS-tics*. Just like "statistics" but with an 'R'
 
     "Statistics".gsub(/^St/i, 'R') #=> "Ratistics"
 
