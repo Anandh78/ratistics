@@ -297,6 +297,7 @@ It is the test data used in the aforementioned book *Think Stats*.
 ## Todo
 
 * Submit a patch adding a #slice function to Hamster::Vector
+* Consider a better CSV solution (FasterCSV or keep dependencies at zero?)
 
 ## Copyright
 
