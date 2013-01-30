@@ -32,6 +32,18 @@ Downey and didn't want to do the exercises in Python. I looked for a
 Ruby statistics library but couldn't find one that I liked.
 So I decided to write my own.
 
+## Project Goals
+
+As much as possible I plan to follow these guidelines as I develop this gem
+(in no particular order):
+
+* Keep all functions pure and idempotent
+* Support as many common collection classes as possible
+* Keep runtime dependencies to a minimum, hopefully zero
+* Remain backward compatable to Ruby version 1.8.7
+* Support common Ruby interpreters (MRI, REE, and JRuby)
+* Be simple, consistent, and easy to use
+
 ### Purely Functional
 
 This entire library is written in a purely functional style. All
@@ -297,7 +309,10 @@ It is the test data used in the aforementioned book *Think Stats*.
 ## Todo
 
 * Submit a patch adding a #slice function to Hamster::Vector
-* Consider a better CSV solution (FasterCSV or keep dependencies at zero?)
+* Fix CSV parsing by writing a minimal CVS parser
+* Support negative indexes on #slice
+* Add and *opts* argument to all functions
+* Moved *sorted* param to opts
 
 ## Copyright
 
