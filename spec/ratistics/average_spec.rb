@@ -111,7 +111,7 @@ module Ratistics
         sample = [11, 11, 12, 12, 12, 13, 13, 13, 13, 13, 14, 14, 16, 16, 17, 18, 19, 19, 20, 21]
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
-        mean = Average.truncated_mean(sample, 10, true)
+        mean = Average.truncated_mean(sample, 10, :sorted => true)
       end
 
       it 'calculates the truncated mean with a block' do
@@ -188,7 +188,7 @@ module Ratistics
 
         specify { Average.truncated_mean(list, 10).should be_within(0.01).of(14.625) }
 
-        specify { Average.truncated_mean(vector, 10, true).should be_within(0.01).of(14.625) }
+        specify { Average.truncated_mean(vector, 10, :sorted => true).should be_within(0.01).of(14.625) }
 
         specify { Average.truncated_mean(set, 10).should be_within(0.01).of(16.125) }
       end
@@ -222,7 +222,7 @@ module Ratistics
         sample = [13, 13, 13, 13, 14, 14, 16, 18, 21]
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
-        mean = Average.midrange(sample, true)
+        mean = Average.midrange(sample, :sorted => true)
       end
 
       it 'calculates the midrange using a block' do
@@ -250,7 +250,7 @@ module Ratistics
 
         specify { Average.midrange(list).should be_within(0.01).of(17.0) }
 
-        specify { Average.midrange(vector, true).should be_within(0.01).of(17.0) }
+        specify { Average.midrange(vector, :sorted => true).should be_within(0.01).of(17.0) }
 
         specify { Average.midrange(set).should be_within(0.01).of(17.0) }
       end
@@ -282,12 +282,12 @@ module Ratistics
         sample = [13, 13, 13, 13, 14, 14, 16, 18, 21]
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
-        Average.median(sample, true)
+        Average.median(sample, :sorted => true)
       end
 
       it 'calculates the median for an unsorted sample' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
-        median = Average.median(sample, false)
+        median = Average.median(sample, :sorted => false)
         median.should be_within(0.01).of(14.0)
       end
 
@@ -334,7 +334,7 @@ module Ratistics
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
 
-        Average.median(sample, false) {|item| item[:count] }
+        Average.median(sample, :sorted => false) {|item| item[:count] }
       end
 
       context 'with Hamster' do
@@ -345,7 +345,7 @@ module Ratistics
 
         specify { Average.median(list).should be_within(0.01).of(14.0) }
 
-        specify { Average.median(vector, true).should be_within(0.01).of(14.0) }
+        specify { Average.median(vector, :sorted => true).should be_within(0.01).of(14.0) }
 
         specify { Average.median(set).should be_within(0.01).of(16.0) }
 

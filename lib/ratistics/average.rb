@@ -72,9 +72,9 @@ module Ratistics
     #
     # @return [Float, 0] the statistical mean of the given data set
     #   or zero if the data set is empty
-    def truncated_mean(data, truncation=nil, sorted=false, opts={}, &block)
+    def truncated_mean(data, truncation=nil, opts={}, &block)
       return 0 if data.nil? || data.empty?
-      data = data.sort unless block_given? || sorted
+      data = data.sort unless block_given? || opts[:sorted] == true
 
       if truncation.nil?
         if data.count >= 3
@@ -152,10 +152,10 @@ module Ratistics
     #
     # @return [Float, 0] the statistical midrange of the given data set
     #   or zero if the data set is empty
-    def midrange(data, sorted=false, opts={}, &block)
+    def midrange(data, opts={}, &block)
       return 0 if data.nil? || data.empty?
 
-      if sorted
+      if opts[:sorted] == true
         min = block_given? ? yield(data.first) : data.first
         max = block_given? ? yield(data.last) : data.last
       else
@@ -187,9 +187,9 @@ module Ratistics
     #
     # @return [Float, 0] the statistical median of the given data set
     #   or zero if the data set is empty
-    def median(data, sorted=false, opts={}, &block)
+    def median(data, opts={}, &block)
       return 0 if data.nil? || data.empty?
-      data = data.sort unless block_given? || sorted
+      data = data.sort unless block_given? || opts[:sorted] == true
 
       index = data.count / 2
       if data.count % 2 == 0 #even

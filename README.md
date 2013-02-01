@@ -311,8 +311,6 @@ It is the test data used in the aforementioned book *Think Stats*.
 * Submit a patch adding a #slice function to Hamster::Vector
 * Fix CSV parsing by writing a minimal CVS parser
 * Support negative indexes on #slice
-* Add and *opts* argument to all functions
-* Moved *sorted* param to opts
 
 ## Copyright
 

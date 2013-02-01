@@ -87,9 +87,9 @@ module Ratistics
     #
     # @return [Float, 0] the statistical range of the given data set
     #   or zero if the data set is empty
-    def range(data, sorted=false, opts={}, &block)
+    def range(data, opts={}, &block)
       return 0 if data.nil? || data.count <= 1
-      data = data.sort unless block_given? || sorted
+      data = data.sort unless block_given? || opts[:sorted] == true
 
       if block_given?
         range = yield(data.last) - yield(data.first)

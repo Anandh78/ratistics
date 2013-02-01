@@ -146,13 +146,13 @@ module Ratistics
 
       it 'returns the range for a sorted list' do
         sample = [13, 13, 13, 13, 14, 14, 16, 18, 21].freeze
-        range = Distribution.range(sample, true)
+        range = Distribution.range(sample, :sorted => true)
         range.should be_within(0.01).of(8.0)
       end
 
       it 'returns the range for an unsorted list' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
-        range = Distribution.range(sample, false)
+        range = Distribution.range(sample, :sorted => false)
         range.should be_within(0.01).of(8.0)
       end
 
@@ -160,7 +160,7 @@ module Ratistics
         sample = [13, 13, 13, 13, 14, 14, 16, 18, 21]
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
-        Distribution.range(sample, true)
+        Distribution.range(sample, :sorted => true)
       end
 
       it 'calculates the range when using a block' do
@@ -188,7 +188,7 @@ module Ratistics
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
 
-        Distribution.range(sample, false) {|item| item[:count] }
+        Distribution.range(sample, :sorted => false) {|item| item[:count] }
       end
 
       context 'with Hamster' do
@@ -199,7 +199,7 @@ module Ratistics
 
         specify { Distribution.range(list).should be_within(0.01).of(8.0) }
 
-        specify { Distribution.range(vector, true).should be_within(0.01).of(8.0) }
+        specify { Distribution.range(vector, :sorted => true).should be_within(0.01).of(8.0) }
 
         specify { Distribution.range(set).should be_within(0.01).of(8.0) }
 
