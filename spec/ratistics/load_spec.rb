@@ -161,7 +161,7 @@ module Ratistics
           record.should == {:place => 1}
         end
 
-        it 'supports CSV class options' do
+        it 'supports :col_sep option' do
           record = Ratistics::Load.csv_record(psv_row, nil, :col_sep => '|')
           record.should eq record_array
         end
@@ -195,7 +195,7 @@ module Ratistics
           record.first.should eq record_hash
         end
 
-        it 'supports CSV class options' do
+        it 'supports :col_sep option' do
           record = Ratistics::Load.csv_data(psv_row, nil, :col_sep => '|')
           record.count.should eq 1
           record.first.should eq record_array
@@ -256,12 +256,6 @@ module Ratistics
             records.should be_kind_of Hamster::Vector
             records.size.should eq record_count
           end
-
-          it 'accepts strings for the key and value when setting the :hamster option' do
-            records = Ratistics::Load.csv_data(contents, csv_definition, 'hamster' => 'list')
-            records.should be_kind_of Hamster::List
-            records.size.should eq record_count
-          end
         end
       end
 
@@ -279,7 +273,7 @@ module Ratistics
           record.first.should eq record_hash
         end
 
-        it 'supports CSV class options' do
+        it 'supports :col_sep option' do
           record = Ratistics::Load.csv_file(psv_file, nil, :col_sep => '|')
           record.count.should eq record_count
           record.first.should eq record_array
@@ -435,12 +429,6 @@ module Ratistics
           it 'returns a Hamster::Vector when the :hamster option is set to an unknown type' do
             records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :bogus)
             records.should be_kind_of Hamster::Vector
-            records.size.should eq record_count
-          end
-
-          it 'accepts strings for the key and value when setting the :hamster option' do
-            records = Ratistics::Load.dat_data(contents, dat_definition, 'hamster' => 'list')
-            records.should be_kind_of Hamster::List
             records.size.should eq record_count
           end
         end

@@ -83,11 +83,7 @@ module Ratistics
     def csv_record(data, definition = nil, opts = {})
 
       if data.is_a?(String)
-        if RUBY_VERSION.to_i >= 1.9
-          data = CSV.parse(data, opts) {|row| break(row) }
-        else
-          data = data.split(opts[:col_sep] || ',')
-        end
+        data = data.split(opts[:col_sep] || ',')
       end
 
       unless definition.nil?
@@ -146,19 +142,12 @@ module Ratistics
     # 
     # @see #csv_record
     def csv_data(data, definition = nil, opts = {})
-      records = new_collection(opts[:hamster] || opts['hamster'])
-      opts = opts.dup.delete_if{|key, value| key.to_s == 'hamster'}
+      records = new_collection(opts[:hamster])
 
-      if RUBY_VERSION.to_i >= 1.9
-        CSV.parse(data, opts) do |row|
-          records = add_to_collection(records, csv_record(row, definition))
-        end
-      else
-        data.split(opts[:row_sep] || /$/).each do |row|
-          row = row.strip
-          unless row.empty?
-            records = add_to_collection(records, csv_record(row, definition, opts))
-          end
+      data.split(opts[:row_sep] || $/).each do |row|
+        row = row.strip
+        unless row.empty?
+          records = add_to_collection(records, csv_record(row.strip, definition, opts))
         end
       end
 
@@ -182,17 +171,10 @@ module Ratistics
     # 
     # @see #csv_record
     def csv_file(path, definition = nil, opts = {})
-      records = new_collection(opts[:hamster] || opts['hamster'])
-      opts = opts.dup.delete_if{|key, value| key.to_s == 'hamster'}
+      records = new_collection(opts[:hamster])
 
-      if RUBY_VERSION.to_i >= 1.9
-        CSV.foreach(path, opts) do |row|
-          records = add_to_collection(records, csv_record(row, definition))
-        end
-      else
-        File.open(path, 'r').each_line do |row|
-          records = add_to_collection(records, csv_record(row.strip, definition, opts))
-        end
+      File.open(path, 'r').each_line(opts[:row_sep] || $/) do |row|
+        records = add_to_collection(records, csv_record(row.strip, definition, opts))
       end
 
       return records
@@ -211,7 +193,7 @@ module Ratistics
     # 
     # @see #csv_record
     def csv_gz_file(path, definition = nil, opts = {})
-      records = new_collection(opts[:hamster] || opts['hamster'])
+      records = new_collection(opts[:hamster])
       opts = opts.dup.delete_if{|key, value| key.to_s == 'hamster'}
 
       Zlib::GzipReader.open(path) do |gz|
@@ -337,7 +319,7 @@ module Ratistics
     #
     # @see #dat_record
     def dat_data(data, definition, opts = {})
-      records = new_collection(opts[:hamster] || opts['hamster'])
+      records = new_collection(opts[:hamster])
 
       data.lines do |line|
         records = add_to_collection(records, dat_record(line, definition))
@@ -363,9 +345,9 @@ module Ratistics
     #
     # @see #dat_record
     def dat_file(path, definition, opts = {})
-      records = new_collection(opts[:hamster] || opts['hamster'])
+      records = new_collection(opts[:hamster])
 
-      File.open(path).each do |line|
+      File.open(path, 'r').each do |line|
         records = add_to_collection(records, dat_record(line, definition))
       end
 
@@ -386,7 +368,7 @@ module Ratistics
     #
     # @see #dat_record
     def dat_gz_file(path, definition, opts = {})
-      records = new_collection(opts[:hamster] || opts['hamster'])
+      records = new_collection(opts[:hamster])
 
       Zlib::GzipReader.open(path) do |gz|
         gz.each_line do |line|

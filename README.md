@@ -309,8 +309,9 @@ It is the test data used in the aforementioned book *Think Stats*.
 ## Todo
 
 * Submit a patch adding a #slice function to Hamster::Vector
-* Fix CSV parsing by writing a minimal CVS parser
 * Support negative indexes on #slice
+* Supports quoted CSV fields, :quote_char, :skip_blanks, and :headers options
+* Update YARD doc for CSV parsing
 
 ## Copyright
 
