@@ -40,3 +40,13 @@ gem install bundler &>/dev/null
 bundle install &>/dev/null
 bundle exec rspec spec
 
+rvm use rbx-head-d18@ratistics --create
+gem install bundler &>/dev/null 
+bundle install &>/dev/null
+bundle exec rspec spec
+
+rvm use rbx-head-d19@ratistics --create
+gem install bundler &>/dev/null 
+bundle install &>/dev/null
+bundle exec rspec spec
+

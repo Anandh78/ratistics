@@ -22,5 +22,6 @@ tmtags
 *.swo
 *.swp
 .idea
+.rbx/*
 *.py
 *.pyc

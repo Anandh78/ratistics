@@ -76,6 +76,8 @@ good results with any of the following:
 * jruby-1.6.8
 * jruby-1.7.0
 * ree-1.8.7
+* rbx (1.8 mode)
+* rbx (1.9 mode)
 
 #### Hamster
 
