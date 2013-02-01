@@ -10,18 +10,18 @@ module Ratistics
 
     alias :centile, :percentile
 
-    def percentile?(data, percentile, value, sorted=false, &block)
+    def percentile?(data, percentile, value, sorted=false, opts={}, &block)
     end
 
     alias :centile?, :percentile?
 
     # The percentage of scores in the frequency distribution that are the same or lower
-    def percentile_rank(data, value, sorted=false, &block)
+    def percentile_rank(data, value, sorted=false, opts={}, &block)
     end
 
     alias :centile_rank, :percentile_rank
 
-    def percentile_rank?(data, value, percentile, sorted=false, &block) 
+    def percentile_rank?(data, value, percentile, sorted=false, opts={}, &block) 
     end
 
     alias :centile_rank?, :percentile_rank?

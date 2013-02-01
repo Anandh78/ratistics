@@ -22,7 +22,7 @@ module Ratistics
     #
     # @return [Hash, nil] the statistical frequency of the given data set
     #   or nil if the data set is empty
-    def frequency(data, &block)
+    def frequency(data, opts={}, &block)
       return nil if data.nil? || data.empty?
 
       freq = data.reduce({}) do |memo, datum|
@@ -48,7 +48,7 @@ module Ratistics
     #
     # @return [Float, 0] the statistical mean of the given data set
     #   or zero if the data set is empty
-    def frequency_mean(data, &block)
+    def frequency_mean(data, opts={}, &block)
       return 0 if data.nil? || data.empty?
       pmf = probability(data, &block)
       mean = probability_mean(pmf)
@@ -75,7 +75,7 @@ module Ratistics
     #
     # @return [Hash, nil] the statistical probability of the given data set
     #   or nil if the data set is empty
-    def probability(data, &block)
+    def probability(data, opts={}, &block)
       return nil if data.nil? || data.empty?
       from_frequency = data.respond_to? :keys
 
@@ -115,7 +115,7 @@ module Ratistics
     # @param [Hash] pmf the probability curve to normalize
     # 
     # @return [Hash] a new, normalized probability distribution.
-    def normalize_probability(pmf)
+    def normalize_probability(pmf, opts={})
       total = pmf.values.reduce(0.0){|n, value| n + value} 
 
       return { pmf.keys.first => 1 } if pmf.count == 1
@@ -151,7 +151,7 @@ module Ratistics
     #
     # @return [Float, 0] the statistical mean of the given data set
     #   or zero if the data set is empty
-    def probability_mean(data, &block)
+    def probability_mean(data, opts={}, &block)
       return 0 if data.nil? || data.empty?
       from_probability = data.respond_to? :keys
 
@@ -188,7 +188,7 @@ module Ratistics
     #
     # @return [Float, 0] the statistical variance of the given data set
     #   or zero if the data set is empty
-    def probability_variance(data, &block)
+    def probability_variance(data, opts={}, &block)
       return 0 if data.nil? || data.empty?
       from_probability = data.respond_to? :keys
 

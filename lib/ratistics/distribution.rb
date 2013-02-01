@@ -24,7 +24,7 @@ module Ratistics
     #
     # @return [Float, 0] the statistical variance of the given data set
     #   or zero if the data set is empty
-    def variance(data, mu=nil, &block)
+    def variance(data, mu=nil, opts={}, &block)
       return 0 if data.nil? || data.empty?
 
       mu = Average.mean(data, &block) if mu.nil?
@@ -59,7 +59,7 @@ module Ratistics
     #
     # @return [Float, 0] the standard deviation of the given data set
     #   or zero if the data set is empty
-    def standard_deviation(data, mu=nil, &block)
+    def standard_deviation(data, mu=nil, opts={}, &block)
       return 0 if data.nil? || data.empty?
       return Math.sqrt(variance(data, mu, &block))
     end
@@ -87,7 +87,7 @@ module Ratistics
     #
     # @return [Float, 0] the statistical range of the given data set
     #   or zero if the data set is empty
-    def range(data, sorted=false, &block)
+    def range(data, sorted=false, opts={}, &block)
       return 0 if data.nil? || data.count <= 1
       data = data.sort unless block_given? || sorted
 

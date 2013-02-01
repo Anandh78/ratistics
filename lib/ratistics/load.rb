@@ -288,7 +288,7 @@ module Ratistics
     #   individual fields (see above)
     #
     # @return [Hash] a hash with keys matching the fields in the record definition
-    def dat_record(data, definition)
+    def dat_record(data, definition, opts={})
       record = {}
 
       definition.each do |field|

@@ -21,7 +21,7 @@ module Ratistics
     #
     # @return [Float, 0] the statistical mean of the given data set
     #   or zero if the data set is empty
-    def mean(data, &block)
+    def mean(data, opts={}, &block)
       return 0 if data.nil? || data.empty?
       total = 0.0
 
@@ -72,7 +72,7 @@ module Ratistics
     #
     # @return [Float, 0] the statistical mean of the given data set
     #   or zero if the data set is empty
-    def truncated_mean(data, truncation=nil, sorted=false, &block)
+    def truncated_mean(data, truncation=nil, sorted=false, opts={}, &block)
       return 0 if data.nil? || data.empty?
       data = data.sort unless block_given? || sorted
 
@@ -152,7 +152,7 @@ module Ratistics
     #
     # @return [Float, 0] the statistical midrange of the given data set
     #   or zero if the data set is empty
-    def midrange(data, sorted=false, &block)
+    def midrange(data, sorted=false, opts={}, &block)
       return 0 if data.nil? || data.empty?
 
       if sorted
@@ -187,7 +187,7 @@ module Ratistics
     #
     # @return [Float, 0] the statistical median of the given data set
     #   or zero if the data set is empty
-    def median(data, sorted=false, &block)
+    def median(data, sorted=false, opts={}, &block)
       return 0 if data.nil? || data.empty?
       data = data.sort unless block_given? || sorted
 
@@ -228,7 +228,7 @@ module Ratistics
     #
     # @return [Array] An array of zero or more values (in no particular
     #   order) indicating the modes of the data set
-    def mode(data, &block)
+    def mode(data, opts={}, &block)
       return [] if data.nil? || data.empty?
 
       modes = {}
