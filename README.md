@@ -38,7 +38,7 @@ As much as possible I plan to follow these guidelines as I develop this gem
 (in no particular order):
 
 * Keep all functions pure and idempotent
-* Support as many common collection classes as possible
+* Support as many common collection classes as possible, especiall ActiveRecord
 * Keep runtime dependencies to a minimum, hopefully zero
 * Remain backward compatable to Ruby version 1.8.7
 * Support common Ruby interpreters (MRI, REE, and JRuby)
@@ -79,6 +79,16 @@ good results with any of the following:
 * rbx (1.8 mode)
 * rbx (1.9 mode)
 
+#### ActiveRecord
+
+[ActiveRecord](http://guides.rubyonrails.org/active_record_querying.html) is the
+most common ORM in use by Ruby programmers. ActiveRecord result set collections
+support the most common idiomatic Ruby enumerable methods. Subsequently, it
+should be eacy to perform most calculations within this library directly against
+ActiveRecord results set, using block syntax for field access. ActiveRecord is
+not a runtime dependency of this gem but the test suite explicitly tests
+ActiveRecord compatibality. 
+
 #### Hamster
 
 The main drawback of side-effect free functions is that in
@@ -117,6 +127,10 @@ then use it:
     mean = Ratistics.mean(sample)
 
 When working with sets of complex data use blocks to process the data without copying:
+
+    require 'active_record'
+
+    class Person < ActiveRecord::Base; end
 
     people = Person.all
     
@@ -311,7 +325,6 @@ It is the test data used in the aforementioned book *Think Stats*.
 ## Todo
 
 * Update YARD docs for CSV loading
-* Test with ActiveRecord data sets
 * Submit a patch adding a #slice function to Hamster::Vector
 * Support negative indexes on #slice
 * Update YARD doc for CSV parsing

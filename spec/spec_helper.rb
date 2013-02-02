@@ -11,9 +11,7 @@ require 'rspec'
 require 'ratistics'
 
 require 'hamster'
-
 require 'active_record'
-require 'standalone_migrations'
 
 # import all the support files
 Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each { |f| require File.expand_path(f) }
@@ -21,7 +19,6 @@ Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each { |f| require Fil
 RSpec.configure do |config|
 
   config.before(:suite) do
-    dbconfig = StandaloneMigrations::Configurator.load_configurations[:test]
   end
 
   config.before(:each) do

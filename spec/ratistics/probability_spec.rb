@@ -64,6 +64,23 @@ module Ratistics
         frequency[21].should eq 1
       end
 
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify do
+          frequency = Probability.frequency(Racer.all){|r| r.age }
+
+          frequency.count.should eq 67
+          frequency[22].should eq 11
+          frequency[30].should eq 47
+          frequency[26].should eq 39
+          frequency[25].should eq 28
+          frequency[27].should eq 50
+        end
+
+      end
+
       context 'with Hamster' do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
@@ -267,6 +284,23 @@ module Ratistics
         probability[16].should be_within(0.01).of(0.111)
         probability[18].should be_within(0.01).of(0.111)
         probability[21].should be_within(0.01).of(0.111)
+      end
+
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify do
+          probability = Probability.probability(Racer.all){|r| r.age }
+
+          probability.count.should eq 67
+          probability[22].should be_within(0.001).of(0.00673)
+          probability[30].should be_within(0.001).of(0.02878)
+          probability[26].should be_within(0.001).of(0.02388)
+          probability[25].should be_within(0.001).of(0.01714)
+          probability[27].should be_within(0.001).of(0.03061)
+        end
+
       end
 
       context 'with Hamster' do

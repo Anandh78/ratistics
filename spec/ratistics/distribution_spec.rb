@@ -51,6 +51,14 @@ module Ratistics
         standard_deviation.should be_within(0.01).of(12.049)
       end
 
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify { Distribution.standard_deviation(Racer.all){|r| r.age }.should be_within(0.01).of(12.479) }
+
+      end
+
       context 'with Hamster' do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
@@ -112,6 +120,14 @@ module Ratistics
 
         variance = Distribution.variance(sample, 85){|item| item[:count]}
         variance.should be_within(0.01).of(145.2)
+      end
+
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify { Distribution.variance(Racer.all){|r| r.age }.should be_within(0.01).of(155.725) }
+
       end
 
       context 'with Hamster' do

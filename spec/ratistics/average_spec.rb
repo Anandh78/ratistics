@@ -36,6 +36,14 @@ module Ratistics
         mean.should be_within(0.01).of(15.0)
       end
 
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify { Average.mean(Racer.all){|r| r.age }.should be_within(0.01).of(38.440) }
+
+      end
+
       context 'with Hamster' do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
@@ -238,8 +246,16 @@ module Ratistics
           {:count => 13},
         ].freeze
 
-        mean = Average.midrange(sample){|item| item[:count]}
-        mean.should be_within(0.01).of(17.0)
+        midrange = Average.midrange(sample){|item| item[:count]}
+        midrange.should be_within(0.01).of(17.0)
+      end
+
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify { Average.midrange(Racer.all){|r| r.age }.should be_within(0.01).of(40.0) }
+
       end
 
       context 'with Hamster' do
@@ -335,6 +351,14 @@ module Ratistics
         sample.should_not_receive(:sort_by)
 
         Average.median(sample, :sorted => false) {|item| item[:count] }
+      end
+
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify { Average.median(Racer.all){|r| r.age }.should be_within(0.01).of(23.0) }
+
       end
 
       context 'with Hamster' do
@@ -460,6 +484,18 @@ module Ratistics
         mode.should include(2)
         mode.should include(3)
         mode.should include(4)
+      end
+
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify do
+          mode = Average.mode(Racer.all){|r| r.age }
+          mode.count.should eq 1
+          mode.should include(40)
+        end
+
       end
 
       context 'with Hamster' do
