@@ -36,10 +36,6 @@ module Ratistics
       '1|1/362|M2039|30:43|30:42|4:57|Brian Harvey|22|M|1422|Allston MA'
     end
 
-    let(:quote_row) do
-      '1,"1/362",M2039,"30:43",30:42,"4:57","Brian, Harvey",22,M,1422,"Allston, MA"'
-    end
-
     let(:dat_definition) do
       [
         {:field => :place, :start => 1, :end => 6, :cast => lambda {|i| i.to_i} },
@@ -169,6 +165,8 @@ module Ratistics
           record = Ratistics::Load.csv_record(psv_row, nil, :col_sep => '|')
           record.should eq record_array
         end
+
+        #it 'supports empty fields'
       end
 
       context '#csv_data' do
@@ -213,9 +211,11 @@ module Ratistics
         end
 
         it 'recognizes quoted fields' do
-          record = Ratistics::Load.csv_data(quote_row, nil)
+          data = '1,"1/362",M2039,"30:43",30:42,"4:57","Brian, Harvey",22,M,1422,"Allston, MA"'
+          result = ["1", "1/362", "M2039", "30:43", "30:42", "4:57", "Brian, Harvey", "22", "M", "1422", "Allston, MA"]
+          record = Ratistics::Load.csv_data(data, nil)
           record.count.should eq 1
-          record.first.should eq record_array
+          record.first.should eq result
         end
 
         context 'Hamster' do

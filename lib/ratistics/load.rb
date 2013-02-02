@@ -83,24 +83,16 @@ module Ratistics
     def csv_record(data, definition = nil, opts = {})
 
       if data.is_a?(String)
-        quote_char = opts[:quote_char] || '"'
         col_sep = opts[:col_sep] || ','
-        #row_sep = opts[:row_sep] || $/
-#puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-#p data
-#p col_sep
+        col_sep_r = Regexp.escape(col_sep)
 
-        #regex = /([^#{col_sep}]*)(#{col_sep}|$)/
-        regex = /([^#{Regexp.escape(col_sep)}]*)(#{Regexp.escape(col_sep)}|$)/
+        quote_char_r = Regexp.escape(opts[:quote_char] || '"')
 
-        data = data.scan(regex).collect{|item| item[0] }
-#pp data
-        data.pop if data.last.empty?
+        regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
 
-#puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        
-
-        #data = data.split(opts[:col_sep] || ',')
+        data = data.scan(regex).collect do |match|
+          match.select{|m| ! m.nil? }.first.chomp(col_sep).gsub(/#{quote_char_r}/, '')
+        end
       end
 
       unless definition.nil?
