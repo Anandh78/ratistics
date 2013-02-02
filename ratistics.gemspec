@@ -23,16 +23,24 @@ Gem::Specification.new do |s|
   # Production dependencies
 
   # Development dependencies
-
-  s.add_development_dependency 'hamster'
-  
+ 
   s.add_development_dependency 'bundler'
 
+  # test alternate collection classes
+  s.add_development_dependency 'hamster'
+
+  # test active_record collections
+  s.add_dependency 'standalone_migrations'
+  s.add_dependency 'activerecord', '~> 3.2.0'
+  s.add_dependency 'sqlite3'
+
+  # create API documentation
   s.add_development_dependency 'rake'
   s.add_development_dependency 'yard'
   s.add_development_dependency 'redcarpet'
   #s.add_development_dependency 'github-markup'
 
+  # testing
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'simplecov'
 
