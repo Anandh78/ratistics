@@ -36,6 +36,10 @@ module Ratistics
       '1|1/362|M2039|30:43|30:42|4:57|Brian Harvey|22|M|1422|Allston MA'
     end
 
+    let(:quote_row) do
+      '1,"1/362",M2039,"30:43",30:42,"4:57","Brian, Harvey",22,M,1422,"Allston, MA"'
+    end
+
     let(:dat_definition) do
       [
         {:field => :place, :start => 1, :end => 6, :cast => lambda {|i| i.to_i} },
@@ -205,6 +209,12 @@ module Ratistics
           data = csv_row + '|' + csv_row + '|' + csv_row 
           record = Ratistics::Load.csv_data(data, nil, :row_sep => '|')
           record.count.should eq 3
+          record.first.should eq record_array
+        end
+
+        it 'recognizes quoted fields' do
+          record = Ratistics::Load.csv_data(quote_row, nil)
+          record.count.should eq 1
           record.first.should eq record_array
         end
 
