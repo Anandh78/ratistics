@@ -1,16 +1,34 @@
+require 'active_record'
+
 $:.push File.join(File.dirname(__FILE__), '../lib')
-$:.push File.join(File.dirname(__FILE__), '../spec')
 
 require 'ratistics'
-require 'support/db'
+
+########################
+### Database Classes
+
+class Racer < ActiveRecord::Base
+end
+
+class Pregnancy < ActiveRecord::Base
+  belongs_to :female_respondent,
+    :primary_key => :caseid,
+    :foreign_key => :caseid
+end
+
+class FemaleRespondent < ActiveRecord::Base
+  has_many :pregnancy,
+    :primary_key => :caseid,
+    :foreign_key => :caseid
+end
 
 ########################
 ### Dump old data
 
 puts 'Deleting old data...'
-Ratistics::Racer.delete_all
-Ratistics::FemaleRespondent.delete_all
-Ratistics::Pregnancy.delete_all
+Racer.delete_all
+FemaleRespondent.delete_all
+Pregnancy.delete_all
 
 ########################
 ### Racer
@@ -35,11 +53,11 @@ racer = Ratistics::Load.dat_gz_file(racer_file, racer_definition)
 
 puts 'Seeding racer data...'
 racer.each do |record|
-  Ratistics::Racer.create(record)
+  Racer.create(record)
 end
 
-puts "Seeded #{Ratistics::Racer.all.count} racer records."
-#pp Ratistics::Racer.first 
+puts "Seeded #{Racer.all.count} racer records."
+pp Racer.first 
 puts
 
 ########################
@@ -55,11 +73,11 @@ respondents = Ratistics::Load.dat_gz_file(respondent_file, respondent_definition
 
 puts 'Seeding female respondent data...'
 respondents.each do |record|
-  Ratistics::FemaleRespondent.create(record)
+  FemaleRespondent.create(record)
 end
 
-puts "Seeded #{Ratistics::FemaleRespondent.all.count} records."
-#pp Ratistics::FemaleRespondent.first
+puts "Seeded #{FemaleRespondent.all.count} records."
+#pp FemaleRespondent.first
 puts
 
 ########################
@@ -84,9 +102,9 @@ pregnancies = Ratistics::Load.dat_gz_file(pregnancy_file, pregnancy_definition)
 
 puts 'Seeding pregnancy data...'
 pregnancies.each do |record|
-  Ratistics::Pregnancy.create(record)
+  Pregnancy.create(record)
 end
 
-puts "Seeded #{Ratistics::Pregnancy.all.count} records."
-#pp Ratistics::Pregnancy.first
+puts "Seeded #{Pregnancy.all.count} records."
+#pp Pregnancy.first
 puts

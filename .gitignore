@@ -7,7 +7,6 @@ doc/*
 tmp/*
 man/*
 *.tmproj
-*.sqlite3
 rdoc/*
 *.orig
 *.BACKUP.*
