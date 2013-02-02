@@ -167,13 +167,18 @@ module Ratistics
         end
 
         it 'recognizes quoted fields' do
-          data = '1,"1/362",M2039,"30:43",30:42,"4:57","Brian, Harvey",22,M,1422,"Allston, MA"'
-          result = ["1", "1/362", "M2039", "30:43", "30:42", "4:57", "Brian, Harvey", "22", "M", "1422", "Allston, MA"]
+          data = '1,"1/362",M2039,"30:43",30:42,"4:57","Harvey, Brian",22,M,1422,"Allston, MA"'
+          result = ["1", "1/362", "M2039", "30:43", "30:42", "4:57", "Harvey, Brian", "22", "M", "1422", "Allston, MA"]
           record = Ratistics::Load.csv_record(data, nil)
           record.should eq result
         end
 
-        #it 'supports empty fields'
+        it 'supports empty fields' do
+          data = '1,,1/362,M2039,"",30:43,30:42,"4:57","Harvey, Brian",22,,M,1422,Allston MA'
+          record = Ratistics::Load.csv_record(data, nil)
+          record.count.should eq 14
+          record.should eq ["1", "", "1/362", "M2039", "", "30:43", "30:42", "4:57", "Harvey, Brian", "22", "", "M", "1422", "Allston MA"]
+        end
       end
 
       context '#csv_data' do
@@ -218,8 +223,8 @@ module Ratistics
         end
 
         it 'recognizes quoted fields' do
-          data = '1,"1/362",M2039,"30:43",30:42,"4:57","Brian, Harvey",22,M,1422,"Allston, MA"'
-          result = ["1", "1/362", "M2039", "30:43", "30:42", "4:57", "Brian, Harvey", "22", "M", "1422", "Allston, MA"]
+          data = '1,"1/362",M2039,"30:43",30:42,"4:57","Harvey, Brian",22,M,1422,"Allston, MA"'
+          result = ["1", "1/362", "M2039", "30:43", "30:42", "4:57", "Harvey, Brian", "22", "M", "1422", "Allston, MA"]
           record = Ratistics::Load.csv_data(data, nil)
           record.count.should eq 1
           record.first.should eq result
