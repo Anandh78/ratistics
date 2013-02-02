@@ -310,9 +310,10 @@ It is the test data used in the aforementioned book *Think Stats*.
 
 ## Todo
 
+* Update YARD docs for CSV loading
+* Test with ActiveRecord data sets
 * Submit a patch adding a #slice function to Hamster::Vector
 * Support negative indexes on #slice
-* Supports quoted CSV fields, :quote_char, :skip_blanks, and :headers options
 * Update YARD doc for CSV parsing
 
 ## Copyright

@@ -230,6 +230,28 @@ module Ratistics
           record.first.should eq result
         end
 
+        it 'skips the first line when :headers option is true' do
+          record = Ratistics::Load.csv_data(contents, csv_definition, :headers => true)
+          record.count.should eq record_count-1
+          record.first.should_not eq record_hash
+        end
+
+        it 'uses the header line for the definition when :headers option is true without a definition' do
+          record = Ratistics::Load.csv_data(contents, nil, :headers => true)
+          record.count.should eq record_count-1
+          record_array.size.should eq record.first.keys.size
+          record.first.keys.each do |key|
+            record_array.should include(key.to_s)
+          end
+        end
+
+        it 'uses the provided definition instead of the header line when :headers option is true' do
+          record = Ratistics::Load.csv_data(contents, csv_definition, :headers => true)
+          record.count.should eq record_count-1
+          record.first.should_not eq record_hash
+          record.first.keys.should eq record_hash.keys
+        end
+
         context 'Hamster' do
 
           it 'returns a Ruby Array when no :hamster option is given' do
@@ -308,6 +330,28 @@ module Ratistics
           record.first.should eq record_array
         end
 
+        it 'skips the first line when :headers option is true' do
+          record = Ratistics::Load.csv_file(csv_file, csv_definition, :headers => true)
+          record.count.should eq record_count-1
+          record.first.should_not eq record_hash
+        end
+
+        it 'uses the header line for the definition when :headers option is true without a definition' do
+          record = Ratistics::Load.csv_file(csv_file, nil, :headers => true)
+          record.count.should eq record_count-1
+          record_array.size.should eq record.first.keys.size
+          record.first.keys.each do |key|
+            record_array.should include(key.to_s)
+          end
+        end
+
+        it 'uses the provided definition instead of the header line when :headers option is true' do
+          record = Ratistics::Load.csv_file(csv_file, csv_definition, :headers => true)
+          record.count.should eq record_count-1
+          record.first.should_not eq record_hash
+          record.first.keys.should eq record_hash.keys
+        end
+
         it 'supports the :hamster option' do
           records = Ratistics::Load.csv_file(csv_file, csv_definition, :hamster => true)
           records.should be_kind_of Hamster::Vector
@@ -327,6 +371,28 @@ module Ratistics
           record = Ratistics::Load.csv_gz_file(csv_gz_file, csv_definition)
           record.count.should eq record_count
           record.first.should eq record_hash
+        end
+
+        it 'skips the first line when :headers option is true' do
+          record = Ratistics::Load.csv_gz_file(csv_gz_file, csv_definition, :headers => true)
+          record.count.should eq record_count-1
+          record.first.should_not eq record_hash
+        end
+
+        it 'uses the header line for the definition when :headers option is true without a definition' do
+          record = Ratistics::Load.csv_gz_file(csv_gz_file, nil, :headers => true)
+          record.count.should eq record_count-1
+          record_array.size.should eq record.first.keys.size
+          record.first.keys.each do |key|
+            record_array.should include(key.to_s)
+          end
+        end
+
+        it 'uses the provided definition instead of the header line when :headers option is true' do
+          record = Ratistics::Load.csv_gz_file(csv_gz_file, csv_definition, :headers => true)
+          record.count.should eq record_count-1
+          record.first.should_not eq record_hash
+          record.first.keys.should eq record_hash.keys
         end
 
         it 'supports the :hamster option' do

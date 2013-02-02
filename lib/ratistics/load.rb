@@ -152,11 +152,17 @@ module Ratistics
     # @see #csv_record
     def csv_data(data, definition = nil, opts = {})
       records = new_collection(opts[:hamster])
+      headers = (opts[:headers] == true)
 
       data.split(opts[:row_sep] || $/).each do |row|
-        row = row.strip
-        unless row.empty?
-          records = add_to_collection(records, csv_record(row.strip, definition, opts))
+        if headers
+          headers = false
+          definition = definition_from_header(row, definition, opts)
+        else
+          row = row.strip
+          unless row.empty?
+            records = add_to_collection(records, csv_record(row.strip, definition, opts))
+          end
         end
       end
 
@@ -181,9 +187,15 @@ module Ratistics
     # @see #csv_record
     def csv_file(path, definition = nil, opts = {})
       records = new_collection(opts[:hamster])
+      headers = (opts[:headers] == true)
 
       File.open(path, 'r').each_line(opts[:row_sep] || $/) do |row|
-        records = add_to_collection(records, csv_record(row.strip, definition, opts))
+        if headers
+          headers = false
+          definition = definition_from_header(row, definition, opts)
+        else
+          records = add_to_collection(records, csv_record(row.strip, definition, opts))
+        end
       end
 
       return records
@@ -203,11 +215,16 @@ module Ratistics
     # @see #csv_record
     def csv_gz_file(path, definition = nil, opts = {})
       records = new_collection(opts[:hamster])
-      opts = opts.dup.delete_if{|key, value| key.to_s == 'hamster'}
+      headers = (opts[:headers] == true)
 
       Zlib::GzipReader.open(path) do |gz|
         gz.each_line do |row|
-          records = add_to_collection(records, csv_record(row.strip, definition, opts))
+          if headers
+            headers = false
+            definition = definition_from_header(row, definition, opts)
+          else
+            records = add_to_collection(records, csv_record(row.strip, definition, opts))
+          end
         end
       end
 
@@ -419,6 +436,16 @@ module Ratistics
       else
         return array.cons(item)
       end
+    end
+
+    # :nodoc:
+    # @private
+    def definition_from_header(row, definition, opts)
+      if definition.nil?
+        definition = add_to_collection([], csv_record(row.strip, definition, opts))
+        definition = definition.flatten.collect{|field| field.to_sym }
+      end
+      return definition
     end
   end
 end
