@@ -201,6 +201,13 @@ module Ratistics
           record.first.should eq record_array
         end
 
+        it 'supports :row_sep option' do
+          data = csv_row + '|' + csv_row + '|' + csv_row 
+          record = Ratistics::Load.csv_data(data, nil, :row_sep => '|')
+          record.count.should eq 3
+          record.first.should eq record_array
+        end
+
         context 'Hamster' do
 
           it 'returns a Ruby Array when no :hamster option is given' do
