@@ -1,5 +1,3 @@
-$:.push File.join(File.dirname(__FILE__))
-
 require 'ratistics/average'
 require 'ratistics/distribution'
 require 'ratistics/functions'
