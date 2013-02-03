@@ -22,6 +22,9 @@ The project is hosted on the following sites:
 * [Continuous integration on Travis-CI](https://travis-ci.org/jdantonio/ratistics)
 * [Dependency tracking on Gemnasium](https://gemnasium.com/jdantonio/ratistics)
 
+See the [changelog](https://github.com/jdantonio/ratistics/blob/master/CHANGELOG.md)
+for information on the latest updates.
+
 # About
 
 A [friend](https://github.com/joecannatti) of mine convinced me

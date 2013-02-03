@@ -27,10 +27,11 @@ Gem::Specification.new do |s|
     Ratistics is pronounced *ra-TIS-tics*. Just like "statistics" but with an 'R'
   EOF
 
-  s.files            = Dir['README*', 'LICENSE*']
+  s.files            = Dir['README*', 'LICENSE*', 'CHANGELOG*']
   s.files           += Dir['{lib,spec}/**/*']
   s.test_files       = Dir['{spec}/**/*']
   s.extra_rdoc_files = ['README.md']
+  s.extra_rdoc_files = Dir['README*', 'LICENSE*', 'CHANGELOG*']
   s.require_paths    = ['lib']
 
   s.required_ruby_version = '>= 1.8.7'
