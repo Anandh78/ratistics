@@ -13,7 +13,6 @@ module Ratistics
     # probability to be computed against a specific field in a
     # data set of hashes or objects.
     #
-    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -47,7 +46,6 @@ module Ratistics
     # probability to be computed against a specific field in a
     # data set of hashes or objects.
     #
-    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -70,20 +68,20 @@ module Ratistics
     # Calculates the statistical range.
     #
     # Will sort the data set using natural sort order unless
-    # the #sorted argument is true or a block is given.
+    # the :sorted option is true or a block is given.
     #
     # When a block is given the block will be applied to every
     # element in the data set. Using a block in this way allows
     # probability to be computed against a specific field in a
     # data set of hashes or objects.
     #
-    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
     # @param [Enumerable] data the data set to compute the range of
-    # @param [Boolean] sorted indicates of the list is already sorted
     # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [String] :sorted indicates of the data is already sorted
     #
     # @return [Float, 0] the statistical range of the given data set
     #   or zero if the data set is empty

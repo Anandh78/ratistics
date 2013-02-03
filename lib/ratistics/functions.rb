@@ -10,7 +10,6 @@ module Ratistics
     # difference to be computed against a specific field in a
     # data set of hashes or objects.
     #
-    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -35,7 +34,6 @@ module Ratistics
     # difference to be computed against a specific field in a
     # data set of hashes or objects.
     #
-    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
