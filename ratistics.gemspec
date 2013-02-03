@@ -7,18 +7,34 @@ Gem::Specification.new do |s|
   s.name        = 'ratistics'
   s.version     = Ratistics::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Jerry D'Antonio"]
-  s.email       = ['jerry.dantonio@gmail.com']
+  s.author      = "Jerry D'Antonio"
+  s.email       = 'jerry.dantonio@gmail.com'
   s.homepage    = 'https://github.com/jdantonio/ratistics/'
-  s.summary     = %q{Ruby statistics functions.}
-  s.description = %q{Ratistics provides basic statistics computations and functions to Ruby programmers.}
+  s.summary     = "Ruby statistics functions"
+  s.license     = 'MIT'
 
-  s.files         = Dir['README*', 'LICENSE*']
-  s.files        += Dir['{lib,spec}/**/*']
-  s.test_files    = Dir['{spec}/**/*']
-  s.require_paths = ['lib']
+  s.description = <<-EOF
+    Ratistics is a purely functional library that provides basic statistical
+    computation functions to Ruby programmers. It is intended for small data
+    sets only. This gem was designed for simplicity. Only basic consideration
+    was given to performance.
 
-  s.post_install_message = 'Happy computing!'
+    Ratistics functions operate any any enumerable object and support block
+    syntax for accessing complex data. This makes it possible to perform
+    statistical computations on a wide range of collections, including
+    ActiveRecord record sets.
+
+    Ratistics is pronounced *ra-TIS-tics*. Just like "statistics" but with an 'R'
+  EOF
+
+  s.files            = Dir['README*', 'LICENSE*']
+  s.files           += Dir['{lib,spec}/**/*']
+  s.test_files       = Dir['{spec}/**/*']
+  s.extra_rdoc_files = ['README.md']
+  s.require_paths    = ['lib']
+
+  s.required_ruby_version = '>= 1.8.7'
+  s.post_install_message  = 'Happy computing!'
 
   # Production dependencies
 
