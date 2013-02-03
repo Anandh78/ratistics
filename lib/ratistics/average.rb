@@ -1,3 +1,4 @@
+require 'ratistics/collection'
 require 'ratistics/math'
 
 module Ratistics
@@ -96,7 +97,7 @@ module Ratistics
           if data.respond_to? :slice
             slice = data.slice(index, length)
           else
-            slice = Math.slice(data, index, length)
+            slice = Collection.slice(data, index, length)
           end
           mean = Average.mean(slice, &block)
 
