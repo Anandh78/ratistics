@@ -82,5 +82,12 @@ module Ratistics
 
     alias :pmf_variance :probability_variance
 
+    # @see Rank::percentiles
+    def percentiles(*args, &block)
+      return Ratistics.percentiles(self, *args, &block)
+    end
+
+    alias :centiles :percentiles
+
   end
 end

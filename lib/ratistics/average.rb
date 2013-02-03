@@ -244,7 +244,7 @@ module Ratistics
         end
       end
 
-      modes = modes.sort_by{|key, value| value * -1  }
+      modes = modes.sort_by{|key, value| value * -1 }
 
       modes = modes.reduce([]) do |memo, mode|
         break(memo) if mode[1] < modes[0][1]

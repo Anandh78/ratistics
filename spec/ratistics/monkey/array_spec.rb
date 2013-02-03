@@ -427,6 +427,38 @@ module Ratistics
         end
       end
 
+      context '#percentiles' do
+
+        it 'returns the percentiles in a multi-element sample' do
+          sample = [22, 40].freeze
+
+          centiles = sample.percentiles
+          centiles.size.should eq 2
+
+          centiles[0][0].should eq 22
+          centiles[0][1].should be_within(0.001).of(25.0)
+
+          centiles[1][0].should eq 40
+          centiles[1][1].should be_within(0.001).of(75.0)
+        end
+
+        it 'returns the percentiles with a block' do
+          sample = [
+            {:count => 22},
+            {:count => 40}
+          ].freeze
+
+          centiles = sample.percentiles{|item| item[:count]}
+          centiles.size.should eq 2
+
+          centiles[0][0].should eq 22
+          centiles[0][1].should be_within(0.001).of(25.0)
+
+          centiles[1][0].should eq 40
+          centiles[1][1].should be_within(0.001).of(75.0)
+        end
+      end
+
     end
   end
 end
