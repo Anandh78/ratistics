@@ -1,4 +1,4 @@
-require 'ratistics/functions'
+require 'ratistics/math'
 
 module Ratistics
 
@@ -89,14 +89,14 @@ module Ratistics
         interval = 100.0 / data.count
         steps = truncation / interval
 
-        if Functions.delta(steps, steps.to_i) < 0.1
+        if Math.delta(steps, steps.to_i) < 0.1
           
           # exact truncation
           index, length = steps.floor, data.count-(steps.floor * 2)
           if data.respond_to? :slice
             slice = data.slice(index, length)
           else
-            slice = Functions.slice(data, index, length)
+            slice = Math.slice(data, index, length)
           end
           mean = Average.mean(slice, &block)
 
@@ -110,8 +110,8 @@ module Ratistics
             slice1 = data.slice(index1, length1)
             slice2 = data.slice(index2, length2)
           else
-            slice1 = Functions.slice(data, index1, length2)
-            slice2 = Functions.slice(data, index1, length2)
+            slice1 = Math.slice(data, index1, length2)
+            slice2 = Math.slice(data, index1, length2)
           end
 
           m1 = Average.mean(slice1, &block)
@@ -160,7 +160,7 @@ module Ratistics
         min = block_given? ? yield(data.first) : data.first
         max = block_given? ? yield(data.last) : data.last
       else
-        min, max = Functions.minmax(data, &block)
+        min, max = Math.minmax(data, &block)
       end
 
       return Average.mean([min, max])

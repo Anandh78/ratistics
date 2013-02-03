@@ -59,7 +59,7 @@ module Ratistics
     #   or zero if the data set is empty
     def standard_deviation(data, mu=nil, opts={}, &block)
       return 0 if data.nil? || data.empty?
-      return Math.sqrt(variance(data, mu, &block))
+      return ::Math.sqrt(variance(data, mu, &block))
     end
 
     alias :std_dev :standard_deviation

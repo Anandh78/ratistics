@@ -1,6 +1,6 @@
 require 'ratistics/average'
 require 'ratistics/distribution'
-require 'ratistics/functions'
+require 'ratistics/math'
 require 'ratistics/load'
 require 'ratistics/probability'
 require 'ratistics/rank'
@@ -10,7 +10,7 @@ module Ratistics
   class << self
     include Average
     include Distribution
-    include Functions
+    include Math
     include Probability
     include Rank
   end

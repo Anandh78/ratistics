@@ -1,6 +1,6 @@
 module Ratistics
 
-  module Functions
+  module Math
     extend self
 
     # Compute the difference (delta) between two values.
@@ -68,8 +68,8 @@ module Ratistics
     #     {:count => 21},
     #   ]
     #
-    #   Functions.min([18, 13, 21]) #=> 13
-    #   Functions.min(sample){|item| item[:count] } #=> 13
+    #   Math.min([18, 13, 21]) #=> 13
+    #   Math.min(sample){|item| item[:count] } #=> 13
     #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
@@ -107,8 +107,8 @@ module Ratistics
     #     {:count => 21},
     #   ]
     #
-    #   Functions.max([18, 13, 21]) #=> 21
-    #   Functions.max(sample){|item| item[:count] } #=> 21
+    #   Math.max([18, 13, 21]) #=> 21
+    #   Math.max(sample){|item| item[:count] } #=> 21
     #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
@@ -146,8 +146,8 @@ module Ratistics
     #     {:count => 21},
     #   ]
     #
-    #   Functions.minmax([18, 13, 21]) #=> [13, 21]
-    #   Functions.minmax(sample){|item| item[:count] } #=> [13, 21]
+    #   Math.minmax([18, 13, 21]) #=> [13, 21]
+    #   Math.minmax(sample){|item| item[:count] } #=> [13, 21]
     #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set

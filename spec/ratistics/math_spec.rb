@@ -10,38 +10,38 @@ module Ratistics
     def first; @data.first; end
   end
 
-  describe Functions do
+  describe Math do
 
     context '#delta' do
 
       it 'computes the delta of two positive values' do
-        Functions.delta(10.5, 5.0).should be_within(0.01).of(5.5)
+        Math.delta(10.5, 5.0).should be_within(0.01).of(5.5)
       end
 
       it 'computes the delta of two negative values' do
-        Functions.delta(-10.5, -5.0).should be_within(0.01).of(5.5)
+        Math.delta(-10.5, -5.0).should be_within(0.01).of(5.5)
       end
 
       it 'computes the delta of a positive and negative value' do
-        Functions.delta(10.5, -5.0).should be_within(0.01).of(15.5)
+        Math.delta(10.5, -5.0).should be_within(0.01).of(15.5)
       end
 
       it 'computes the delta of two positive values with a block' do
         v1 = {:count => 10.5}
         v2 = {:count => 5.0}
-        Functions.delta(v1, v2){|x| x[:count]}.should be_within(0.01).of(5.5)
+        Math.delta(v1, v2){|x| x[:count]}.should be_within(0.01).of(5.5)
       end
 
       it 'computes the delta of two negative values with a block' do
         v1 = {:count => -10.5}
         v2 = {:count => -5.0}
-        Functions.delta(v1, v2){|x| x[:count]}.should be_within(0.01).of(5.5)
+        Math.delta(v1, v2){|x| x[:count]}.should be_within(0.01).of(5.5)
       end
 
       it 'computes the delta of a positive and negative value with a block' do
         v1 = {:count => 10.5}
         v2 = {:count => -5.0}
-        Functions.delta(v1, v2){|x| x[:count]}.should be_within(0.01).of(15.5)
+        Math.delta(v1, v2){|x| x[:count]}.should be_within(0.01).of(15.5)
       end
     end
 
@@ -90,22 +90,22 @@ module Ratistics
     context '#min' do
 
       it 'returns nil for a nil sample' do
-        Functions.min(nil).should be_nil
+        Math.min(nil).should be_nil
       end
 
       it 'returns nil for an empty sample' do
-        Functions.min([].freeze).should be_nil
+        Math.min([].freeze).should be_nil
       end
 
       context 'when data class has a #min function' do
 
         it 'returns the element for a one-element sample' do
-          Functions.min([10].freeze).should eq 10
+          Math.min([10].freeze).should eq 10
         end
 
         it 'returns the correct min for a multi-element sample' do
           sample = [18, 13, 13, 14, 13, 16, 14, 21, 13].freeze
-          Functions.min(sample).should eq 13
+          Math.min(sample).should eq 13
         end
 
         it 'returns the min with a block' do
@@ -121,7 +121,7 @@ module Ratistics
             {:count => 13},
           ].freeze
 
-          min = Functions.min(sample){|item| item[:count] }
+          min = Math.min(sample){|item| item[:count] }
           min.should eq 13
         end
       end
@@ -129,12 +129,12 @@ module Ratistics
       context 'when data class does not have a #min function' do
 
         it 'returns the element for a one-element sample' do
-          Functions.min(MinMaxTester.new(10).freeze).should eq 10
+          Math.min(MinMaxTester.new(10).freeze).should eq 10
         end
 
         it 'returns the correct min for a multi-element sample' do
           sample = MinMaxTester.new(18, 13, 13, 14, 13, 16, 14, 21, 13).freeze
-          Functions.min(sample).should eq 13
+          Math.min(sample).should eq 13
         end
 
         it 'returns the min with a block' do
@@ -150,7 +150,7 @@ module Ratistics
             {:count => 13}
           ).freeze
 
-          min = Functions.min(sample){|item| item[:count] }
+          min = Math.min(sample){|item| item[:count] }
           min.should eq 13
         end
       end
@@ -161,7 +161,7 @@ module Ratistics
 
         specify do
           sample = Racer.where('age > 0')
-          Functions.min(sample){|r| r.age}.should eq 10
+          Math.min(sample){|r| r.age}.should eq 10
         end
       end
 
@@ -171,33 +171,33 @@ module Ratistics
         let(:vector) { Hamster.vector(18, 13, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:set) { Hamster.set(18, 13, 13, 14, 13, 16, 14, 21, 13).freeze }
 
-        specify { Functions.min(list).should eq 13 }
+        specify { Math.min(list).should eq 13 }
 
-        specify { Functions.min(vector).should eq 13 }
+        specify { Math.min(vector).should eq 13 }
 
-        specify { Functions.min(set).should eq 13 }
+        specify { Math.min(set).should eq 13 }
       end
     end
 
     context '#max' do
 
       it 'returns nil for a nil sample' do
-        Functions.max(nil).should be_nil
+        Math.max(nil).should be_nil
       end
 
       it 'returns nil for an empty sample' do
-        Functions.max([].freeze).should be_nil
+        Math.max([].freeze).should be_nil
       end
 
       context 'when data class has a #min function' do
 
         it 'returns the element for a one-element sample' do
-          Functions.max([10].freeze).should eq 10
+          Math.max([10].freeze).should eq 10
         end
 
         it 'returns the correct max for a multi-element sample' do
           sample = [18, 13, 13, 14, 13, 16, 14, 21, 13].freeze
-          Functions.max(sample).should eq 21
+          Math.max(sample).should eq 21
         end
 
         it 'returns the max with a block' do
@@ -213,7 +213,7 @@ module Ratistics
             {:count => 13},
           ].freeze
 
-          max = Functions.max(sample){|item| item[:count] }
+          max = Math.max(sample){|item| item[:count] }
           max.should eq 21
         end
       end
@@ -221,12 +221,12 @@ module Ratistics
       context 'when data class does not have a #min function' do
 
         it 'returns the element for a one-element sample' do
-          Functions.max(MinMaxTester.new(10).freeze).should eq 10
+          Math.max(MinMaxTester.new(10).freeze).should eq 10
         end
 
         it 'returns the correct max for a multi-element sample' do
           sample = MinMaxTester.new(8, 13, 13, 14, 13, 16, 14, 21, 13).freeze
-          Functions.max(sample).should eq 21
+          Math.max(sample).should eq 21
         end
 
         it 'returns the max with a block' do
@@ -242,7 +242,7 @@ module Ratistics
             {:count => 13}
           ).freeze
 
-          max = Functions.max(sample){|item| item[:count] }
+          max = Math.max(sample){|item| item[:count] }
           max.should eq 21
         end
       end
@@ -253,7 +253,7 @@ module Ratistics
 
         specify do
           sample = Racer.where('age > 0')
-          Functions.max(sample){|r| r.age}.should eq 80
+          Math.max(sample){|r| r.age}.should eq 80
         end
       end
 
@@ -263,33 +263,33 @@ module Ratistics
         let(:vector) { Hamster.vector(18, 13, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:set) { Hamster.set(18, 13, 13, 14, 13, 16, 14, 21, 13).freeze }
 
-        specify { Functions.max(list).should eq 21 }
+        specify { Math.max(list).should eq 21 }
 
-        specify { Functions.max(vector).should eq 21 }
+        specify { Math.max(vector).should eq 21 }
 
-        specify { Functions.max(set).should eq 21 }
+        specify { Math.max(set).should eq 21 }
       end
     end
 
     context '#minmax' do
 
       it 'returns an array with two nil elements for a nil sample' do
-        Functions.minmax(nil).should eq [nil, nil]
+        Math.minmax(nil).should eq [nil, nil]
       end
 
       it 'returns an array with two nil elements for an empty sample' do
-        Functions.minmax([].freeze).should eq [nil, nil]
+        Math.minmax([].freeze).should eq [nil, nil]
       end
 
       context 'when data class has a #min function' do
 
         it 'returns the element as min and maxfor a one-element sample' do
-          Functions.minmax([10].freeze).should eq [10, 10]
+          Math.minmax([10].freeze).should eq [10, 10]
         end
 
         it 'returns the correct min and max for a multi-element sample' do
           sample = [18, 13, 13, 14, 13, 16, 14, 21, 13].freeze
-          Functions.minmax(sample).should eq [13, 21]
+          Math.minmax(sample).should eq [13, 21]
         end
 
         it 'returns the min and max with a block' do
@@ -305,7 +305,7 @@ module Ratistics
             {:count => 13},
           ].freeze
 
-          minmax = Functions.minmax(sample){|item| item[:count] }
+          minmax = Math.minmax(sample){|item| item[:count] }
           minmax.should eq [13, 21]
         end
       end
@@ -313,12 +313,12 @@ module Ratistics
       context 'when data class does not have a #min function' do
 
         it 'returns the element as min and maxfor a one-element sample' do
-          Functions.minmax(MinMaxTester.new(10).freeze).should eq [10, 10]
+          Math.minmax(MinMaxTester.new(10).freeze).should eq [10, 10]
         end
 
         it 'returns the correct min and max for a multi-element sample' do
           sample = MinMaxTester.new(18, 13, 13, 14, 13, 16, 14, 21, 13).freeze
-          Functions.minmax(sample).should eq [13, 21]
+          Math.minmax(sample).should eq [13, 21]
         end
 
         it 'returns the min and max with a block' do
@@ -334,7 +334,7 @@ module Ratistics
             {:count => 13}
           ).freeze
 
-          minmax = Functions.minmax(sample){|item| item[:count] }
+          minmax = Math.minmax(sample){|item| item[:count] }
           minmax.should eq [13, 21]
         end
       end
@@ -345,7 +345,7 @@ module Ratistics
 
         specify do
           sample = Racer.where('age > 0')
-          Functions.minmax(sample){|r| r.age}.should eq [10, 80]
+          Math.minmax(sample){|r| r.age}.should eq [10, 80]
         end
       end
 
@@ -355,11 +355,11 @@ module Ratistics
         let(:vector) { Hamster.vector(18, 13, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:set) { Hamster.set(18, 13, 13, 14, 13, 16, 14, 21, 13).freeze }
 
-        specify { Functions.minmax(list).should eq [13, 21] }
+        specify { Math.minmax(list).should eq [13, 21] }
 
-        specify { Functions.minmax(vector).should eq [13, 21] }
+        specify { Math.minmax(vector).should eq [13, 21] }
 
-        specify { Functions.minmax(set).should eq [13, 21] }
+        specify { Math.minmax(set).should eq [13, 21] }
       end
     end
 

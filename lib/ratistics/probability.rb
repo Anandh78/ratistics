@@ -1,4 +1,4 @@
-require 'ratistics/functions'
+require 'ratistics/math'
 
 module Ratistics
 
@@ -117,7 +117,7 @@ module Ratistics
       total = pmf.values.reduce(0.0){|n, value| n + value} 
 
       return { pmf.keys.first => 1 } if pmf.count == 1
-      return pmf if Functions.delta(total, 1.0) < 0.01
+      return pmf if Math.delta(total, 1.0) < 0.01
 
       factor = 1.0 / total.to_f
       normalized = pmf.reduce({}) do |memo, pair|
