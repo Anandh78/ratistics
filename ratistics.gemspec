@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.summary     = %q{Ruby statistics functions.}
   s.description = %q{Ratistics provides basic statistics computations and functions to Ruby programmers.}
 
-  s.files         = Dir['Rakefile', 'README*', 'LICENSE*']
-  s.files        += Dir['{lib,spec,tasks}/**/*']
+  s.files         = Dir['README*', 'LICENSE*']
+  s.files        += Dir['{lib,spec}/**/*']
   s.test_files    = Dir['{spec}/**/*']
   s.require_paths = ['lib']
 
