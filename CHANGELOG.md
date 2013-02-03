@@ -1,6 +1,6 @@
 # Ratistics Changelog
 
-## 0.1.1
+## 0.1.1 *(in progress)*
 
 * Added *Rank* module with functions related to percentiles
   * percentiles (alias: centiles)
