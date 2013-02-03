@@ -55,7 +55,7 @@ module Ratistics
 
         before(:all) { Racer.connect }
 
-        specify { Distribution.standard_deviation(Racer.all){|r| r.age }.should be_within(0.01).of(12.479) }
+        specify { Distribution.standard_deviation(Racer.all.freeze){|r| r.age }.should be_within(0.01).of(12.479) }
 
       end
 
@@ -126,7 +126,7 @@ module Ratistics
 
         before(:all) { Racer.connect }
 
-        specify { Distribution.variance(Racer.all){|r| r.age }.should be_within(0.01).of(155.725) }
+        specify { Distribution.variance(Racer.all.freeze){|r| r.age }.should be_within(0.01).of(155.725) }
 
       end
 

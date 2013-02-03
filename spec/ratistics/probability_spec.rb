@@ -69,7 +69,7 @@ module Ratistics
         before(:all) { Racer.connect }
 
         specify do
-          frequency = Probability.frequency(Racer.all){|r| r.age }
+          frequency = Probability.frequency(Racer.all.freeze){|r| r.age }
 
           frequency.count.should eq 67
           frequency[22].should eq 11
@@ -291,7 +291,7 @@ module Ratistics
         before(:all) { Racer.connect }
 
         specify do
-          probability = Probability.probability(Racer.all){|r| r.age }
+          probability = Probability.probability(Racer.all.freeze){|r| r.age }
 
           probability.count.should eq 67
           probability[22].should be_within(0.001).of(0.00673)

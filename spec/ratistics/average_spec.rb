@@ -40,7 +40,7 @@ module Ratistics
 
         before(:all) { Racer.connect }
 
-        specify { Average.mean(Racer.all){|r| r.age }.should be_within(0.01).of(38.440) }
+        specify { Average.mean(Racer.all.freeze){|r| r.age }.should be_within(0.01).of(38.440) }
 
       end
 
@@ -254,7 +254,7 @@ module Ratistics
 
         before(:all) { Racer.connect }
 
-        specify { Average.midrange(Racer.all){|r| r.age }.should be_within(0.01).of(40.0) }
+        specify { Average.midrange(Racer.all.freeze){|r| r.age }.should be_within(0.01).of(40.0) }
 
       end
 
@@ -357,7 +357,7 @@ module Ratistics
 
         before(:all) { Racer.connect }
 
-        specify { Average.median(Racer.all){|r| r.age }.should be_within(0.01).of(23.0) }
+        specify { Average.median(Racer.all.freeze){|r| r.age }.should be_within(0.01).of(23.0) }
 
       end
 
@@ -491,7 +491,7 @@ module Ratistics
         before(:all) { Racer.connect }
 
         specify do
-          mode = Average.mode(Racer.all){|r| r.age }
+          mode = Average.mode(Racer.all.freeze){|r| r.age }
           mode.count.should eq 1
           mode.should include(40)
         end
