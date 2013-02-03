@@ -321,13 +321,14 @@ shows how to use [Gruff](https://github.com/topfunky/gruff) to create this:
 
 ## Test Data
 
-The test data shipped with this gem is freely available from
-the Centers for Disease Control and Prevention
-[National Survey of Family Growth](http://www.cdc.gov/nchs/nsfg.htm).
-It is the test data used in the aforementioned book *Think Stats*.
+The test data shipped with this gem is freely available from the Centers for Disease Control
+and Prevention [National Survey of Family Growth](http://www.cdc.gov/nchs/nsfg.htm) and from
+the [27th Anniversary Edition James Joyce Ramble 10K](27th Anniversary Edition James Joyce Ramble 10K).
 
 ## Todo
 
+* Add #summation function to Math module
+* Support both hashes and arrays of arrays for distribution data
 * Update YARD docs for CSV loading
 * Submit a patch adding a #slice function to Hamster::Vector
 * Support negative indexes on #slice
