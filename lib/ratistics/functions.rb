@@ -10,6 +10,7 @@ module Ratistics
     # difference to be computed against a specific field in a
     # data set of hashes or objects.
     #
+    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -34,6 +35,7 @@ module Ratistics
     # difference to be computed against a specific field in a
     # data set of hashes or objects.
     #
+    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -199,16 +201,16 @@ module Ratistics
     def slice(data, *args)
       index = args[0]
       length = args[1]
-      if args.count == 1
+      if args.size == 1
         if index.is_a? Range
           slice_with_range(data, index)
         else
           slice_with_index(data, index)
         end
-      elsif args.count == 2
+      elsif args.size == 2
         slice_with_length(data, index, length)
       else
-        raise ArgumentError.new("wrong number of arguments (#{args.count} for 2..3)")
+        raise ArgumentError.new("wrong number of arguments (#{args.size} for 2..3)")
       end
     end
 
@@ -228,8 +230,8 @@ module Ratistics
     # :nodoc:
     # @private
     def slice_with_range(data, range)
-      return nil if range.first < 0 || range.first >= data.count
-      last = [range.last, data.count-1].min
+      return nil if range.first < 0 || range.first >= data.size
+      last = [range.last, data.size-1].min
       range = Range.new(range.first, last)
       slice = []
       range.each do |index|

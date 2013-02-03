@@ -2,6 +2,14 @@ require 'spec_helper'
 
 module Ratistics
 
+  class MinMaxTester
+    attr_reader :data
+    def initialize(*args); @data = [args].flatten; end
+    def each(&block); @data.each {|item| yield(item) }; end
+    def empty?; @data.empty?; end
+    def first; @data.first; end
+  end
+
   describe Functions do
 
     context '#delta' do
@@ -89,30 +97,72 @@ module Ratistics
         Functions.min([].freeze).should be_nil
       end
 
-      it 'returns the element for a one-element sample' do
-        Functions.min([10].freeze).should eq 10
+      context 'when data class has a #min function' do
+
+        it 'returns the element for a one-element sample' do
+          Functions.min([10].freeze).should eq 10
+        end
+
+        it 'returns the correct min for a multi-element sample' do
+          sample = [18, 13, 13, 14, 13, 16, 14, 21, 13].freeze
+          Functions.min(sample).should eq 13
+        end
+
+        it 'returns the min with a block' do
+          sample = [
+            {:count => 18},
+            {:count => 13},
+            {:count => 13},
+            {:count => 14},
+            {:count => 13},
+            {:count => 16},
+            {:count => 14},
+            {:count => 21},
+            {:count => 13},
+          ].freeze
+
+          min = Functions.min(sample){|item| item[:count] }
+          min.should eq 13
+        end
       end
 
-      it 'returns the correct min for a multi-element sample' do
-        sample = [18, 13, 13, 14, 13, 16, 14, 21, 13].freeze
-        Functions.min(sample).should eq 13
+      context 'when data class does not have a #min function' do
+
+        it 'returns the element for a one-element sample' do
+          Functions.min(MinMaxTester.new(10).freeze).should eq 10
+        end
+
+        it 'returns the correct min for a multi-element sample' do
+          sample = MinMaxTester.new(18, 13, 13, 14, 13, 16, 14, 21, 13).freeze
+          Functions.min(sample).should eq 13
+        end
+
+        it 'returns the min with a block' do
+          sample = MinMaxTester.new(
+            {:count => 18},
+            {:count => 13},
+            {:count => 13},
+            {:count => 14},
+            {:count => 13},
+            {:count => 16},
+            {:count => 14},
+            {:count => 21},
+            {:count => 13}
+          ).freeze
+
+          min = Functions.min(sample){|item| item[:count] }
+          min.should eq 13
+        end
       end
 
-      it 'returns the min with a block' do
-        sample = [
-          {:count => 18},
-          {:count => 13},
-          {:count => 13},
-          {:count => 14},
-          {:count => 13},
-          {:count => 16},
-          {:count => 14},
-          {:count => 21},
-          {:count => 13},
-        ].freeze
+      context 'with ActiveRecord' do
 
-        min = Functions.min(sample){|item| item[:count] }
-        min.should eq 13
+        before(:all) { Racer.connect }
+
+        specify do
+          sample = Racer.where('age > 0')
+          Functions.min(sample){|r| r.age}.should eq 10
+        end
       end
 
       context 'with Hamster' do
@@ -139,30 +189,72 @@ module Ratistics
         Functions.max([].freeze).should be_nil
       end
 
-      it 'returns the element for a one-element sample' do
-        Functions.max([10].freeze).should eq 10
+      context 'when data class has a #min function' do
+
+        it 'returns the element for a one-element sample' do
+          Functions.max([10].freeze).should eq 10
+        end
+
+        it 'returns the correct max for a multi-element sample' do
+          sample = [18, 13, 13, 14, 13, 16, 14, 21, 13].freeze
+          Functions.max(sample).should eq 21
+        end
+
+        it 'returns the max with a block' do
+          sample = [
+            {:count => 18},
+            {:count => 13},
+            {:count => 13},
+            {:count => 14},
+            {:count => 13},
+            {:count => 16},
+            {:count => 14},
+            {:count => 21},
+            {:count => 13},
+          ].freeze
+
+          max = Functions.max(sample){|item| item[:count] }
+          max.should eq 21
+        end
       end
 
-      it 'returns the correct max for a multi-element sample' do
-        sample = [18, 13, 13, 14, 13, 16, 14, 21, 13].freeze
-        Functions.max(sample).should eq 21
+      context 'when data class does not have a #min function' do
+
+        it 'returns the element for a one-element sample' do
+          Functions.max(MinMaxTester.new(10).freeze).should eq 10
+        end
+
+        it 'returns the correct max for a multi-element sample' do
+          sample = MinMaxTester.new(8, 13, 13, 14, 13, 16, 14, 21, 13).freeze
+          Functions.max(sample).should eq 21
+        end
+
+        it 'returns the max with a block' do
+          sample = MinMaxTester.new(
+            {:count => 18},
+            {:count => 13},
+            {:count => 13},
+            {:count => 14},
+            {:count => 13},
+            {:count => 16},
+            {:count => 14},
+            {:count => 21},
+            {:count => 13}
+          ).freeze
+
+          max = Functions.max(sample){|item| item[:count] }
+          max.should eq 21
+        end
       end
 
-      it 'returns the max with a block' do
-        sample = [
-          {:count => 18},
-          {:count => 13},
-          {:count => 13},
-          {:count => 14},
-          {:count => 13},
-          {:count => 16},
-          {:count => 14},
-          {:count => 21},
-          {:count => 13},
-        ].freeze
+      context 'with ActiveRecord' do
 
-        max = Functions.max(sample){|item| item[:count] }
-        max.should eq 21
+        before(:all) { Racer.connect }
+
+        specify do
+          sample = Racer.where('age > 0')
+          Functions.max(sample){|r| r.age}.should eq 80
+        end
       end
 
       context 'with Hamster' do
@@ -189,30 +281,72 @@ module Ratistics
         Functions.minmax([].freeze).should eq [nil, nil]
       end
 
-      it 'returns the element as min and maxfor a one-element sample' do
-        Functions.minmax([10].freeze).should eq [10, 10]
+      context 'when data class has a #min function' do
+
+        it 'returns the element as min and maxfor a one-element sample' do
+          Functions.minmax([10].freeze).should eq [10, 10]
+        end
+
+        it 'returns the correct min and max for a multi-element sample' do
+          sample = [18, 13, 13, 14, 13, 16, 14, 21, 13].freeze
+          Functions.minmax(sample).should eq [13, 21]
+        end
+
+        it 'returns the min and max with a block' do
+          sample = [
+            {:count => 18},
+            {:count => 13},
+            {:count => 13},
+            {:count => 14},
+            {:count => 13},
+            {:count => 16},
+            {:count => 14},
+            {:count => 21},
+            {:count => 13},
+          ].freeze
+
+          minmax = Functions.minmax(sample){|item| item[:count] }
+          minmax.should eq [13, 21]
+        end
       end
 
-      it 'returns the correct min and max for a multi-element sample' do
-        sample = [18, 13, 13, 14, 13, 16, 14, 21, 13].freeze
-        Functions.minmax(sample).should eq [13, 21]
+      context 'when data class does not have a #min function' do
+
+        it 'returns the element as min and maxfor a one-element sample' do
+          Functions.minmax(MinMaxTester.new(10).freeze).should eq [10, 10]
+        end
+
+        it 'returns the correct min and max for a multi-element sample' do
+          sample = MinMaxTester.new(18, 13, 13, 14, 13, 16, 14, 21, 13).freeze
+          Functions.minmax(sample).should eq [13, 21]
+        end
+
+        it 'returns the min and max with a block' do
+          sample = MinMaxTester.new(
+            {:count => 18},
+            {:count => 13},
+            {:count => 13},
+            {:count => 14},
+            {:count => 13},
+            {:count => 16},
+            {:count => 14},
+            {:count => 21},
+            {:count => 13}
+          ).freeze
+
+          minmax = Functions.minmax(sample){|item| item[:count] }
+          minmax.should eq [13, 21]
+        end
       end
 
-      it 'returns the min and max with a block' do
-        sample = [
-          {:count => 18},
-          {:count => 13},
-          {:count => 13},
-          {:count => 14},
-          {:count => 13},
-          {:count => 16},
-          {:count => 14},
-          {:count => 21},
-          {:count => 13},
-        ].freeze
+      context 'with ActiveRecord' do
 
-        minmax = Functions.minmax(sample){|item| item[:count] }
-        minmax.should eq [13, 21]
+        before(:all) { Racer.connect }
+
+        specify do
+          sample = Racer.where('age > 0')
+          Functions.minmax(sample){|r| r.age}.should eq [10, 80]
+        end
       end
 
       context 'with Hamster' do
@@ -230,6 +364,21 @@ module Ratistics
     end
 
     context '#slice' do
+
+      context 'function signature' do
+
+        it 'raises an exception with less than two arguments' do
+          lambda {
+            Ratistics.slice(1)
+          }.should raise_exception(ArgumentError)
+        end
+
+        it 'raises and exception with more than three arguments' do
+          lambda {
+            Ratistics.slice(1, 2, 3, 4)
+          }.should raise_exception(ArgumentError)
+        end
+      end
 
       context 'with index' do
 
