@@ -3,6 +3,41 @@ module Ratistics
   module Collection
     extend self
 
+    # Conduct a binary search against the sorted collection and return
+    # a pair of indexes indicating the result of the search. The
+    # indexes will be returned as a two-element array.
+    #
+    # The default behavior is to search the entire collections. The
+    # options hash can be used to provide optional low and high indexes
+    # (:imin and :imax). If either :imin or :imax is out of range the
+    # natural collection boundary will be used.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # When the key is found both returned indexes will be the index of
+    # the item. When the key is not found but the value is within the
+    # range of value in the data set the returned indexes will be
+    # immediately above and below where the key would reside. When
+    # the key is below the lowest value in the search range the result
+    # will be nil and the lowest index. When the key is higher than the
+    # highest value in the search range the result will be the highest
+    # index and nil. 
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to search
+    # @param [Hash] opts search options
+    # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [Integer] :imin minimum index to search
+    # @option opts [Integer] :imax maximum index to search
+    #
+    # @return [Array] pair of indexes (see above) or nil when the collection
+    #   is empty or nil
     def binary_search(data, key, opts={}, &block)
       return nil if data.nil? || data.empty?
 

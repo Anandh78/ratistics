@@ -142,6 +142,7 @@ When working with sets of complex data use blocks to process the data without co
 
 ### Available Functions
 
+* binary_search (alias: bsearch, half_interval_search)
 * delta
 * frequency
 * frequency_mean
