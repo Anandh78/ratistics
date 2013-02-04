@@ -21,6 +21,7 @@ The project is hosted on the following sites:
 * [YARD documentation on RubyDoc.org](http://rubydoc.info/github/jdantonio/ratistics/master/frames )
 * [Continuous integration on Travis-CI](https://travis-ci.org/jdantonio/ratistics)
 * [Dependency tracking on Gemnasium](https://gemnasium.com/jdantonio/ratistics)
+* [Follow me on Twitter](https://twitter.com/jerrydantonio)
 
 See the [changelog](https://github.com/jdantonio/ratistics/blob/master/CHANGELOG.md)
 for information on the latest updates.
