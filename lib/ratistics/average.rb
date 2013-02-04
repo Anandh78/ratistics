@@ -69,7 +69,7 @@ module Ratistics
     #   both high and low outliers
     # @param [Block] block optional block for per-item processing
     #
-    # @option opts [String] :sorted indicates of the data is already sorted
+    # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Float, 0] the statistical mean of the given data set
     #   or zero if the data set is empty
@@ -150,7 +150,7 @@ module Ratistics
     # @param [Enumerable] data the data set to compute the midrange of
     # @param [Block] block optional block for per-item processing
     #
-    # @option opts [String] :sorted indicates of the data is already sorted
+    # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Float, 0] the statistical midrange of the given data set
     #   or zero if the data set is empty
@@ -185,7 +185,7 @@ module Ratistics
     # @param [Enumerable] data the data set to compute the median of
     # @param [Block] block optional block for per-item processing
     #
-    # @option opts [String] :sorted indicates of the data is already sorted
+    # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Float, 0] the statistical median of the given data set
     #   or zero if the data set is empty

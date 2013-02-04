@@ -38,7 +38,7 @@ module Ratistics
     # @param [Hash] opts computation options
     # @param [Block] block optional block for per-item processing
     #
-    # @option opts [String] :sorted indicates of the data is already sorted
+    # @option opts [true, false] :sorted indicates of the data is already sorted
     # @option opts [String] :flatten remove duplicate data values
     #
     # @return [Array] set of values and percentiles
@@ -82,7 +82,7 @@ module Ratistics
     #   the percentile of
     # @param [Hash] opts computation options
     #
-    # @option opts [String] :sorted indicates of the data is already sorted
+    # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Numeric] percentile of the given index
     def percent_rank(data, index, opts={})
@@ -112,7 +112,7 @@ module Ratistics
     # @param [Hash] opts computation options
     # @param [Block] block optional block for per-item processing
     #
-    # @option opts [String] :sorted indicates of the data is already sorted
+    # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Numeric] value at the rank nearest to the given percentile
     def nearest_rank(data, percentile, opts={}, &block)
@@ -151,7 +151,7 @@ module Ratistics
     # @param [Hash] opts computation options
     # @param [Block] block optional block for per-item processing
     #
-    # @option opts [String] :sorted indicates of the data is already sorted
+    # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Numeric] value at the rank nearest to the given percentile
     def linear_rank(data, percentile, opts={}, &block)
