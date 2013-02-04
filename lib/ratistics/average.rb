@@ -31,7 +31,7 @@ module Ratistics
         total = total + item.to_f
       end
 
-      return total / data.count.to_f
+      return total / data.size.to_f
     end
 
     alias :avg :mean
@@ -78,8 +78,8 @@ module Ratistics
       data = data.sort unless block_given? || opts[:sorted] == true
 
       if truncation.nil?
-        if data.count >= 3
-          mean = Average.mean(data.slice(1..data.count-2))
+        if data.size >= 3
+          mean = Average.mean(data.slice(1..data.size-2))
         else
           mean = 0
         end
@@ -87,13 +87,13 @@ module Ratistics
         truncation = truncation * 100.0 if truncation < 1.0
         raise ArgumentError if truncation >= 50.0
 
-        interval = 100.0 / data.count
+        interval = 100.0 / data.size
         steps = truncation / interval
 
         if Math.delta(steps, steps.to_i) < 0.1
           
           # exact truncation
-          index, length = steps.floor, data.count-(steps.floor * 2)
+          index, length = steps.floor, data.size-(steps.floor * 2)
           if data.respond_to? :slice
             slice = data.slice(index, length)
           else
@@ -104,15 +104,15 @@ module Ratistics
         else
 
           # interpolation truncation
-          index1, length1 = steps.floor, data.count-(steps.floor * 2)
-          index2, length2 = steps.ceil, data.count-(steps.ceil * 2)
+          index1, length1 = steps.floor, data.size-(steps.floor * 2)
+          index2, length2 = steps.ceil, data.size-(steps.ceil * 2)
 
           if data.respond_to? :slice
             slice1 = data.slice(index1, length1)
             slice2 = data.slice(index2, length2)
           else
-            slice1 = Math.slice(data, index1, length2)
-            slice2 = Math.slice(data, index1, length2)
+            slice1 = Collection.slice(data, index1, length2)
+            slice2 = Collection.slice(data, index1, length2)
           end
 
           m1 = Average.mean(slice1, &block)
@@ -193,8 +193,8 @@ module Ratistics
       return 0 if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
 
-      index = data.count / 2
-      if data.count % 2 == 0 #even
+      index = data.size / 2
+      if data.size % 2 == 0 #even
 
         if block_given?
           median = (yield(data[index-1]) + yield(data[index])) / 2.0

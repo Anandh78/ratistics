@@ -1,6 +1,17 @@
 require 'spec_helper'
 
 module Ratistics
+
+  class MeanTester
+    attr_reader :data
+    def initialize(*args); @data = [args].flatten; end
+    def each(&block); @data.each {|item| yield(item) }; end
+    def empty?; @data.empty?; end
+    def first; @data.first; end
+    def size; @data.size; end
+    def [](index); @data[index]; end
+  end
+
   describe Average do
 
     context '#mean' do
@@ -113,6 +124,12 @@ module Ratistics
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
         mean = Average.truncated_mean(sample, 12.5)
         mean.should be_within(0.01).of(14.5625)
+      end
+
+      it 'calculates the interpolated mean when the collection does not support #slice' do
+        sample = MeanTester.new(11, 11, 12, 12, 12, 13, 13, 13, 13, 13, 14, 14, 16, 16, 17, 18, 19, 19, 20, 21).freeze
+        mean = Average.truncated_mean(sample, 12.5, :sorted => true)
+        mean.should be_within(0.01).of(14.0)
       end
 
       it 'does not sort a sample that is already sorted' do
