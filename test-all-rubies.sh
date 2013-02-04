@@ -33,7 +33,7 @@ bundle exec rspec spec
 rvm use jruby-1.7.0@ratistics --create
 JRUBY_OPTS="-Xcext.enabled=true" gem install bundler &>/dev/null 
 JRUBY_OPTS="-Xcext.enabled=true" bundle install &>/dev/null
-bundle exec rspec spec
+JRUBY_OPTS="-Xcext.enabled=true" bundle exec rspec spec
 
 rvm use ree-1.8.7-2012.02@ratistics --create
 gem install bundler &>/dev/null 
