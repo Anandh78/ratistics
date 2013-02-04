@@ -75,7 +75,25 @@ module Ratistics
     alias :bsearch :binary_search
     alias :half_interval_search :binary_search
 
+    # Scan a collection and determine if the elements are all in
+    # ascending order. Returns true for an empty set and false for
+    # a nil sample.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to search
+    # @param [Hash] opts search options
+    # @param [Block] block optional block for per-item processing
+    #
+    # @param [true, false] if the data set is in ascending order
     def ascending?(data, opts={}, &block)
+      return false if data.nil?
       (data.size-1).times do |i|
         if block_given?
           return false if yield(data[i]) > yield(data[i+1])
@@ -86,7 +104,25 @@ module Ratistics
       return true
     end
 
+    # Scan a collection and determine if the elements are all in
+    # descending order. Returns true for an empty set and false for
+    # a nil sample.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to search
+    # @param [Hash] opts search options
+    # @param [Block] block optional block for per-item processing
+    #
+    # @param [true, false] if the data set is in descending order
     def descending?(data, opts={}, &block)
+      return false if data.nil?
       (data.size-1).times do |i|
         if block_given?
           return false if yield(data[i]) < yield(data[i+1])

@@ -19,6 +19,10 @@ Finally, several arithmetic and statitical computations.
   * max
   * minmax
   * relative_risk
+* Added collections functions with block support
+  * ascending?
+  * descending?
+  * binary_search (alias: bsearch, half_interval_search)
 * Added *#midrange* function to the *Average* module
 * Added tests to confirm ActiveRecord compatability
 * Refactored CSV loading for better support across Ruby versions

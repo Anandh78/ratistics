@@ -126,5 +126,15 @@ module Ratistics
     alias :bsearch :binary_search
     alias :half_interval_search :binary_search
 
+    # @see Collection::ascending?
+    def ascending?(*args, &block)
+      return Ratistics.ascending?(self, *args, &block)
+    end
+
+    # @see Collection::descending?
+    def descending?(*args, &block)
+      return Ratistics.descending?(self, *args, &block)
+    end
+
   end
 end

@@ -497,6 +497,32 @@ module Ratistics
         end
       end
 
+      context '#ascending?' do
+
+        it 'returns true for an ascending collection' do
+          sample = [1, 2, 3, 4].freeze
+          sample.ascending?.should be_true
+        end
+
+        it 'returns false for a non-ascending collection' do
+          sample = [1, 3, 2, 4].freeze
+          sample.ascending?.should be_false
+        end
+      end
+
+      context '#descending?' do
+
+        it 'returns true for an descending collection' do
+          sample = [4, 3, 2, 1].freeze
+          sample.descending?.should be_true
+        end
+
+        it 'returns false for a non-descending collection' do
+          sample = [1, 3, 2, 4].freeze
+          sample.descending?.should be_false
+        end
+      end
+
     end
   end
 end
