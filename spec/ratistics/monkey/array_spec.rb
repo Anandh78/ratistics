@@ -470,6 +470,33 @@ module Ratistics
         end
       end
 
+      context '#binary_search' do
+
+        it 'returns the index of the item when found as [index, index]' do
+          sample = [3, 5, 6, 7, 8, 11, 15, 21, 22, 28, 30, 32, 33, 34, 40].freeze
+          index = sample.binary_search(11)
+          index.should eq [5, 5]
+        end
+
+        it 'returns the index of the item when using a block' do
+          sample = [
+            {:count => 11}, 
+            {:count => 12},
+            {:count => 13},
+            {:count => 14},
+            {:count => 16},
+            {:count => 17},
+            {:count => 18},
+            {:count => 19},
+            {:count => 20},
+            {:count => 21}
+          ].freeze
+
+          index = sample.binary_search(14){|item| item[:count]}
+          index.should eq [3, 3]
+        end
+      end
+
     end
   end
 end
