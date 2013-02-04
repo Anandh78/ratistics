@@ -14,11 +14,10 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
 
   s.description = <<-EOF
-    Ratistics is a purely functional library that provides basic statistical
-    computation functions to Ruby programmers. It is intended for small data
-    sets only. This gem was designed for simplicity. Only basic consideration
-    was given to performance.
+    Ratistics is a purely functional library that provides basic statistics
+    functions to Ruby programs. It is intended for small data sets only.
 
+    This gem was designed for simplicity.
     Ratistics functions operate any any enumerable object and support block
     syntax for accessing complex data. This makes it possible to perform
     statistical computations on a wide range of collections, including
@@ -47,9 +46,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'hamster'
 
   # test active_record collections
-  s.add_dependency 'standalone_migrations'
-  s.add_dependency 'activerecord', '~> 3.2.0'
-  s.add_dependency 'sqlite3'
+  s.add_development_dependency 'standalone_migrations'
+  s.add_development_dependency 'activerecord', '~> 3.2.0'
+  s.add_development_dependency 'sqlite3'
 
   # create API documentation
   s.add_development_dependency 'rake'
