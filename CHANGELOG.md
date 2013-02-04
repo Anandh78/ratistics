@@ -1,8 +1,15 @@
 # Ratistics Changelog
 
-### 0.1.1 *(in progress)*
+### 0.2.1
 
-Release Date: TBD
+Release Date: February 4, 2013
+
+Removed runtime dependencies that were accidentally added in 2.0.0.
+They were intended to be development dependencies only.
+
+### 0.2.0
+
+Release Date: February 4, 2013
 
 This release greatly enhanced the tests by adding support for ActiveRecord.
 It also greatly enhanced cross-Ruby compatibility by fixing code that
