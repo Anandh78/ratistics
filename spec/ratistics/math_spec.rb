@@ -363,5 +363,15 @@ module Ratistics
       end
     end
 
+    context 'rank calculations' do
+
+      specify { Math.ordinal_rank(40, 5).should be_within(0.001).of(2.5) }
+
+      specify { Math.nist_primary_rank(40, 5).should be_within(0.001).of(2.4) }
+
+      specify { Math.nist_alternate_rank(40, 5).should be_within(0.001).of(2.6) }
+
+    end
+
   end
 end

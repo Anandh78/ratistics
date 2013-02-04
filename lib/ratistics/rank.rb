@@ -1,4 +1,5 @@
 require 'ratistics/collection'
+require 'ratistics/math'
 
 module Ratistics
 
@@ -113,6 +114,8 @@ module Ratistics
     # @param [Block] block optional block for per-item processing
     #
     # @option opts [true, false] :sorted indicates of the data is already sorted
+    # @option opts [Symbol] :rank which method to use to calculate the percentile
+    #   rank: :ordinal, :nist_primary, :nist_alternate (default: ordinal)
     #
     # @return [Numeric] value at the rank nearest to the given percentile
     def nearest_rank(data, percentile, opts={}, &block)
@@ -121,7 +124,8 @@ module Ratistics
       return data.first if percentile == 0
       return data.last if percentile == 100
 
-      index = ((percentile / 100.0 * data.size) + 0.5).round
+      calc = opts[:rank] || :ordinal
+      index = Math.send("#{calc}_rank", percentile, data.size).round
 
       if block_given?
         rank = yield(data[index-1])

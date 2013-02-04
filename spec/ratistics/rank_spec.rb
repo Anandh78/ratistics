@@ -321,6 +321,37 @@ module Ratistics
         rank = Rank.nearest_rank(sample, 35){|item| item[:count]}
       end
 
+      context 'rank calculations' do
+
+        it 'uses the ordinal rank formula when :rank => :ordinal' do
+          Math.should_receive(:ordinal_rank).with(40, 5).and_return(2.5)
+          sample = [15, 20, 35, 40, 50].freeze
+          rank = Rank.nearest_rank(sample, 40, :rank => :ordinal)
+          rank.should eq 35
+        end
+
+        it 'uses the NIST primary formula when :rank => :nist_primary' do
+          Math.should_receive(:nist_primary_rank).with(40, 5).and_return(2.4)
+          sample = [15, 20, 35, 40, 50].freeze
+          rank = Rank.nearest_rank(sample, 40, :rank => :nist_primary)
+          rank.should eq 20
+        end
+
+        it 'uses the NIST alternate formula when :rank => :nist_alternate' do
+          Math.should_receive(:nist_alternate_rank).with(40, 5).and_return(2.6)
+          sample = [15, 20, 35, 40, 50].freeze
+          rank = Rank.nearest_rank(sample, 40, :rank => :nist_alternate)
+          rank.should eq 35
+        end
+
+        it 'uses the ordinal rank formula by default' do
+          Math.should_receive(:ordinal_rank).with(40, 5).and_return(2.5)
+          sample = [15, 20, 35, 40, 50].freeze
+          rank = Rank.nearest_rank(sample, 40)
+          rank.should eq 35
+        end
+      end
+
       context 'for ActiveRecord' do
 
         before(:all) { Racer.connect }

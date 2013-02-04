@@ -142,19 +142,13 @@ When working with sets of complex data use blocks to process the data without co
 
 ### Available Functions
 
-* binary_search (alias: bsearch, half_interval_search)
-* ascending?
-* delta
-* descending?
+#### Statistics
 * frequency
 * frequency_mean
 * linear_rank (alias: percentile, centile)
-* max
 * mean (alias: average, avg)
 * median
 * midrange (alias: midextreme)
-* min
-* minmax
 * mode
 * nearest_rank
 * normalize_probability (alias: normalize_pmf)
@@ -164,11 +158,28 @@ When working with sets of complex data use blocks to process the data without co
 * probability_variance (alias: pmf_variance)
 * range
 * ranks (alias: percentiles, centiles)
-* relative_risk (alias: risk_ratio)
-* slice
 * standard_deviation (alias: std_dev, stddev)
 * truncated_mean (alias: trimmed_mean)
 * variance (alias: var)
+
+#### Math
+
+* delta
+* max
+* min
+* minmax
+* relative_risk (alias: risk_ratio)
+
+* nist_alternate_rank
+* nist_primary_rank
+* ordinal_rank
+
+#### Collection
+
+* binary_search (alias: bsearch, half_interval_search)
+* ascending?
+* descending?
+* slice
 
 ### I can drive that loader
 

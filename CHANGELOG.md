@@ -12,7 +12,7 @@ Finally, several arithmetic and statitical computations.
 * Added *Rank* module with functions related to percentiles
   * ranks (alias: percentiles, centiles)
   * linear_rank (aias: percentile, centile)
-  * nearest_rank
+  * nearest_rank (with :ordinal, :nist_primary, and :nist_alternate formulas)
   * percent_rank
 * Added math functions with block support
   * min
