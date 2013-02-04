@@ -129,12 +129,6 @@ module Ratistics
 
       context '#mode' do
 
-        it 'returns an array of one element for single-modal sample' do
-          sample = [3, 7, 5, 13, 20, 23, 39, 23, 40, 23, 14, 12, 56, 23, 29].freeze
-          mode = sample.mode
-          mode.should eq [23]
-        end
-
         it 'returns an array with all correct modes for a multi-modal sample' do
           sample = [1, 1, 1, 3, 3, 3, 4, 4, 4, 6, 6, 6, 9].freeze
           mode = sample.mode
@@ -143,19 +137,6 @@ module Ratistics
           mode.should include(3)
           mode.should include(4)
           mode.should include(6)
-        end
-
-        it 'returns the correct values for a single-modal sample with a block' do
-          sample = [
-            {:count => 1},
-            {:count => 3},
-            {:count => 2},
-            {:count => 2},
-            {:count => 2},
-          ].freeze
-
-          mode = sample.mode{|item| item[:count] }
-          mode.should eq [2]
         end
 
         it 'returns the correct values for a multimodal sample with a block' do
@@ -456,6 +437,27 @@ module Ratistics
 
           centiles[1][0].should eq 40
           centiles[1][1].should be_within(0.001).of(75.0)
+        end
+      end
+
+      context '#nearest_rank' do
+
+        it 'returns the nearest rank for a sample less that 100' do
+          sample = [40, 15, 35, 20, 40, 50].freeze
+          rank = sample.nearest_rank(35)
+          rank.should eq 35
+        end
+
+        it 'returns the nearest rank with block' do
+          sample = [
+            {:count => 15},
+            {:count => 20},
+            {:count => 35},
+            {:count => 40},
+            {:count => 50}
+          ].freeze
+          rank = sample.nearest_rank(35){|item| item[:count]}
+          rank.should eq 20
         end
       end
 
