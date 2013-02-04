@@ -449,6 +449,34 @@ module Ratistics
         end
       end
 
+      context '#linear_rank' do
+
+        it 'returns the rank when the given value is an exact match' do
+          sample = [35, 20, 15, 40, 50].freeze
+          rank = sample.linear_rank(70.0)
+          rank.should eq 40
+        end
+
+        it 'uses linear interpolation when the given value is not a match' do
+          sample = [35, 20, 15, 40, 50].freeze
+          rank = sample.linear_rank(40)
+          rank.should be_within(0.001).of(27.5)
+        end
+
+        it 'returns the linear rank with block' do
+          sample = [
+            {:count => 15},
+            {:count => 20},
+            {:count => 35},
+            {:count => 40},
+            {:count => 50}
+          ].freeze
+
+          rank = sample.linear_rank(70.0){|item| item[:count]}
+          rank.should eq 40
+        end
+      end
+
       context '#nearest_rank' do
 
         it 'returns the nearest rank for a sample less than 100' do

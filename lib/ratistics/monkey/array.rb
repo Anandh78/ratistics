@@ -108,16 +108,6 @@ module Ratistics
       return Ratistics.nearest_rank(self, *args, &block)
     end
 
-    # @see Collection::ascending?
-    def ascending?(*args, &block)
-      return Ratistics.ascending?(self, *args, &block)
-    end
-
-    # @see Collection::descending?
-    def descending(*args, &block)
-      return Ratistics.descending?(self, *args, &block)
-    end
-
     # @see Collection::binary_search
     def binary_search(*args, &block)
       return Ratistics.binary_search(self, *args, &block)
