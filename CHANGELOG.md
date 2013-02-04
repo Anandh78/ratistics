@@ -1,10 +1,18 @@
 # Ratistics Changelog
 
-## 0.1.1 *(in progress)*
+### 0.1.1 *(in progress)*
+
+Release Date: TBD
+
+This release greatly enhanced the tests by adding support for ActiveRecord.
+It also greatly enhanced cross-Ruby compatibility by fixing code that
+was broken under 1.8.7 and by verifying compatibility with Rubinius.
+Finally, several arithmetic and statitical computations.
 
 * Added *Rank* module with functions related to percentiles
   * percentiles (alias: centiles)
   * nearest_rank
+  * percent_rank
 * Added math functions with block support
   * min
   * max
@@ -18,6 +26,7 @@
 * Added more monkey-patch methods
 * Added a *#slice* function to support more collection classes
 * Support Hamster classes as return types when loading data from files
+* Began testing under the Rubinius interpreter
 * Bagan documenting answers to exercises to *Think Stats* in the *examples* directory
 * Added more sample data and sample code to the *examples* directory
 * Updated documentation

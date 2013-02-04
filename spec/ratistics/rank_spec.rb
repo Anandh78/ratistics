@@ -186,6 +186,69 @@ module Ratistics
       end
     end
 
+    context '#percent_rank' do
+
+      it 'returns nil for a nil sample' do
+        Rank.percent_rank(nil, 1).should be_nil
+      end
+
+      it 'returns nil for an empty sample' do
+        Rank.percent_rank([], 1).should be_nil
+      end
+
+      it 'returns nil for a non-positive index' do
+        sample = [40, 15, 35, 20, 40, 50].freeze
+        rank = Rank.percent_rank(sample, 0)
+        rank.should be_nil
+      end
+
+      it 'returns nil for an index greater than the collection size' do
+        sample = [40, 15, 35, 20, 40, 50].freeze
+        rank = Rank.percent_rank(sample, 10)
+        rank.should be_nil
+      end
+
+      it 'returns 50.0% for a one-element sample' do
+        Rank.percent_rank([10], 1).should be_within(0.01).of(50.0)
+      end
+
+      it 'returns the percentile rank for a valid index' do
+        sample = [40, 15, 35, 20, 40, 50].freeze
+        rank = Rank.percent_rank(sample, 3)
+        rank.should be_within(0.001).of(41.667)
+      end
+
+      it 'does not re-sort a sorted sample' do
+        sample = [15, 20, 35, 40, 50]
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        rank = Rank.percent_rank(sample, 1, :sorted => true)
+      end
+
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify do
+          sample = Racer.all.collect{|r| r.age}
+          sample.sort.freeze
+
+          rank = Rank.percent_rank(sample, 3)
+          rank.should be_within(0.001).of(0.153)
+        end
+      end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(40, 15, 35, 20, 40, 50).freeze }
+        let(:vector) { Hamster.vector(15, 20, 35, 40, 50).freeze }
+
+        specify { Rank.percent_rank(list, 3).should be_within(0.001).of(41.667) }
+
+        specify { Rank.percent_rank(vector, 2, :sorted => true).should be_within(0.001).of(30.0) }
+      end
+    end
+
     context '#nearest_rank' do
 
       it 'returns nil for a nil sample' do
@@ -267,7 +330,8 @@ module Ratistics
           sample = Racer.all.collect{|r| r.age}
           sample.sort.freeze
 
-          centiles = Rank.percentiles(sample, :sorted => true)
+          rank = Rank.nearest_rank(sample, 35)
+          rank.should eq 34
         end
       end
 

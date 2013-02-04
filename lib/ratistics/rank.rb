@@ -63,6 +63,34 @@ module Ratistics
 
     alias :centiles :percentiles
 
+    # Calculate the percent rank for the given index within the sorted
+    # data set.
+    #
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true.
+    #
+    # @note
+    #   Statistical indexes start at one (1) where the first element in
+    #   the data set is one (1). Unlike Ruby which indexes collections
+    #   beginning with zero (0).
+    #
+    # @param [Enumerable] data the data set against which percentile is computed
+    # @param [Integer] index the index within the collection to calculate
+    #   the percentile of
+    # @param [Hash] opts computation options
+    #
+    # @option opts [String] :sorted indicates of the data is already sorted
+    #
+    # @return [Numeric] percentile of the given index
+    def percent_rank(data, index, opts={})
+      return nil if data.nil? || data.empty?
+      return nil if index <= 0 || index > data.size
+      data = data.sort unless block_given? || opts[:sorted] == true
+
+      rank = (100.0 / data.size) * (index.to_f - 0.5)
+      return rank
+    end
+
     ## The value of a variable below which a certain percent of observations fall 
     ## Linear interpolation between closest ranks
     #def percentile(data, percentile, opts={}, &block)

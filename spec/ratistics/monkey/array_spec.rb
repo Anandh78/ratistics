@@ -440,6 +440,15 @@ module Ratistics
         end
       end
 
+      context '#percent_rank' do
+
+        it 'returns the percentile rank for a valid index' do
+          sample = [40, 15, 35, 20, 40, 50].freeze
+          rank = sample.percent_rank(3)
+          rank.should be_within(0.001).of(41.667)
+        end
+      end
+
       context '#nearest_rank' do
 
         it 'returns the nearest rank for a sample less that 100' do

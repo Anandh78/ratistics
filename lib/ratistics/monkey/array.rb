@@ -89,6 +89,10 @@ module Ratistics
 
     alias :centiles :percentiles
 
+    def percent_rank(*args, &block)
+      return Ratistics.percent_rank(self, *args, &block)
+    end
+
     def nearest_rank(*args, &block)
       return Ratistics.nearest_rank(self, *args, &block)
     end

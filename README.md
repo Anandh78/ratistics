@@ -153,6 +153,7 @@ When working with sets of complex data use blocks to process the data without co
 * mode
 * nearest_rank
 * normalize_probability (alias: normalize_pmf)
+* percent_rank
 * percentiles (alias: centiles)
 * probability (alias: pmf)
 * probability_mean (alias: pmf_mean)
