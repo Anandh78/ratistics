@@ -6,7 +6,7 @@ module Ratistics
     # Calculate the set of percentile ranks for every element in the sample.
     #
     # Will sort the data set using natural sort order unless
-    # the :sorted option is true or a block is given. when the :flatten
+    # the :sorted option is true or a block is given. When the :flatten
     # option is true duplicate values will be removed from the sample and
     # only the highest percentile for that value will be returned.
     #
@@ -70,6 +70,27 @@ module Ratistics
 
     #alias :centile :percentile
 
+    # Return the value at the percentile rank nearest to the given percentile.
+    #
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true or a block is given.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set against which percentile is computed
+    # @param [Float] percentile the percentile to find the nearest rank of
+    # @param [Hash] opts computation options
+    # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [String] :sorted indicates of the data is already sorted
+    #
+    # @return [Numeric] value at the rank nearest to the given percentile
     def nearest_rank(data, percentile, opts={}, &block)
       return nil if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
