@@ -73,13 +73,16 @@ module Ratistics
     # @param [String, Array] data the CSV data to be processed
     # @param [Array] definition the record definition for processing
     #   individual fields (see above)
-    # @param [Hash] opts options array compatable with the Ruby
-    #   standard library CSV module
+    # @param [Hash] opts CSV parsing options
+    #
+    # @option opts [Character] :col_sep column separator (default: ',')
+    # @option opts [Character] :row_sep row separator (default: $/)
+    # @option opts [Character] :quote_char quote character (default: '"')
+    # @option opts [true, false] :headers the first row of the data/file =
+    #   contains field name headers (default: false)
     #
     # @return [Array, Hash] an array of values when no record definition
     #   is given or a hash with keys matching the record definition
-    #
-    # @see http://ruby-doc.org/stdlib-1.9.3/libdoc/csv/rdoc/CSV.html
     def csv_record(data, definition = nil, opts = {})
 
       if data.is_a?(String)
@@ -140,11 +143,15 @@ module Ratistics
     # @param [String] data the CSV data to be processed
     # @param [Array] definition the record definition for processing
     #   individual fields (see #csv_record)
-    # @param [Hash] opts options array compatable with the Ruby
-    #   standard library CSV module
+    # @param [Hash] opts CSV parsing options
     #
     # @option opts [Symbol] :hamster (false) set to *true* to return a
     #   Hamster collection, or indicate a specific Hamster return type
+    # @option opts [Character] :col_sep column separator (default: ',')
+    # @option opts [Character] :row_sep row separator (default: $/)
+    # @option opts [Character] :quote_char quote character (default: '"')
+    # @option opts [true, false] :headers the first row of the data/file =
+    #   contains field name headers (default: false)
     #
     # @return [Array, Hamster] An array or Hamster collection containing
     #   all the records
@@ -177,8 +184,7 @@ module Ratistics
     # @param [String] path path to the CSV file
     # @param [Array] definition the record definition for processing
     #   individual fields (see #csv_record)
-    # @param [Hash] opts options array compatable with the Ruby
-    #   standard library CSV module
+    # @param [Hash] opts CSV parsing options
     #
     # @option (see #csv_data)
     #

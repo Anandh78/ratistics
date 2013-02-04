@@ -336,10 +336,8 @@ the [27th Anniversary Edition James Joyce Ramble 10K](27th Anniversary Edition J
 
 * Add #summation function to Math module
 * Support both hashes and arrays of arrays for distribution data
-* Update YARD docs for CSV loading
 * Submit a patch adding a #slice function to Hamster::Vector
 * Support negative indexes on #slice
-* Update YARD doc for CSV parsing
 
 ## Copyright
 
