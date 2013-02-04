@@ -4,7 +4,12 @@
 
 * Added *Rank* module with functions related to percentiles
   * percentiles (alias: centiles)
-* Added *#min*, *#max*, *#minmax*, and *#relative_risk* functions with block support
+  * nearest_rank
+* Added math functions with block support
+  * min
+  * max
+  * minmax
+  * relative_risk
 * Added *#midrange* function to the *Average* module
 * Added tests to confirm ActiveRecord compatability
 * Refactored CSV loading for better support across Ruby versions

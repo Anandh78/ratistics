@@ -46,7 +46,7 @@ module Ratistics
 
       centiles = []
 
-      data.each_index do |index|
+      data.size.times do |index|
 
         p = 100.0 * ((index+1).to_f - 0.5) / data.size.to_f
 
@@ -70,13 +70,29 @@ module Ratistics
 
     #alias :centile :percentile
 
-    #def nearest_rank(data, percentile, opts={}, &block)
-    #end
+    def nearest_rank(data, percentile, opts={}, &block)
+      return nil if data.nil? || data.empty?
+      data = data.sort unless block_given? || opts[:sorted] == true
+      return data.first if percentile == 0
+      return data.last if percentile == 100
+
+      rank = ((percentile / 100.0 * data.size) + 0.5).round
+
+      if block_given?
+        centile = yield(data[rank-1])
+      else
+        centile = data[rank-1]
+      end
+
+      return centile
+    end
 
     #def weighted_percentile(data, percentile, opts={}, &block)
     #end
 
     #def percentile?
+    #end
+
     #alias :centile? :percentile?
 
     ## The percentage of scores in the frequency distribution that are the same or lower

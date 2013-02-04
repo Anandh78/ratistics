@@ -151,6 +151,7 @@ When working with sets of complex data use blocks to process the data without co
 * min
 * minmax
 * mode
+* nearest_rank
 * normalize_probability (alias: normalize_pmf)
 * percentiles (alias: centiles)
 * probability (alias: pmf)
