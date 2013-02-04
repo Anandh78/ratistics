@@ -451,10 +451,10 @@ module Ratistics
 
       context '#nearest_rank' do
 
-        it 'returns the nearest rank for a sample less that 100' do
-          sample = [40, 15, 35, 20, 40, 50].freeze
+        it 'returns the nearest rank for a sample less than 100' do
+          sample = [15, 20, 35, 40, 50].freeze
           rank = sample.nearest_rank(35)
-          rank.should eq 35
+          rank.should eq 20
         end
 
         it 'returns the nearest rank with block' do

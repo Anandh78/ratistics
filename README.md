@@ -144,6 +144,7 @@ When working with sets of complex data use blocks to process the data without co
 * delta
 * frequency
 * frequency_mean
+* linear_rank (alias: percentile, centile)
 * max
 * mean (alias: average, avg)
 * median
@@ -154,11 +155,11 @@ When working with sets of complex data use blocks to process the data without co
 * nearest_rank
 * normalize_probability (alias: normalize_pmf)
 * percent_rank
-* percentiles (alias: centiles)
 * probability (alias: pmf)
 * probability_mean (alias: pmf_mean)
 * probability_variance (alias: pmf_variance)
 * range
+* ranks (alias: percentiles, centiles)
 * relative_risk (alias: risk_ratio)
 * slice
 * standard_deviation (alias: std_dev, stddev)

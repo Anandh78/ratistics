@@ -83,19 +83,48 @@ module Ratistics
     alias :pmf_variance :probability_variance
 
     # @see Rank::percentiles
-    def percentiles(*args, &block)
-      return Ratistics.percentiles(self, *args, &block)
+    def ranks(*args, &block)
+      return Ratistics.ranks(self, *args, &block)
     end
 
-    alias :centiles :percentiles
+    alias :percentiles :ranks
+    alias :centiles :ranks
 
+    # @see Rank::percent_rank
     def percent_rank(*args, &block)
       return Ratistics.percent_rank(self, *args, &block)
     end
 
+    # @see Rank::linear_rank
+    def linear_rank(*args, &block)
+      return Ratistics.linear_rank(self, *args, &block)
+    end
+
+    alias :percentile :linear_rank
+    alias :centile :linear_rank
+
+    # @see Rank::nearest_rank
     def nearest_rank(*args, &block)
       return Ratistics.nearest_rank(self, *args, &block)
     end
+
+    # @see Collection::ascending?
+    def ascending?(*args, &block)
+      return Ratistics.ascending?(self, *args, &block)
+    end
+
+    # @see Collection::descending?
+    def descending(*args, &block)
+      return Ratistics.descending?(self, *args, &block)
+    end
+
+    # @see Collection::binary_search
+    def binary_search(*args, &block)
+      return Ratistics.binary_search(self, *args, &block)
+    end
+
+    alias :bsearch :binary_search
+    alias :half_interval_search :binary_search
 
   end
 end

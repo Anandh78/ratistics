@@ -10,7 +10,8 @@ was broken under 1.8.7 and by verifying compatibility with Rubinius.
 Finally, several arithmetic and statitical computations.
 
 * Added *Rank* module with functions related to percentiles
-  * percentiles (alias: centiles)
+  * ranks (alias: percentiles, centiles)
+  * linear_rank (aias: percentile, centile)
   * nearest_rank
   * percent_rank
 * Added math functions with block support

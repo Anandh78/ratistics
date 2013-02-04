@@ -1,3 +1,5 @@
+require 'ratistics/collection'
+
 module Ratistics
 
   module Rank
@@ -40,28 +42,29 @@ module Ratistics
     # @option opts [String] :flatten remove duplicate data values
     #
     # @return [Array] set of values and percentiles
-    def percentiles(data, opts={}, &block)
+    def ranks(data, opts={}, &block)
       return [] if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
 
-      centiles = []
+      ranks = []
 
       data.size.times do |index|
 
         p = 100.0 * ((index+1).to_f - 0.5) / data.size.to_f
 
         item = block_given? ? yield(data[index]) : data[index]
-        if opts[:flatten] == true && index > 0 && centiles.last[0] == item
-          centiles.pop
+        if opts[:flatten] == true && index > 0 && ranks.last[0] == item
+          ranks.pop
         end
 
-        centiles << [item, p]
+        ranks << [item, p]
       end
 
-      return centiles
+      return ranks
     end
 
-    alias :centiles :percentiles
+    alias :percentiles :ranks
+    alias :centiles :ranks
 
     # Calculate the percent rank for the given index within the sorted
     # data set.
@@ -91,13 +94,6 @@ module Ratistics
       return rank
     end
 
-    ## The value of a variable below which a certain percent of observations fall 
-    ## Linear interpolation between closest ranks
-    #def percentile(data, percentile, opts={}, &block)
-    #end
-
-    #alias :centile :percentile
-
     # Return the value at the percentile rank nearest to the given percentile.
     #
     # Will sort the data set using natural sort order unless
@@ -125,16 +121,39 @@ module Ratistics
       return data.first if percentile == 0
       return data.last if percentile == 100
 
-      rank = ((percentile / 100.0 * data.size) + 0.5).round
+      index = ((percentile / 100.0 * data.size) + 0.5).round
 
       if block_given?
-        centile = yield(data[rank-1])
+        rank = yield(data[index-1])
       else
-        centile = data[rank-1]
+        rank = data[index-1]
       end
 
-      return centile
+      return rank
     end
+
+    def linear_rank(data, percentile, opts={}, &block)
+      return nil if data.nil? || data.empty?
+      ranks = Rank.ranks(data, opts.merge(:flatten => true), &block)
+
+      opts = { :sorted => true, :delta => opts[:delta] }
+      indexes = Collection.binary_search(ranks, percentile, opts){|rank| rank.last}
+      return ranks.last.first if indexes.first == ranks.size-1
+      return ranks.first.first if indexes.last == 0
+      return ranks[indexes.first].first if indexes.first == indexes.last
+
+      vk = ranks[indexes.first].first
+      n = ranks.size
+      p = percentile
+      pk = ranks[indexes.first].last
+      vk1 = ranks[indexes.last].first
+      rank = vk + (n * (p - pk) / 100.0 * (vk1 - vk)) 
+
+      return rank
+    end
+
+    alias :percentile :linear_rank
+    alias :centile :linear_rank
 
     #def weighted_percentile(data, percentile, opts={}, &block)
     #end

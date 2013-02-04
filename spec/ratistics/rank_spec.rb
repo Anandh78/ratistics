@@ -5,26 +5,26 @@ module Ratistics
 
     let(:racers) { Racer.from_csv }
 
-    context '#percentiles' do
+    context '#ranks' do
 
       it 'returns an empty array for a nil sample' do
-        Rank.percentiles(nil).should eq []
+        Rank.ranks(nil).should eq []
       end
 
       it 'returns 50.0 for the percentile in a one-element sample' do
         sample = [22].freeze
 
-        centiles = Rank.percentiles(sample)
+        centiles = Rank.ranks(sample)
         centiles.size.should eq 1
 
         centiles[0][0].should eq 22
         centiles[0][1].should be_within(0.001).of(50.0)
       end
 
-      it 'return 25.0 and 50.0 for the percentiles in a two-element sample' do
+      it 'return 25.0 and 50.0 for the ranks in a two-element sample' do
         sample = [22, 40].freeze
 
-        centiles = Rank.percentiles(sample)
+        centiles = Rank.ranks(sample)
         centiles.size.should eq 2
 
         centiles[0][0].should eq 22
@@ -34,10 +34,10 @@ module Ratistics
         centiles[1][1].should be_within(0.001).of(75.0)
       end
 
-      it 'returns the percentiles in a multi-element sample' do
+      it 'returns the ranks in a multi-element sample' do
         sample = [5, 1, 9, 3, 14, 9, 7].freeze
 
-        centiles = Rank.percentiles(sample)
+        centiles = Rank.ranks(sample)
         centiles.size.should eq 7
 
         centiles[0][0].should eq 1
@@ -62,13 +62,13 @@ module Ratistics
         centiles[6][1].should be_within(0.001).of(92.857)
       end
 
-      it 'returns the percentiles with a block' do
+      it 'returns the ranks with a block' do
         sample = [
           {:count => 22},
           {:count => 40}
         ].freeze
 
-        centiles = Rank.percentiles(sample){|item| item[:count]}
+        centiles = Rank.ranks(sample){|item| item[:count]}
         centiles.size.should eq 2
 
         centiles[0][0].should eq 22
@@ -82,7 +82,7 @@ module Ratistics
         sample = [1, 3, 5, 7, 9, 9, 14]
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
-        Rank.percentiles(sample, :sorted => true)
+        Rank.ranks(sample, :sorted => true)
       end
 
       it 'does not attempt to sort when a using a block' do
@@ -94,13 +94,13 @@ module Ratistics
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
 
-        centiles = Rank.percentiles(sample){|item| item[:count]}
+        centiles = Rank.ranks(sample){|item| item[:count]}
       end
 
       it 'returns only the higest percentile for duplicate values when :flatten => true' do
         sample = [5, 1, 9, 3, 14, 9, 7].freeze
 
-        centiles = Rank.percentiles(sample, :flatten => true)
+        centiles = Rank.ranks(sample, :flatten => true)
         centiles.size.should eq 6
 
         centiles[0][0].should eq 1
@@ -129,7 +129,7 @@ module Ratistics
           {:count => 40}
         ].freeze
 
-        centiles = Rank.percentiles(sample, :flatten => true){|item| item[:count]}
+        centiles = Rank.ranks(sample, :flatten => true){|item| item[:count]}
         centiles.size.should eq 2
 
         centiles[0][0].should eq 22
@@ -146,7 +146,7 @@ module Ratistics
         specify do
           sample = Racer.where('age > 0').order('age ASC')
 
-          centiles = Rank.percentiles(sample){|r| r.age}
+          centiles = Rank.ranks(sample){|r| r.age}
           centiles.size.should eq 1597
 
           centiles[0][0].should eq 10
@@ -161,7 +161,7 @@ module Ratistics
         let(:set) { Hamster.set(1, 3, 5, 7, 9, 14).freeze }
 
         specify do
-          centiles = Rank.percentiles(list)
+          centiles = Rank.ranks(list)
           centiles.size.should eq 7
 
           centiles[0][0].should eq 1
@@ -169,7 +169,7 @@ module Ratistics
         end 
 
         specify do
-          centiles = Rank.percentiles(vector, :sorted => true)
+          centiles = Rank.ranks(vector, :sorted => true)
           centiles.size.should eq 7
 
           centiles[0][0].should eq 1
@@ -177,7 +177,7 @@ module Ratistics
         end 
 
         specify do
-          centiles = Rank.percentiles(set)
+          centiles = Rank.ranks(set)
           centiles.size.should eq 6
 
           centiles[0][0].should eq 1
@@ -230,11 +230,10 @@ module Ratistics
         before(:all) { Racer.connect }
 
         specify do
-          sample = Racer.all.collect{|r| r.age}
-          sample.sort.freeze
+          sample = Racer.where('age > 0').order('age ASC')
 
           rank = Rank.percent_rank(sample, 3)
-          rank.should be_within(0.001).of(0.153)
+          rank.should be_within(0.001).of(0.157)
         end
       end
 
@@ -278,9 +277,9 @@ module Ratistics
       end
 
       it 'returns the nearest rank for a sample less that 100' do
-        sample = [40, 15, 35, 20, 40, 50].freeze
+        sample = [15, 20, 35, 40, 50].freeze
         rank = Rank.nearest_rank(sample, 35)
-        rank.should eq 35
+        rank.should eq 20
       end
 
       it 'returns the nearest rank for a sample larger that 100' do
@@ -327,10 +326,9 @@ module Ratistics
         before(:all) { Racer.connect }
 
         specify do
-          sample = Racer.all.collect{|r| r.age}
-          sample.sort.freeze
+          sample = Racer.where('age > 0').order('age ASC')
 
-          rank = Rank.nearest_rank(sample, 35)
+          rank = Rank.nearest_rank(sample, 35){|r| r.age}
           rank.should eq 34
         end
       end
@@ -343,6 +341,97 @@ module Ratistics
         specify { Rank.nearest_rank(list, 35).should eq 35 }
 
         specify { Rank.nearest_rank(vector, 35, :sorted => true).should eq 20 }
+      end
+    end
+
+    context '#linear_rank' do
+
+      it 'returns nil for a nil sample' do
+        Rank.linear_rank(nil, 10).should be_nil
+      end
+
+      it 'returns nil for an empty set' do
+        Rank.linear_rank([], 10).should be_nil
+      end
+
+      it 'returns the value of the highest rank when the given percentile is higher' do
+        sample = [35, 20, 15, 40, 50].freeze
+        rank = Rank.linear_rank(sample, 95.0)
+        rank.should eq 50
+      end
+
+      it 'returns the value of the lowest rank when the given percentile is lower' do
+        sample = [35, 20, 15, 40, 50].freeze
+        rank = Rank.linear_rank(sample, 0.05)
+        rank.should eq 15
+      end
+
+      it 'returns the rank when the given value is an exact match' do
+        sample = [35, 20, 15, 40, 50].freeze
+        rank = Rank.linear_rank(sample, 70.0)
+        rank.should eq 40
+      end
+
+      it 'uses linear interpolation when the given value is not a match' do
+        sample = [35, 20, 15, 40, 50].freeze
+        rank = Rank.linear_rank(sample, 40)
+        rank.should be_within(0.001).of(27.5)
+      end
+
+      it 'returns the linear rank with block' do
+        sample = [
+          {:count => 15},
+          {:count => 20},
+          {:count => 35},
+          {:count => 40},
+          {:count => 50}
+        ].freeze
+
+        rank = Rank.linear_rank(sample, 70.0){|item| item[:count]}
+        rank.should eq 40
+      end
+
+      it 'does not re-sort a sorted sample' do
+        sample = [15, 20, 35, 40, 50]
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        rank = Rank.linear_rank(sample, 70.0, :sorted => true)
+      end
+
+      it 'does not attempt to sort when a using a block' do
+        sample = [
+          {:count => 15},
+          {:count => 20},
+          {:count => 35},
+          {:count => 40},
+          {:count => 50}
+        ]
+
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        rank = Rank.linear_rank(sample, 70.0){|item| item[:count]}
+      end
+
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify do
+          sample = Racer.where('age > 0').order('age ASC')
+
+          rank = Rank.linear_rank(sample, 37.5, :delta => 0.1){|r| r.age}
+          rank.should be_within(0.001).of(34.759)
+        end
+      end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(35, 20, 15, 40, 50).freeze }
+        let(:vector) { Hamster.vector(15, 20, 35, 40, 50).freeze }
+
+        specify { Rank.linear_rank(list, 70.0).should eq 40 }
+
+        specify { Rank.linear_rank(vector, 70.0, :sorted => true).should eq 40 }
       end
     end
 
