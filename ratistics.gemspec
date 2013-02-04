@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.require_paths    = ['lib']
 
   s.required_ruby_version = '>= 1.8.7'
-  s.post_install_message  = 'Happy computing!'
+  s.post_install_message  = '"Lies, damned lies, and statistics"'
 
   # Production dependencies
 
