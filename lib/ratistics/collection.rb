@@ -5,10 +5,10 @@ module Ratistics
 
     def binary_search(data, key, opts={}, &block)
       return nil if data.nil? || data.empty?
-      data = data.sort unless block_given? || opts[:sorted] == true
 
       imin = [opts[:imin].to_i, 0].max
       imax = opts[:imax].nil? ? data.size-1 : [opts[:imax], data.size-1].min
+      return nil if imin > imax
 
       if block_given?
         min, max = yield(data[imin]), yield(data[imax])
