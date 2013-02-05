@@ -4,6 +4,7 @@
 
 Release Date: TBD
 
+* Added Aggregates class
 * Added math functions
   * summation (alias: sum)
 

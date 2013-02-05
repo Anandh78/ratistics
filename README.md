@@ -42,7 +42,8 @@ As much as possible I plan to follow these guidelines as I develop this gem
 (in no particular order):
 
 * Keep all functions pure and idempotent
-* Support as many common collection classes as possible, especiall ActiveRecord
+* But create read-only objects when it makes sense
+* Support as many common collection classes as possible, especially ActiveRecord
 * Keep runtime dependencies to a minimum, hopefully zero
 * Remain backward compatable to Ruby version 1.8.7
 * Support common Ruby interpreters (MRI, REE, and JRuby)
@@ -64,6 +65,14 @@ complex data types without excessive data copying. I've followed
 the same block idiom as much as possible to make the library as
 consistent.
 
+### But With Objects
+
+To better support multiple and repeated calculations against a single data
+set (and to better support the object-oriented among us) a series of
+read-only, (mostly) memoized objects is included. Simply create the
+object by passing the data set to the constructor then call its
+calculation functions.
+  
 ### Pure Ruby
 
 Ratistics is written in pure Ruby and has no runtime gem dependencies.
@@ -128,7 +137,10 @@ then use it:
 
     sample = [2, 3, 4, 5, 6]
     
-    mean = Ratistics.mean(sample)
+    mean = Ratistics.mean(sample) #=> 4.0
+
+    aggregate = Ratistics::Aggregates.new(sample)
+    mean = aggregate.mean #=> 4.0
 
 When working with sets of complex data use blocks to process the data without copying:
 
