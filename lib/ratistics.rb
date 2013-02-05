@@ -1,3 +1,4 @@
+require 'ratistics/aggregates'
 require 'ratistics/average'
 require 'ratistics/collection'
 require 'ratistics/distribution'
@@ -15,5 +16,9 @@ module Ratistics
     include Math
     include Probability
     include Rank
+
+    def aggregates_for(*args, &block)
+      return Aggregates.new(*args, &block)
+    end
   end
 end
