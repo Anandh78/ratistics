@@ -254,58 +254,51 @@ module Ratistics
 
         context 'Hamster' do
 
+          let(:contents) { csv_row }
+
           it 'returns a Ruby Array when no :hamster option is given' do
             records = Ratistics::Load.csv_data(contents, csv_definition)
             records.should be_kind_of Array
-            records.size.should eq record_count
           end
 
           it 'returns a Ruby Array when the :hamster option is set to false' do
             records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => false)
             records.should be_kind_of Array
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to true' do
             records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => true)
             records.should be_kind_of Hamster::Vector
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::List when the :hamster option is set to :list' do
             records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :list)
             records.should be_kind_of Hamster::List
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Stack when the :hamster option is set to :stack' do
             records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :stack)
             records.should be_kind_of Hamster::Stack
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Queue when the :hamster option is set to :queue' do
             records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :queue)
             records.should be_kind_of Hamster::Queue
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Set when the :hamster option is set to :set' do
             records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :set)
             records.should be_kind_of Hamster::Set
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to :vector' do
             records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :vector)
             records.should be_kind_of Hamster::Vector
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to an unknown type' do
             records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :bogus)
             records.should be_kind_of Hamster::Vector
-            records.size.should eq record_count
           end
         end
       end
@@ -473,58 +466,51 @@ module Ratistics
 
         context 'Hamster' do
 
+          let(:contents) { dat_row }
+
           it 'returns a Ruby Array when no :hamster option is given' do
             records = Ratistics::Load.dat_data(contents, dat_definition)
             records.should be_kind_of Array
-            records.size.should eq record_count
           end
 
           it 'returns a Ruby Array when the :hamster option is set to false' do
             records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => false)
             records.should be_kind_of Array
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to true' do
             records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => true)
             records.should be_kind_of Hamster::Vector
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::List when the :hamster option is set to :list' do
             records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :list)
             records.should be_kind_of Hamster::List
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Stack when the :hamster option is set to :stack' do
             records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :stack)
             records.should be_kind_of Hamster::Stack
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Queue when the :hamster option is set to :queue' do
             records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :queue)
             records.should be_kind_of Hamster::Queue
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Set when the :hamster option is set to :set' do
             records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :set)
             records.should be_kind_of Hamster::Set
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to :vector' do
             records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :vector)
             records.should be_kind_of Hamster::Vector
-            records.size.should eq record_count
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to an unknown type' do
             records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :bogus)
             records.should be_kind_of Hamster::Vector
-            records.size.should eq record_count
           end
         end
       end
