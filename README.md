@@ -169,6 +169,7 @@ When working with sets of complex data use blocks to process the data without co
 * min
 * minmax
 * relative_risk (alias: risk_ratio)
+* summation (alias: sum)
 
 * nist_alternate_rank
 * nist_primary_rank
