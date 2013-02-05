@@ -145,7 +145,7 @@ When working with sets of complex data use blocks to process the data without co
 #### Statistics
 * frequency
 * frequency_mean
-* linear_rank (alias: percentile, centile)
+* linear_rank
 * mean (alias: average, avg)
 * median
 * midrange (alias: midextreme)
@@ -169,6 +169,7 @@ When working with sets of complex data use blocks to process the data without co
 * min
 * minmax
 * relative_risk (alias: risk_ratio)
+* summation (alias: sum)
 
 * nist_alternate_rank
 * nist_primary_rank
@@ -345,10 +346,8 @@ the [27th Anniversary Edition James Joyce Ramble 10K](27th Anniversary Edition J
 
 ## Todo
 
-* Add #summation function to Math module
 * Support both hashes and arrays of arrays for distribution data
 * Submit a patch adding a #slice function to Hamster::Vector
-* Support negative indexes on #slice
 
 ## Copyright
 

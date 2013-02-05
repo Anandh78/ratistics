@@ -373,5 +373,76 @@ module Ratistics
 
     end
 
+    context '#summation' do
+
+      let(:sample) do
+        [17, 14, 7, 8, 16, 7, 11, 10, 3, 15].freeze
+      end
+
+      it 'returns zero for a nil sample' do
+        Math.summation(nil).should eq 0
+      end
+
+      it 'returns zero for an empty sample' do
+        Math.summation([].freeze).should eq 0
+      end
+
+      it 'returns the value of a single-element array' do
+        Math.summation([10].freeze).should eq 10
+      end
+
+      it 'sums the entire sample when no lower or upper bound is given' do
+        Math.summation(sample).should eq 108
+      end
+
+      it 'sums the sample staring with the supplied lower bound' do
+        Math.summation(sample, :lower => 3).should eq 70
+      end
+
+      it 'sums the sample ending with the supplied upper bound' do
+        Math.summation(sample, :upper => 6).should eq 80
+      end
+
+      it 'sums the sample between the supplied upper and lower bounds' do
+        Math.summation(sample, :lower => 1, :upper => 8).should eq 76
+      end
+
+      it 'returns zero when given an invalid lower bound' do
+        Math.summation(sample, :lower => -1).should eq 0
+      end
+
+      it 'returns zero when given in invalid upper bound' do
+        Math.summation(sample, :upper => sample.size * 2).should eq 0
+      end
+
+      it 'returns zero when the lower bound is greater than the upper bound' do
+        Math.summation(sample, :lower => 4, :upper => 2).should eq 0
+      end
+
+      it 'sums the sample when given a block' do
+        Math.summation((1..10).to_a){|i| i**2 }.should eq 385
+      end
+
+      context 'with ActiveRecord' do
+
+        before(:all) { Racer.connect }
+
+        specify do
+          sample = Racer.where('age > 0').order('age asc').limit(10)
+          Math.summation(sample){|r| r.age}.should eq 113
+        end
+      end
+
+      context 'with Hamster' do
+
+        let(:list) { Hamster.list(17, 14, 7, 8, 16, 7, 11, 10, 3, 15).freeze }
+        let(:vector) { Hamster.vector(17, 14, 7, 8, 16, 7, 11, 10, 3, 15).freeze }
+
+        specify { Math.summation(list).should eq 108 }
+
+        specify { Math.summation(vector).should eq 108 }
+      end
+    end
+
   end
 end

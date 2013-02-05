@@ -100,9 +100,6 @@ module Ratistics
       return Ratistics.linear_rank(self, *args, &block)
     end
 
-    alias :percentile :linear_rank
-    alias :centile :linear_rank
-
     # @see Rank::nearest_rank
     def nearest_rank(*args, &block)
       return Ratistics.nearest_rank(self, *args, &block)

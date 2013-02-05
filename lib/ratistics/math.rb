@@ -5,12 +5,10 @@ module Ratistics
 
     # Compute the difference (delta) between two values.
     # 
-    # When a block is given the block will be applied to both
-    # arguments. Using a block in this way allows the
-    # difference to be computed against a specific field in a
-    # data set of hashes or objects.
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
     #
-    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -30,12 +28,10 @@ module Ratistics
 
     # Compute the relative risk (risk ratio) between two values.
     # 
-    # When a block is given the block will be applied to both
-    # arguments. Using a block in this way allows the
-    # difference to be computed against a specific field in a
-    # data set of hashes or objects.
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
     #
-    # For a block {|item| ... }
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -60,6 +56,10 @@ module Ratistics
     # before comparison. In this case the return value will be the
     # value obtained by applying the block to the minimum element,
     # not the element itself.
+    # 
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
     #
     # @example
     #   sample = [
@@ -99,6 +99,10 @@ module Ratistics
     # before comparison. In this case the return value will be the
     # value obtained by applying the block to the maximum element,
     # not the element itself.
+    # 
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
     #
     # @example
     #   sample = [
@@ -138,6 +142,10 @@ module Ratistics
     # the collection before comparison. In this case the return values
     # will be the values obtained by applying the block to the minimum
     # and maximum elements, not the elements themselves.
+    # 
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
     #
     # @example
     #   sample = [
@@ -207,6 +215,43 @@ module Ratistics
       # n = ((P / 100) * (N - 1)) + 1
       (((percentile / 100.0) * (size - 1)) + 1)
     end
+
+    # Performs a mathematical summation operation on the given data set.
+    # Returns zero (the identity for addition) when given an empty data
+    # set or invalid upper/lower bounds (degenerate case).
+    # 
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set being searched
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Numeric] the result of the summation operation
+    def summation(data, opts={}, &block)
+      return 0 if data.nil? || data.empty?
+
+      lower = opts[:lower] || 0
+      upper = opts[:upper] || data.size-1
+      
+      return 0 if lower < 0 || upper >= data.size || lower > upper
+
+      sum = 0
+      (lower..upper).each do |i|
+        if block_given?
+          sum = sum + yield(data[i])
+        else
+          sum = sum + data[i]
+        end
+      end
+
+      return sum
+    end
+
+    alias :sum :summation
 
   end
 end

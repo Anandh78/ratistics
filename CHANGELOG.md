@@ -1,5 +1,12 @@
 # Ratistics Changelog
 
+### 0.x.x *(in progress)*
+
+Release Date: TBD
+
+* Added math functions
+  * summation (alias: sum)
+
 ### 0.2.1
 
 Release Date: February 4, 2013
