@@ -156,11 +156,20 @@ module Ratistics
     # @param [Block] block optional block for per-item processing
     #
     # @option opts [true, false] :sorted indicates of the data is already sorted
+    # @option opts [true, false] :ranked indicates of the data is already ranked
+    #   by the #ranks function
     #
     # @return [Numeric] value at the rank nearest to the given percentile
+    #
+    # @see #ranks
     def linear_rank(data, percentile, opts={}, &block)
       return nil if data.nil? || data.empty?
-      ranks = Rank.ranks(data, opts.merge(:flatten => true), &block)
+      
+      if opts[:ranked] == true
+        ranks = data
+      else
+        ranks = Rank.ranks(data, opts.merge(:flatten => true), &block)
+      end
 
       opts = { :sorted => true, :delta => opts[:delta] }
       indexes = Collection.binary_search(ranks, percentile, opts){|rank| rank.last}
