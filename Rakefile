@@ -13,7 +13,7 @@ require 'ratistics'
 Bundler::GemHelper.install_tasks
 
 RSpec::Core::RakeTask.new(:spec) do |t|
-  t.rspec_opts = '-fd --color'
+  t.rspec_opts = '--color'
 end
 
 YARD::Rake::YardocTask.new do |t|
