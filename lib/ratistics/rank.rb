@@ -157,7 +157,7 @@ module Ratistics
     #
     # @option opts [true, false] :sorted indicates of the data is already sorted
     # @option opts [true, false] :ranked indicates of the data is already ranked
-    #   by the #ranks function
+    #   by the {#ranks} function
     #
     # @return [Numeric] value at the rank nearest to the given percentile
     #
