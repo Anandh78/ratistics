@@ -145,7 +145,7 @@ When working with sets of complex data use blocks to process the data without co
 #### Statistics
 * frequency
 * frequency_mean
-* linear_rank (alias: percentile, centile)
+* linear_rank
 * mean (alias: average, avg)
 * median
 * midrange (alias: midextreme)

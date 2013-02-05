@@ -178,9 +178,6 @@ module Ratistics
       return rank
     end
 
-    alias :percentile :linear_rank
-    alias :centile :linear_rank
-
     #def lower_quartile
     #def upper_quartile
     #def first_quartile
