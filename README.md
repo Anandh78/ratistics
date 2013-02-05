@@ -346,10 +346,8 @@ the [27th Anniversary Edition James Joyce Ramble 10K](27th Anniversary Edition J
 
 ## Todo
 
-* Add #summation function to Math module
 * Support both hashes and arrays of arrays for distribution data
 * Submit a patch adding a #slice function to Hamster::Vector
-* Support negative indexes on #slice
 
 ## Copyright
 
