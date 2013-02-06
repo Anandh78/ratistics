@@ -49,7 +49,7 @@ module Ratistics
 
       it 'can be initialized from an ActiveRecord result set' do
         Racer.connect
-        sample = Racer.where('age = 40').freeze
+        sample = Racer.where('age = 40')
         lambda {
           Aggregates.new(sample){|r| r.age}
         }.should_not raise_exception

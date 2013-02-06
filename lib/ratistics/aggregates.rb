@@ -6,19 +6,30 @@ module Ratistics
 
     # Creates a new Aggregates object
     #
+    # When a block is provided a new collection is constructed
+    # by enumerating the original data set and applying the block
+    # to each item. Otherwise a reference to the original collection
+    # is retained.
+    #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
     # @param [Objects, Enumerable] data the data set to aggregate
     # @param [Block] block optional block for per-item processing
     def initialize(*args, &block)
-      @block = block
       if args.count == 0
         raise ArgumentError.new('wrong number of arguments(0 for 1..*)')
       elsif args.count == 1 && args.first.respond_to?(:each)
         @data = args.first
       else
         @data = args
+      end
+
+      # use #each for maximum compatability
+      if block_given?
+        col = []
+        @data.each{|item| col << yield(item) }
+        @data = col
       end
 
       @truncated_means = {}
@@ -36,9 +47,7 @@ module Ratistics
     # Returns the number of items in the sample. Returns #length when no
     # arguments are given. If an argument is given, counts the number of
     # items in the sample which are equal to *item*. If a block is given,
-    # counts the number of elements yielding a true value. If a block was
-    # given at initialization each element is yielded to that block before
-    # being counted.
+    # counts the number of elements yielding a true value.
     #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
@@ -53,12 +62,10 @@ module Ratistics
 
       if ! item.nil?
         @data.each do |datum|
-          datum = @block.yield(datum) if @block
           count = count + 1 if datum == item
         end
       elsif block_given?
         @data.each do |datum|
-          datum = @block.yield(datum) if @block
           count = count + 1 if yield(datum)
         end
       elsif @data.respond_to? :length
@@ -74,7 +81,7 @@ module Ratistics
     #
     # {Average#mean}
     def mean
-      @mean ||= Average.mean(@data, &@block)
+      @mean ||= Average.mean(@data)
     end
 
     alias :avg :mean
@@ -84,7 +91,7 @@ module Ratistics
     #
     # {Average#truncated_mean}
     def truncated_mean(truncation=nil)
-      @truncated_means[truncation] ||= Average.truncated_mean(@data, truncation, &@block)
+      @truncated_means[truncation] ||= Average.truncated_mean(@data, truncation)
     end
 
     alias :trimmed_mean :truncated_mean
@@ -93,7 +100,7 @@ module Ratistics
     #
     # {Average#midrange}
     def midrange
-      @midrange ||= Average.midrange(@data, &@block)
+      @midrange ||= Average.midrange(@data)
     end
 
     alias :midextreme :midrange
@@ -102,14 +109,14 @@ module Ratistics
     #
     # {Average#median}
     def median
-      @median ||= Average.median(@data, &@block)
+      @median ||= Average.median(@data)
     end
 
     # Calculates the statistical modes.
     #
     # {Average#mode}
     def mode
-      @mode ||= Average.mode(@data, &@block)
+      @mode ||= Average.mode(@data)
     end
 
   end
