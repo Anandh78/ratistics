@@ -1,4 +1,5 @@
 require 'ratistics/average'
+require 'ratistics/distribution'
 
 module Ratistics
 
@@ -33,6 +34,8 @@ module Ratistics
       end
 
       @truncated_means = {}
+      @standard_deviations = {}
+      @variances = {}
     end
 
     # Returns the number of elements in the sample. May be zero. 
@@ -117,6 +120,32 @@ module Ratistics
     # {Average#mode}
     def mode
       @mode ||= Average.mode(@data)
+    end
+
+    # Calculates the statistical standard_deviations.
+    #
+    # {Distribution#standard_deviation}
+    def standard_deviation(mu=nil)
+      @standard_deviations[mu] ||= Distribution.standard_deviation(@data, mu)
+    end
+
+    alias :std_dev :standard_deviation
+    alias :stddev :standard_deviation
+
+    # Calculates the statistical variances.
+    #
+    # {Distribution#variance}
+    def variance(mu=nil)
+      @variances[mu] ||= Distribution.variance(@data, mu)
+    end
+
+    alias :var :variance
+
+    # Calculates the statistical ranges.
+    #
+    # {Distribution#range}
+    def range
+      @range ||= Distribution.range(@data)
     end
 
   end

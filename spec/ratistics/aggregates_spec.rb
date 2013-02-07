@@ -284,5 +284,123 @@ module Ratistics
       end
     end
 
+    context '#standard_deviation' do
+
+      it 'calculates standard deviation around the mean for a sample' do
+        sample = [67, 72, 85, 93, 98].freeze
+        ag = Aggregates.new(sample)
+        standard_deviation = ag.standard_deviation
+        standard_deviation.should be_within(0.01).of(11.882)
+      end
+
+      it 'calculates standard deviation around a datum for a sample' do
+        sample = [67, 72, 85, 93, 98].freeze
+        ag = Aggregates.new(sample)
+        standard_deviation = ag.standard_deviation(85)
+        standard_deviation.should be_within(0.01).of(12.049)
+      end
+
+      it 'calculates standard deviation around the mean for a sample with block' do
+        sample = [
+          {:count => 67},
+          {:count => 72},
+          {:count => 85},
+          {:count => 93},
+          {:count => 98},
+        ].freeze
+
+        ag = Aggregates.new(sample){|item| item[:count]}
+        standard_deviation = ag.standard_deviation
+        standard_deviation.should be_within(0.01).of(11.882)
+      end
+
+      it 'calculates standard deviation around a datum for a sample with block' do
+        sample = [
+          {:count => 67},
+          {:count => 72},
+          {:count => 85},
+          {:count => 93},
+          {:count => 98},
+        ].freeze
+
+        ag = Aggregates.new(sample){|item| item[:count]}
+        standard_deviation = ag.standard_deviation(85)
+        standard_deviation.should be_within(0.01).of(12.049)
+      end
+    end
+
+    context '#variance' do
+
+      it 'calculates variance around the mean for a sample' do
+        sample = [67, 72, 85, 93, 98].freeze
+        ag = Aggregates.new(sample)
+        variance = ag.variance
+        variance.should be_within(0.01).of(141.2)
+      end
+
+      it 'calculates variance around a datum for a sample' do
+        sample = [67, 72, 85, 93, 98].freeze
+        ag = Aggregates.new(sample)
+        variance = ag.variance(85)
+        variance.should be_within(0.01).of(145.2)
+      end
+
+      it 'calculates variance around the mean for a sample with block' do
+        sample = [
+          {:count => 67},
+          {:count => 72},
+          {:count => 85},
+          {:count => 93},
+          {:count => 98},
+        ].freeze
+
+        ag = Aggregates.new(sample){|item| item[:count]}
+        variance = ag.variance
+        variance.should be_within(0.01).of(141.2)
+      end
+
+      it 'calculates variance around a datum for a sample with block' do
+        sample = [
+          {:count => 67},
+          {:count => 72},
+          {:count => 85},
+          {:count => 93},
+          {:count => 98},
+        ].freeze
+
+        ag = Aggregates.new(sample){|item| item[:count]}
+        variance = ag.variance(85)
+        variance.should be_within(0.01).of(145.2)
+      end
+    end
+
+    context '#range' do
+
+      it 'calculates the range' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
+        ag = Aggregates.new(sample)
+        range = ag.range
+        range.should be_within(0.01).of(8.0)
+      end
+
+      it 'calculates the range when using a block' do
+        sample = [
+          {:count => 13},
+          {:count => 13},
+          {:count => 13},
+          {:count => 13},
+          {:count => 14},
+          {:count => 14},
+          {:count => 16},
+          {:count => 18},
+          {:count => 21},
+        ].freeze
+
+        ag = Aggregates.new(sample){|item| item[:count]}
+        range = ag.range
+        range.should be_within(0.01).of(8.0)
+      end
+    end
+
   end
 end
