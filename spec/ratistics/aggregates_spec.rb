@@ -47,7 +47,7 @@ module Ratistics
         }.should_not raise_exception
       end
 
-      it 'can be initialized from an ActiveRecord result set' do
+      it 'can be initialized from an ActiveRecord result set', :ar => true do
         Racer.connect
         sample = Racer.where('age = 40')
         lambda {
@@ -126,7 +126,7 @@ module Ratistics
         ag.count{|item| item > 2}.should eq 2
       end
 
-      it 'works with an ActiveRecord result set' do
+      it 'works with an ActiveRecord result set', :ar => true do
         Racer.connect
         sample = Racer.where('age > 40')
         ag = Aggregates.new(sample){|r| r.age}

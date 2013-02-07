@@ -39,7 +39,7 @@ module Ratistics
           Collection.ascending?(sample){|item| item[:count]}.should be_true
         end
 
-        context 'with ActiveRecord' do
+        context 'with ActiveRecord', :ar => true do
 
           before(:all) { Racer.connect }
 
@@ -94,7 +94,7 @@ module Ratistics
           Collection.descending?(sample){|item| item[:count]}.should be_true
         end
 
-        context 'with ActiveRecord' do
+        context 'with ActiveRecord', :ar => true do
 
           before(:all) { Racer.connect }
 
@@ -170,7 +170,7 @@ module Ratistics
           lambda {
             sample = [31, 37, 26, 30, 2, 30, 1, 33, 5, 14, 11, 13, 17, 35, 4].freeze
             Collection.insertion_sort!(sample)
-          }.should raise_error(RuntimeError)
+          }.should raise_error
         end
       end
 
@@ -272,7 +272,7 @@ module Ratistics
           index.should be_nil
         end
 
-        context 'with ActiveRecord' do
+        context 'with ActiveRecord', :ar => true do
 
           before(:all) { Racer.connect }
 

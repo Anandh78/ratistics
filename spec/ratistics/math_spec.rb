@@ -155,7 +155,7 @@ module Ratistics
         end
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -247,7 +247,7 @@ module Ratistics
         end
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -339,7 +339,7 @@ module Ratistics
         end
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -423,7 +423,7 @@ module Ratistics
         Math.summation((1..10).to_a){|i| i**2 }.should eq 385
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
