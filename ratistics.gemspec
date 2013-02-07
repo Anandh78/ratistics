@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
-$:.push File.join(File.dirname(__FILE__), 'lib')
 
-require 'ratistics/version'
+load File.join(File.dirname(__FILE__), 'lib/ratistics/version.rb')
 
 Gem::Specification.new do |s|
   s.name        = 'ratistics'
@@ -12,6 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/jdantonio/ratistics/'
   s.summary     = "Ruby statistics functions"
   s.license     = 'MIT'
+  s.date        = Date.today.to_s
 
   s.description = <<-EOF
     Ratistics is a purely functional library that provides basic statistics
@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   # Production dependencies
 
   # Development dependencies
- 
+
   s.add_development_dependency 'bundler'
 
   # test alternate collection classes
