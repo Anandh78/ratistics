@@ -7,6 +7,8 @@ Release Date: TBD
 * Added Aggregates class
 * Added math functions
   * summation (alias: sum)
+* Added sorts and searches
+  * insertion_sort!
 
 ### 0.2.1
 
