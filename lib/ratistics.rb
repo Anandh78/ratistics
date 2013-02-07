@@ -17,7 +17,7 @@ module Ratistics
     include Probability
     include Rank
 
-    def aggregates_for(*args, &block)
+    def aggregates(*args, &block)
       return Aggregates.new(*args, &block)
     end
   end
