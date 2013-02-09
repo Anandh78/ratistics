@@ -4,21 +4,10 @@ module Ratistics
     extend self
 
     def linear_search(data, key, opts={}, &block)
-      return nil if data.nil? || data.empty?
 
-      imin = [opts[:imin].to_i, 0].max
-      imax = opts[:imax].nil? ? data.size-1 : [opts[:imax], data.size-1].min
-      return nil if imin > imax
-
-      if block_given?
-        min, max = yield(data[imin]), yield(data[imax])
-      else
-        min, max = data[imin], data[imax]
-      end
-      return nil if key < min
-      return imin if key == min
-      return nil if key > max
-      return imax if key == max
+      imin, imax = check_search_options(data, key, opts, &block)
+      return nil if imin.nil? || imax.nil?
+      return imin if imin == imax
 
       index = nil
       (imin..imax).each do |i|
@@ -66,21 +55,10 @@ module Ratistics
     # @return [Array] pair of indexes (see above) or nil when the collection
     #   is empty or nil
     def binary_search(data, key, opts={}, &block)
-      return nil if data.nil? || data.empty?
 
-      imin = [opts[:imin].to_i, 0].max
-      imax = opts[:imax].nil? ? data.size-1 : [opts[:imax], data.size-1].min
-      return nil if imin > imax
-
-      if block_given?
-        min, max = yield(data[imin]), yield(data[imax])
-      else
-        min, max = data[imin], data[imax]
-      end
-      return [nil, imin] if key < min
-      return [imin, imin] if key == min
-      return [imax, nil] if key > max
-      return [imax, imax] if key == max
+      imin, imax = check_search_options(data, key, opts, &block)
+      return nil if imin.nil? && imax.nil?
+      return [imin, imax] if imin == imax || imin.nil? || imax.nil?
 
       while (imax >= imin)
         imid = (imin + imax) / 2
@@ -101,5 +79,29 @@ module Ratistics
 
     alias :bsearch :binary_search
     alias :half_interval_search :binary_search
+
+    private
+
+    # :nodoc:
+    # @private
+    def check_search_options(data, key, opts={}, &block)
+      return [nil, nil] if data.nil? || data.empty?
+
+      imin = [opts[:imin].to_i, 0].max
+      imax = opts[:imax].nil? ? data.size-1 : [opts[:imax], data.size-1].min
+      return [nil, nil] if imin > imax
+
+      if block_given?
+        min, max = yield(data[imin]), yield(data[imax])
+      else
+        min, max = data[imin], data[imax]
+      end
+      return [nil, imin] if key < min
+      return [imin, imin] if key == min
+      return [imax, nil] if key > max
+      return [imax, imax] if key == max
+
+      return [imin, imax]
+    end
   end
 end
