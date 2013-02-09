@@ -7,6 +7,7 @@ module Ratistics
     attr_reader :distribution
 
     alias :frequency :distribution
+    alias :frequencies :distribution
 
     def initialize(data, opts={}, &block)
       raise ArgumentError.new('data cannot be nil') if data.nil?
@@ -25,6 +26,7 @@ module Ratistics
     end
 
     alias :pmf :probability
+    alias :probabilities :probability
 
     def probability_mean
       @probability_mean ||= Probability.probability_mean(probability)
