@@ -51,7 +51,7 @@ module Ratistics
         standard_deviation.should be_within(0.01).of(12.049)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -122,7 +122,7 @@ module Ratistics
         variance.should be_within(0.01).of(145.2)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 

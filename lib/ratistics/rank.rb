@@ -1,4 +1,4 @@
-require 'ratistics/collection'
+require 'ratistics/search'
 require 'ratistics/math'
 
 module Ratistics
@@ -157,7 +157,7 @@ module Ratistics
     #
     # @option opts [true, false] :sorted indicates of the data is already sorted
     # @option opts [true, false] :ranked indicates of the data is already ranked
-    #   by the #ranks function
+    #   by the {#ranks} function
     #
     # @return [Numeric] value at the rank nearest to the given percentile
     #
@@ -172,7 +172,7 @@ module Ratistics
       end
 
       opts = { :sorted => true, :delta => opts[:delta] }
-      indexes = Collection.binary_search(ranks, percentile, opts){|rank| rank.last}
+      indexes = Search.binary_search(ranks, percentile, opts){|rank| rank.last}
       return ranks.last.first if indexes.first == ranks.size-1
       return ranks.first.first if indexes.last == 0
       return ranks[indexes.first].first if indexes.first == indexes.last

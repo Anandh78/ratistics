@@ -416,31 +416,23 @@ module Ratistics
     # :nodoc:
     # @private
     def new_collection(type)
-      type = type.downcase.to_sym if type.is_a? String
-      case type
-      when nil, false
-        array = Array.new
-      when :list
-        array = Hamster.list
-      when :stack
-        array = Hamster.stack
-      when :queue
-        array = Hamster.queue
-      when :set
-        array = Hamster.set
+      if type.nil? || type == false
+        collection = Array.new
+      elsif Hamster.respond_to?(type.to_s)
+        collection = Hamster.send(type.to_s)
       else
-        array = Hamster.vector
+        collection = Hamster.vector
       end
-      return array
+      return collection
     end
 
     # :nodoc:
     # @private
-    def add_to_collection(array, item)
-      if array.respond_to? :<<
-        return array << item
+    def add_to_collection(collection, item)
+      if collection.respond_to? :<<
+        return collection << item
       else
-        return array.cons(item)
+        return collection.cons(item)
       end
     end
 

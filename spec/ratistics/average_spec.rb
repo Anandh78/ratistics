@@ -47,7 +47,7 @@ module Ratistics
         mean.should be_within(0.01).of(15.0)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -233,21 +233,21 @@ module Ratistics
         Average.midrange([10].freeze).should be_within(0.01).of(10.0)
       end
 
-      it 'returns the mean for a two-element sample' do
+      it 'returns the midrange for a two-element sample' do
         Average.midrange([5, 15].freeze).should be_within(0.01).of(10.0)
       end
 
       it 'returns the correct midrange for a multi-element sample' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
-        mean = Average.midrange(sample)
-        mean.should be_within(0.01).of(17.0)
+        midrange = Average.midrange(sample)
+        midrange.should be_within(0.01).of(17.0)
       end
 
       it 'does not sort a sample that is already sorted' do
         sample = [13, 13, 13, 13, 14, 14, 16, 18, 21]
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
-        mean = Average.midrange(sample, :sorted => true)
+        midrange = Average.midrange(sample, :sorted => true)
       end
 
       it 'calculates the midrange using a block' do
@@ -267,7 +267,7 @@ module Ratistics
         midrange.should be_within(0.01).of(17.0)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -370,7 +370,7 @@ module Ratistics
         Average.median(sample, :sorted => false) {|item| item[:count] }
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -503,7 +503,7 @@ module Ratistics
         mode.should include(4)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 

@@ -139,7 +139,7 @@ module Ratistics
         centiles[1][1].should be_within(0.001).of(83.333)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -225,7 +225,7 @@ module Ratistics
         rank = Rank.percent_rank(sample, 1, :sorted => true)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -352,7 +352,7 @@ module Ratistics
         end
       end
 
-      context 'for ActiveRecord' do
+      context 'for ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -455,7 +455,7 @@ module Ratistics
         Rank.linear_rank(ranks, 40, :ranked => true)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
