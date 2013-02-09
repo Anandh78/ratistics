@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 module Ratistics
-  describe Probability do
+
+  describe Frequencies do
 
     context 'construction' do
 
@@ -11,12 +12,12 @@ module Ratistics
         }.should raise_error
       end
 
-      it 'creates an empty frequency has if the sample is empty' do
+      it 'creates an empty #distribution if the sample is empty' do
         frequency = Frequencies.new([])
         frequency.distribution.should == {}
       end
 
-      it 'creates a frequency hash for a valid sample array' do
+      it 'creates a #distribution for a valid sample array' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 
         frequency = Frequencies.new(sample)
@@ -30,7 +31,7 @@ module Ratistics
         frequency[21].should eq 1
       end
 
-      it 'creates a frequency hash for a valid argument list' do
+      it 'creates a #distribution for a valid argument list' do
         frequency = Frequencies.new(13, 18, 13, 14, 13, 16, 14, 21, 13)
         frequency = frequency.distribution
 
@@ -42,7 +43,7 @@ module Ratistics
         frequency[21].should eq 1
       end
 
-      it 'creates a frequency hash when given a block' do
+      it 'creates a #distribution when given a block' do
         sample = [
           {:count => 10},
         ].freeze
@@ -52,7 +53,7 @@ module Ratistics
         frequency.should == {10 => 1}
       end
 
-      it 'freezes the frequency distribution' do
+      it 'freezes the #distribution' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 
         frequency = Frequencies.new(sample)

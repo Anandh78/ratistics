@@ -177,6 +177,7 @@ When working with sets of complex data use blocks to process the data without co
 
 * Aggregates
 * Frequencies
+* Percentiles
 
 ### I can drive that loader
 
