@@ -38,5 +38,39 @@ module Ratistics
 
     alias :pmf_variance :probability_variance
 
+    def frequency_of(value)
+      distribution[value] || 0
+    end
+
+    alias :of :frequency_of
+
+    def probability_of(value)
+      probability[value] || 0
+    end
+
+    def each(&block)
+      distribution.each do |value, frequency|
+        yield(value, frequency, probability[value])
+      end
+    end
+
+    def each_value(&block)
+      distribution.each do |value, frequency|
+        yield(value)
+      end
+    end
+
+    def each_frequency(&block)
+      distribution.each do |value, frequency|
+        yield(frequency)
+      end
+    end
+
+    def each_probability(&block)
+      probability.each do |value, prob|
+        yield(prob)
+      end
+    end
+
   end
 end

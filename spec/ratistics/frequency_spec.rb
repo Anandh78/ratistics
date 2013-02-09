@@ -214,5 +214,72 @@ module Ratistics
       end
     end
 
+    context '#frequency_of' do
+
+      let(:sample) { [1, 2, 3, 4, 5, 6, 6, 6, 6, 6].freeze }
+      let(:frequency) { Frequency.new(sample) }
+
+      it 'returns the frequency of the given value' do
+        frequency.frequency_of(6).should eq 5
+      end
+
+      it 'returns zero when the value is not in the sample' do
+        frequency.frequency_of(10).should eq 0
+      end
+    end
+
+    context '#probability_of' do
+
+      let(:sample) { [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze }
+      let(:frequency) { Frequency.new(sample) }
+
+      it 'returns the frequency of the given value' do
+        frequency.probability_of(13).should be_within(0.01).of(0.444)
+      end
+
+      it 'returns zero when the value is not in the sample' do
+        frequency.probability_of(10).should eq 0
+      end
+    end
+
+    context 'iterators' do
+
+      let(:sample) { [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze }
+      let(:distribution) { {13=>4, 18=>1, 14=>2, 16=>1, 21=>1}.freeze }
+      let(:probabilities) { {13=>0.444, 18=>0.111, 14=>0.222, 16=>0.111, 21=>0.111}.freeze }
+
+      subject { Frequency.new(sample) }
+
+      specify '#each' do
+
+        subject.each do |value, frequency, probability|
+          sample.should include(value)
+          distribution[value].should eq frequency
+          probability.should be_within(0.001).of(probabilities[value])
+        end
+      end
+
+      specify '#each_value' do
+
+        subject.each_value do |value|
+          sample.should include(value)
+        end
+      end
+
+      specify '#each_frequecy' do
+
+        subject.each_frequency do |frequency|
+          distribution.values.should include(frequency)
+        end
+      end
+
+      specify '#each_probability' do
+
+        subject.each_probability do |probability|
+          probabilities.values.should include((probability * 1000).round / 1000.0)
+        end
+      end
+    end
+
   end
 end
