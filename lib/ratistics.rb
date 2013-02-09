@@ -6,6 +6,8 @@ require 'ratistics/math'
 require 'ratistics/load'
 require 'ratistics/probability'
 require 'ratistics/rank'
+require 'ratistics/search'
+require 'ratistics/sort'
 require 'ratistics/version'
 
 module Ratistics
@@ -16,6 +18,8 @@ module Ratistics
     include Math
     include Probability
     include Rank
+    include Search
+    include Sort
 
     def aggregates(*args, &block)
       return Aggregates.new(*args, &block)
