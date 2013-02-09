@@ -1,6 +1,7 @@
 require 'ratistics/average'
 require 'ratistics/collection'
 require 'ratistics/distribution'
+require 'ratistics/frequency'
 require 'ratistics/math'
 require 'ratistics/load'
 require 'ratistics/probability'
