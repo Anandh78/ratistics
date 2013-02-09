@@ -7,19 +7,31 @@ module Ratistics
 
       it 'raises an exception if the sample is nil' do
         lambda {
-          Frequency.new(nil)
+          Frequencies.new(nil)
         }.should raise_error
       end
 
       it 'creates an empty frequency has if the sample is empty' do
-        frequency = Frequency.new([])
+        frequency = Frequencies.new([])
         frequency.distribution.should == {}
       end
 
-      it 'creates a frequency hash for a valid sample' do
+      it 'creates a frequency hash for a valid sample array' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 
-        frequency = Frequency.new(sample)
+        frequency = Frequencies.new(sample)
+        frequency = frequency.distribution
+
+        frequency.count.should eq 5
+        frequency[13].should eq 4
+        frequency[14].should eq 2
+        frequency[16].should eq 1
+        frequency[18].should eq 1
+        frequency[21].should eq 1
+      end
+
+      it 'creates a frequency hash for a valid argument list' do
+        frequency = Frequencies.new(13, 18, 13, 14, 13, 16, 14, 21, 13)
         frequency = frequency.distribution
 
         frequency.count.should eq 5
@@ -35,7 +47,7 @@ module Ratistics
           {:count => 10},
         ].freeze
 
-        frequency = Frequency.new(sample){|item| item[:count]}
+        frequency = Frequencies.new(sample){|item| item[:count]}
         frequency = frequency.distribution
         frequency.should == {10 => 1}
       end
@@ -43,7 +55,7 @@ module Ratistics
       it 'freezes the frequency distribution' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 
-        frequency = Frequency.new(sample)
+        frequency = Frequencies.new(sample)
         lambda {
           frequency.distribution[100] = 0
         }.should raise_error
@@ -52,7 +64,7 @@ module Ratistics
       it 'works with an ActiveRecord result set', :ar => true do
         Racer.connect
 
-        frequency = Frequency.new(Racer.all.freeze){|r| r.age }
+        frequency = Frequencies.new(Racer.all.freeze){|r| r.age }
         frequency = frequency.distribution
 
         frequency.count.should eq 67
@@ -67,7 +79,7 @@ module Ratistics
 
         sample = Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze
 
-        frequency = Frequency.new(sample)
+        frequency = Frequencies.new(sample)
         frequency = frequency.distribution
 
         frequency.count.should eq 5
@@ -83,7 +95,7 @@ module Ratistics
 
       it 'calculates the mean of a sample' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
-        frequency = Frequency.new(sample)
+        frequency = Frequencies.new(sample)
         mean = frequency.frequency_mean
         mean.should be_within(0.01).of(15.0)
       end
@@ -101,7 +113,7 @@ module Ratistics
           {:count => 13},
         ].freeze
 
-        frequency = Frequency.new(sample){|item| item[:count] }
+        frequency = Frequencies.new(sample){|item| item[:count] }
         mean = frequency.frequency_mean
         mean.should be_within(0.01).of(15.0)
       end
@@ -112,7 +124,7 @@ module Ratistics
       it 'returns a probability hash' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 
-        frequency = Frequency.new(sample)
+        frequency = Frequencies.new(sample)
         probability = frequency.probability
 
         probability.count.should eq 5
@@ -136,7 +148,7 @@ module Ratistics
           {:count => 13},
         ].freeze
 
-        frequency = Frequency.new(sample){|item| item[:count]}
+        frequency = Frequencies.new(sample){|item| item[:count]}
         probability = frequency.probability
 
         probability.count.should eq 5
@@ -149,7 +161,7 @@ module Ratistics
 
       it 'freezes the probability' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
-        frequency = Frequency.new(sample)
+        frequency = Frequencies.new(sample)
         lambda {
           frequency.probability[100] = 100
         }.should raise_error
@@ -160,7 +172,7 @@ module Ratistics
 
       it 'calculates the mean' do
         sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6].freeze
-        frequency = Frequency.new(sample)
+        frequency = Frequencies.new(sample)
         mean = frequency.probability_mean
         mean.should be_within(0.01).of(4.5)
       end
@@ -179,7 +191,7 @@ module Ratistics
           {:count => 6},
         ].freeze
 
-        frequency = Frequency.new(sample){|item| item[:count]}
+        frequency = Frequencies.new(sample){|item| item[:count]}
         mean = frequency.probability_mean
         mean.should be_within(0.01).of(4.5)
       end
@@ -189,7 +201,7 @@ module Ratistics
 
       it 'calculates the probability variance' do
         sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6].freeze
-        frequency = Frequency.new(sample)
+        frequency = Frequencies.new(sample)
         variance = frequency.probability_variance
         variance.should be_within(0.01).of(3.25)
       end
@@ -208,7 +220,7 @@ module Ratistics
           {:count => 6},
         ].freeze
 
-        frequency = Frequency.new(sample){|item| item[:count]}
+        frequency = Frequencies.new(sample){|item| item[:count]}
         variance = frequency.probability_variance
         variance.should be_within(0.01).of(3.25)
       end
@@ -217,7 +229,7 @@ module Ratistics
     context '#frequency_of' do
 
       let(:sample) { [1, 2, 3, 4, 5, 6, 6, 6, 6, 6].freeze }
-      let(:frequency) { Frequency.new(sample) }
+      let(:frequency) { Frequencies.new(sample) }
 
       it 'returns the frequency of the given value' do
         frequency.frequency_of(6).should eq 5
@@ -231,7 +243,7 @@ module Ratistics
     context '#probability_of' do
 
       let(:sample) { [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze }
-      let(:frequency) { Frequency.new(sample) }
+      let(:frequency) { Frequencies.new(sample) }
 
       it 'returns the frequency of the given value' do
         frequency.probability_of(13).should be_within(0.01).of(0.444)
@@ -248,7 +260,7 @@ module Ratistics
       let(:distribution) { {13=>4, 18=>1, 14=>2, 16=>1, 21=>1}.freeze }
       let(:probabilities) { {13=>0.444, 18=>0.111, 14=>0.222, 16=>0.111, 21=>0.111}.freeze }
 
-      subject { Frequency.new(sample) }
+      subject { Frequencies.new(sample) }
 
       specify '#each' do
 

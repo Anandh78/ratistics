@@ -2,7 +2,7 @@ require 'ratistics/aggregates'
 require 'ratistics/average'
 require 'ratistics/collection'
 require 'ratistics/distribution'
-require 'ratistics/frequency'
+require 'ratistics/frequencies'
 require 'ratistics/math'
 require 'ratistics/load'
 require 'ratistics/probability'
@@ -24,6 +24,10 @@ module Ratistics
 
     def aggregates(*args, &block)
       return Aggregates.new(*args, &block)
+    end
+
+    def frequencies(*args, &block)
+      return Frequencies.new(*args, &block)
     end
   end
 end

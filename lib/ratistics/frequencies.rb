@@ -2,16 +2,18 @@ require 'ratistics/probability'
 
 module Ratistics
 
-  class Frequency
+  class Frequencies
 
     attr_reader :distribution
 
     alias :frequency :distribution
     alias :frequencies :distribution
 
-    def initialize(data, opts={}, &block)
-      raise ArgumentError.new('data cannot be nil') if data.nil?
-      @distribution = Probability.frequency(data, opts, &block).freeze
+    def initialize(*args, &block)
+      if args.nil? || args.size == 0 || (args.size == 1 && args.first.nil?)
+        raise ArgumentError.new('data cannot be nil') 
+      end
+      @distribution = Probability.frequency([args].flatten, &block).freeze
       @distribution ||= {}
     end
 
