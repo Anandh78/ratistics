@@ -3,6 +3,34 @@ module Ratistics
   module Search
     extend self
 
+    def linear_search(data, key, opts={}, &block)
+      return nil if data.nil? || data.empty?
+
+      imin = [opts[:imin].to_i, 0].max
+      imax = opts[:imax].nil? ? data.size-1 : [opts[:imax], data.size-1].min
+      return nil if imin > imax
+
+      if block_given?
+        min, max = yield(data[imin]), yield(data[imax])
+      else
+        min, max = data[imin], data[imax]
+      end
+      return nil if key < min
+      return imin if key == min
+      return nil if key > max
+      return imax if key == max
+
+      index = nil
+      (imin..imax).each do |i|
+        if (block_given? && yield(data[i]) == key) || data[i] == key
+          index = i
+          break
+        end
+      end
+
+      return index
+    end
+
     # Conduct a binary search against the sorted collection and return
     # a pair of indexes indicating the result of the search. The
     # indexes will be returned as a two-element array.
