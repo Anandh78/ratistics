@@ -123,5 +123,20 @@ module Ratistics
       return Ratistics.descending?(self, *args, &block)
     end
 
+    # @see Search::linear_search
+    def linear_search(*args, &block)
+      return Ratistics.linear_search(self, *args, &block)
+    end
+
+    # @see Search::binary_search
+    def binary_search(*args, &block)
+      return Ratistics.binary_search(self, *args, &block)
+    end
+
+    # @see Sort::insertion_sort!
+    def insertion_sort!(*args, &block)
+      return Ratistics.insertion_sort!(self, *args, &block)
+    end
+
   end
 end

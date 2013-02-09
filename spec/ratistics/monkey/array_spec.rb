@@ -551,6 +551,94 @@ module Ratistics
         end
       end
 
+      context '#linear_search' do
+
+        let(:sample) do
+          [3, 5, 6, 7, 8, 11, 15, 21, 22, 28, 30, 32, 33, 34, 40].freeze
+        end
+
+        it 'returns the index of the item when found' do
+          index = sample.linear_search(11)
+          index.should eq 5
+        end
+
+        it 'returns the index of the item when using a block' do
+          sample = [
+            {:count => 11}, 
+            {:count => 12},
+            {:count => 13},
+            {:count => 14},
+            {:count => 16},
+            {:count => 17},
+            {:count => 18},
+            {:count => 19},
+            {:count => 20},
+            {:count => 21}
+          ].freeze
+
+          index = sample.linear_search(14){|item| item[:count]}
+          index.should eq 3
+        end
+      end
+
+      context '#binary_search' do
+
+        let(:sample) do
+          [3, 5, 6, 7, 8, 11, 15, 21, 22, 28, 30, 32, 33, 34, 40].freeze
+        end
+
+        it 'returns the index of the item when found as [index, index]' do
+          index = sample.binary_search(11)
+          index.should eq [5, 5]
+        end
+
+        it 'returns the index of the item when using a block' do
+          sample = [
+            {:count => 11}, 
+            {:count => 12},
+            {:count => 13},
+            {:count => 14},
+            {:count => 16},
+            {:count => 17},
+            {:count => 18},
+            {:count => 19},
+            {:count => 20},
+            {:count => 21}
+          ].freeze
+
+          index = sample.binary_search(14){|item| item[:count]}
+          index.should eq [3, 3]
+        end
+      end
+
+      context '#insertion_sort!' do
+
+        it 'sorts an unsorted collection' do
+          sample = [31, 37, 26, 30, 2, 30, 1, 33, 5, 14, 11, 13, 17, 35, 4]
+          count = sample.count
+          sorted = sample.insertion_sort!
+          Ratistics.ascending?(sorted).should be_true
+          sorted.count.should eq count
+        end
+
+        it 'it sorts a collection with a block' do
+          sample = [
+            {:count => 31},
+            {:count => 37},
+            {:count => 26},
+            {:count => 30},
+            {:count => 2},
+            {:count => 30},
+            {:count => 1}
+          ]
+
+          count = sample.count
+          sorted = sample.insertion_sort!{|item| item[:count]}
+          Ratistics.ascending?(sorted){|item| item[:count]}.should be_true
+          sorted.count.should eq count
+        end
+      end
+
     end
   end
 end
