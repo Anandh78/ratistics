@@ -173,6 +173,11 @@ When working with sets of complex data use blocks to process the data without co
 * truncated_mean (alias: trimmed_mean)
 * variance (alias: var)
 
+#### Classes
+
+* Aggregates
+* Frequencies
+
 ### I can drive that loader
 
 Loading data from CSV and fixed field-width data files is a very common activity
@@ -337,6 +342,7 @@ the [27th Anniversary Edition James Joyce Ramble 10K](27th Anniversary Edition J
 
 ## Todo
 
+* Review opts in Probability module w/ resppect to sample vs. frequency
 * Support both hashes and arrays of arrays for distribution data
 * Submit a patch adding a #slice function to Hamster::Vector
 
