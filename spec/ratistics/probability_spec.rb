@@ -64,7 +64,7 @@ module Ratistics
         frequency[21].should eq 1
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -286,7 +286,7 @@ module Ratistics
         probability[21].should be_within(0.01).of(0.111)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 

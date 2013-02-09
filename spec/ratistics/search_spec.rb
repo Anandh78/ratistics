@@ -98,7 +98,7 @@ module Ratistics
         index.should be_nil
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 

@@ -39,7 +39,7 @@ module Ratistics
           Collection.ascending?(sample){|item| item[:count]}.should be_true
         end
 
-        context 'with ActiveRecord' do
+        context 'with ActiveRecord', :ar => true do
 
           before(:all) { Racer.connect }
 
@@ -94,7 +94,7 @@ module Ratistics
           Collection.descending?(sample){|item| item[:count]}.should be_true
         end
 
-        context 'with ActiveRecord' do
+        context 'with ActiveRecord', :ar => true do
 
           before(:all) { Racer.connect }
 

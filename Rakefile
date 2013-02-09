@@ -16,6 +16,10 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = '--color'
 end
 
+RSpec::Core::RakeTask.new(:jruby_spec) do |t|
+  t.rspec_opts = '--color --tag ~@ar'
+end
+
 YARD::Rake::YardocTask.new do |t|
 end
 

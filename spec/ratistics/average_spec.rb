@@ -47,7 +47,7 @@ module Ratistics
         mean.should be_within(0.01).of(15.0)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -267,7 +267,7 @@ module Ratistics
         midrange.should be_within(0.01).of(17.0)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -370,7 +370,7 @@ module Ratistics
         Average.median(sample, :sorted => false) {|item| item[:count] }
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
@@ -503,7 +503,7 @@ module Ratistics
         mode.should include(4)
       end
 
-      context 'with ActiveRecord' do
+      context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
 
