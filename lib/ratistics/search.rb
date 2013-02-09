@@ -3,6 +3,31 @@ module Ratistics
   module Search
     extend self
 
+    # Conduct a linear search against an unsorted collection and
+    # return the index where the item was found. Returns nil if
+    # the item is not found.
+    #
+    # The default behavior is to search the entire collections. The
+    # options hash can be used to provide optional low and high indexes
+    # (:imin and :imax). If either :imin or :imax is out of range the
+    # natural collection boundary will be used.
+    # 
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to search
+    # @param [Hash] opts search options
+    # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [Integer] :imin minimum index to search
+    # @option opts [Integer] :imax maximum index to search
+    #
+    # @return [Array] the index where the item is found or nil when the
+    #   collection is empty or nil
     def linear_search(data, key, opts={}, &block)
 
       imin, imax = check_search_options(data, key, opts, &block)
