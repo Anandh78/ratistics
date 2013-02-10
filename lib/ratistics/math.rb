@@ -188,7 +188,7 @@ module Ratistics
     # @param [Float] percentile percentile value (0 < P < 100)
     # @param [Integer] size the size of the data sample (N)
     #
-    # @param [Float] the corresponding rank
+    # @return [Float] the corresponding rank
     def ordinal_rank(percentile, size)
       # n = P / 100 * N + 1/2
       ((percentile / 100.0 * size) + 0.5)
@@ -199,7 +199,7 @@ module Ratistics
     # @param [Float] percentile percentile value (0 < P < 100)
     # @param [Integer] size the size of the data sample (N)
     #
-    # @param [Float] the corresponding rank
+    # @return [Float] the corresponding rank
     def nist_primary_rank(percentile, size)
       # n = (P / 100) * (N + 1)
       ((percentile / 100.0) * (size + 1))
@@ -210,7 +210,7 @@ module Ratistics
     # @param [Float] percentile percentile value (0 < P < 100)
     # @param [Integer] size the size of the data sample (N)
     #
-    # @param [Float] the corresponding rank
+    # @return [Float] the corresponding rank
     def nist_alternate_rank(percentile, size)
       # n = ((P / 100) * (N - 1)) + 1
       (((percentile / 100.0) * (size - 1)) + 1)

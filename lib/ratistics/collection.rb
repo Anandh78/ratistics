@@ -18,7 +18,7 @@ module Ratistics
     # @param [Hash] opts search options
     # @param [Block] block optional block for per-item processing
     #
-    # @param [true, false] if the data set is in ascending order
+    # @return [true, false] if the data set is in ascending order
     def ascending?(data, opts={}, &block)
       return false if data.nil?
       (data.size-1).times do |i|
@@ -46,7 +46,7 @@ module Ratistics
     # @param [Hash] opts search options
     # @param [Block] block optional block for per-item processing
     #
-    # @param [true, false] if the data set is in descending order
+    # @return [true, false] if the data set is in descending order
     def descending?(data, opts={}, &block)
       return false if data.nil?
       (data.size-1).times do |i|

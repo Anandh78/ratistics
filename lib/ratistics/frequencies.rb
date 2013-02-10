@@ -19,7 +19,8 @@ module Ratistics
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
-    # @param [Objects, Enumerable] data the data set calculate frequencies for
+    # @param [Objects, Enumerable] args the data set calculate frequencies for
+    # @param [Block] block optional block for per-item processing
     def initialize(*args, &block)
       if args.nil? || args.size == 0 || (args.size == 1 && args.first.nil?)
         raise ArgumentError.new('data cannot be nil') 
@@ -68,7 +69,7 @@ module Ratistics
     # Returns the frequency of occurency for the given value. Returns zero
     # if the value was not in the original data sample.
     #
-    # @params [Object] value the value to find the frequency of
+    # @param [Object] value the value to find the frequency of
     #
     # @return [Integer] the frequency or zero
     def frequency_of(value)
@@ -80,7 +81,7 @@ module Ratistics
     # Returns the probability of occurency for the given value. Returns zero
     # if the value was not in the original data sample.
     #
-    # @params [Object] value the value to find the probability of
+    # @param [Object] value the value to find the probability of
     #
     # @return [Integer] the probability or zero
     def probability_of(value)
