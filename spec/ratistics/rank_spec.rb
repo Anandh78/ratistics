@@ -248,6 +248,124 @@ module Ratistics
       end
     end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    context '#percentile' do
+
+      it 'returns nil for a nil sample' do
+        Rank.percentile(nil, 10).should be_nil
+      end
+
+      it 'returns nil for an empty set' do
+        Rank.percentile([], 10).should be_nil
+      end
+
+      it 'returns 100th percentile for a value above the upper range' do
+        sample = [40, 15, 35, 20, 40, 50].freeze
+        percentile = Rank.percentile(sample, 55)
+        percentile.should eq 100
+      end
+
+      it 'returns the 0th percentile for a value below the lower range' do
+        sample = [40, 15, 35, 20, 40, 50].freeze
+        percentile = Rank.percentile(sample, 5)
+        percentile.should eq 0
+      end
+
+      it 'returns the exact percentile of an exact match' do
+        sample = [40, 15, 35, 20, 40, 50].freeze
+        percentile = Rank.percentile(sample, 20)
+        percentile.should eq 25
+      end
+
+      it 'returns the calculated percentile for a value not in the sample' do
+        sample = [40, 15, 35, 20, 40, 50].freeze
+        percentile = Rank.percentile(sample, 25)
+        percentile.should be_within(0.001).of(33.333)
+      end
+
+      it 'returns the nearest percentile with block' do
+        sample = [
+          {:count => 15},
+          {:count => 20},
+          {:count => 35},
+          {:count => 40},
+          {:count => 40},
+          {:count => 50}
+        ].freeze
+
+        percentile = Rank.percentile(sample, 20){|item| item[:count]}
+        percentile.should eq 25
+      end
+
+      it 'does not re-sort a sorted sample' do
+        sample = [15, 20, 35, 40, 40, 50]
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        percentile = Rank.percentile(sample, 20, :sorted => true)
+      end
+
+      it 'does not attempt to sort when a using a block' do
+        sample = [
+          {:count => 15},
+          {:count => 20},
+          {:count => 35},
+          {:count => 40},
+          {:count => 40},
+          {:count => 50}
+        ]
+
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        percentile = Rank.percentile(sample, 20){|item| item[:count]}
+      end
+
+      context 'for ActiveRecord', :ar => true do
+
+        before(:all) { Racer.connect }
+
+        specify do
+          sample = Racer.where('age > 0').order('age ASC')
+
+          percentile = Rank.percentile(sample, 34){|r| r.age}
+          percentile.should be_within(0.001).of(34.502)
+
+          percentile = Rank.percentile(sample, 79){|r| r.age}
+          percentile.should be_within(0.001).of(99.874)
+        end
+      end
+
+      context 'for Hamster' do
+
+        let(:list) { Hamster.list(40, 15, 35, 20, 40, 50).freeze }
+        let(:vector) { Hamster.vector(15, 20, 35, 40, 40, 50).freeze }
+
+        specify { Rank.percentile(list, 20).should eq 25 }
+
+        specify { Rank.percentile(vector, 20, :sorted => true).should eq 25 }
+      end
+    end
+
+
+
+
+
+
+
+
+
+
     context '#nearest_rank' do
 
       it 'returns nil for a nil sample' do

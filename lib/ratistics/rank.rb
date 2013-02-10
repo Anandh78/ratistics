@@ -1,5 +1,6 @@
-require 'ratistics/search'
 require 'ratistics/math'
+require 'ratistics/probability'
+require 'ratistics/search'
 
 module Ratistics
 
@@ -95,7 +96,6 @@ module Ratistics
       return rank
     end
 
-    #def percentile(data, value, opts={})
     # http://easycalculation.com/statistics/percentile-rank.php
     #
     # sample = [5, 1, 9, 3, 14, 9, 7]
@@ -115,6 +115,29 @@ module Ratistics
     # 13 - 7/6/0/85.71428571428571
     # 14 - 7/6/1/92.85714285714286
     #
+    # sample = [40, 15, 35, 20, 40, 50]
+    #
+    #  5 - 6/0/0/0
+    # 10 - 6/0/0/0
+    # 15 - 6/0/1/8.333333333333332
+    # 20 - 6/1/1/25
+    # 25 - 6/2/0/33.33333333333333
+    # 30 - 6/2/0/33.33333333333333
+    # 35 - 6/2/1/41.66666666666667
+    # 40 - 6/3/2/66.66666666666666
+    # 45 - 6/5/0/83.33333333333334
+    # 50 - 6/5/1/91.66666666666666
+    # 55 - 6/6/0/100  
+    #
+    # sample = [1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,4,4,5,6]
+    #
+    # 1 - 22/0/5/11.363636363636363
+    # 2 - 22/5/8/40.909090909090914
+    # 3 - 22/13/5/70.45454545454545
+    # 4 - 22/18/2/86.36363636363636
+    # 5 - 22/20/1/93.18181818181817
+    # 6 - 22/21/1/97.72727272727273
+    #
     # Formula:
     # PR% = L + ( 0.5 x S ) / N 
     #
@@ -122,7 +145,36 @@ module Ratistics
     # L = Number of below rank, 
     # S = Number of same rank,
     # N = Total numbers.
-    #end
+    def percentile(data, value, opts={}, &block)
+      return nil if data.nil? || data.empty?
+      data = data.sort unless block_given? || opts[:sorted] == true
+      
+      #return 0 if value < data.first
+      #return 100 if value > data.last
+      
+      # Formula:
+      # PR% = L + ( 0.5 x S ) / N 
+      #
+      # Where,
+      # L = Number of below rank, 
+      # S = Number of same rank,
+      # N = Total numbers.
+      
+      frequency = opts[:frequency] || Probability.frequency(data, &block)
+      ranks = frequency.keys.sort
+      l, s = Search.binary_search(ranks, value)
+
+      return 0 if l.nil?
+      return 100 if s.nil?
+
+      l = Math.summation(ranks, :upper => s-1){|item| frequency[item]}
+      s = frequency[value].to_i
+      n = data.size
+
+      return ((l + (0.5 * s)) / n.to_f) * 100.0
+    end
+
+    alias :centile :percentile
 
     # Return the percentile rank nearest to the given percentile.
     #
