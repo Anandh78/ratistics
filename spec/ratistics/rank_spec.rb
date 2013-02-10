@@ -608,20 +608,38 @@ module Ratistics
         end
 
         it 'returns nil for an empty set' do
-          Rank.first_quartile([]).should be_nil
+          Rank.first_quartile([].freeze).should be_nil
         end
 
         it 'calculates the rank for an even-numbered sample' do
-          Rank.first_quartile(even_sample).should be_within(0.001).of(2)
+          Rank.first_quartile(even_sample.freeze).should be_within(0.001).of(2)
         end
 
         it 'calculates the rank for an odd-numbered sample' do
-          Rank.first_quartile(odd_sample).should be_within(0.001).of(77.5)
+          Rank.first_quartile(odd_sample.freeze).should be_within(0.001).of(77.5)
         end
 
         it 'calculates the rank with a block' do
-          rank = Rank.first_quartile(block_sample){|item| item[:count]}
+          rank = Rank.first_quartile(block_sample.freeze){|item| item[:count]}
           rank.should be_within(0.001).of(77.5)
+        end
+
+        it 'does not re-sort a sorted sample' do
+          sample = odd_sample.dup
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          Rank.first_quartile(sample, :sorted => true)
+        end
+
+        it 'does not attempt to sort when a using a block' do
+          sample = [
+            {:count => 22},
+            {:count => 40}
+          ]
+
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          Rank.first_quartile(sample){|item| item[:count]}
         end
 
         specify 'with ActiveRecord', :ar => true do
@@ -630,12 +648,11 @@ module Ratistics
         end
 
         specify 'with Hamster' do
-          pending
 
-          sample = Hamster.vector(:even_sample)
+          sample = Hamster.list(*even_sample).freeze
           Rank.first_quartile(sample).should be_within(0.001).of(2)
 
-          sample = Hamster.vector(:odd_sample)
+          sample = Hamster.list(*odd_sample).freeze
           Rank.first_quartile(sample).should be_within(0.001).of(77.5)
         end
       end
@@ -647,20 +664,38 @@ module Ratistics
         end
 
         it 'returns nil for an empty set' do
-          Rank.second_quartile([]).should be_nil
+          Rank.second_quartile([].freeze).should be_nil
         end
 
         it 'calculates the rank for an even-numbered sample' do
-          Rank.second_quartile(even_sample).should be_within(0.001).of(2)
+          Rank.second_quartile(even_sample.freeze).should be_within(0.001).of(2)
         end
 
         it 'calculates the rank for an odd-numbered sample' do
-          Rank.second_quartile(odd_sample).should be_within(0.001).of(90.0)
+          Rank.second_quartile(odd_sample.freeze).should be_within(0.001).of(90.0)
         end
 
         it 'calculates the rank with a block' do
-          rank = Rank.second_quartile(block_sample){|item| item[:count]}
+          rank = Rank.second_quartile(block_sample.freeze){|item| item[:count]}
           rank.should be_within(0.001).of(90.0)
+        end
+
+        it 'does not re-sort a sorted sample' do
+          sample = odd_sample.dup
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          Rank.second_quartile(sample, :sorted => true)
+        end
+
+        it 'does not attempt to sort when a using a block' do
+          sample = [
+            {:count => 22},
+            {:count => 40}
+          ]
+
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          Rank.second_quartile(sample){|item| item[:count]}
         end
 
         specify 'with ActiveRecord', :ar => true do
@@ -669,12 +704,11 @@ module Ratistics
         end
 
         specify 'with Hamster' do
-          pending
 
-          sample = Hamster.vector(:even_sample)
+          sample = Hamster.list(*even_sample).freeze
           Rank.second_quartile(sample).should be_within(0.001).of(2)
 
-          sample = Hamster.vector(:odd_sample)
+          sample = Hamster.list(*odd_sample).freeze
           Rank.second_quartile(sample).should be_within(0.001).of(90.0)
         end
       end
@@ -686,20 +720,38 @@ module Ratistics
         end
 
         it 'returns nil for an empty set' do
-          Rank.third_quartile([]).should be_nil
+          Rank.third_quartile([].freeze).should be_nil
         end
 
         it 'calculates the rank for an even-numbered sample' do
-          Rank.third_quartile(even_sample).should be_within(0.001).of(3)
+          Rank.third_quartile(even_sample.freeze).should be_within(0.001).of(3)
         end
 
         it 'calculates the rank for an odd-numbered sample' do
-          Rank.third_quartile(odd_sample).should be_within(0.001).of(93.5)
+          Rank.third_quartile(odd_sample.freeze).should be_within(0.001).of(93.5)
         end
 
         it 'calculates the rank with a block' do
-          rank = Rank.third_quartile(block_sample){|item| item[:count]}
+          rank = Rank.third_quartile(block_sample.freeze){|item| item[:count]}
           rank.should be_within(0.001).of(93.5)
+        end
+
+        it 'does not re-sort a sorted sample' do
+          sample = odd_sample.dup
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          Rank.third_quartile(sample, :sorted => true)
+        end
+
+        it 'does not attempt to sort when a using a block' do
+          sample = [
+            {:count => 22},
+            {:count => 40}
+          ]
+
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          Rank.third_quartile(sample){|item| item[:count]}
         end
 
         specify 'with ActiveRecord', :ar => true do
@@ -708,12 +760,11 @@ module Ratistics
         end
 
         specify 'with Hamster' do
-          pending
 
-          sample = Hamster.vector(:even_sample)
+          sample = Hamster.list(*even_sample).freeze
           Rank.third_quartile(sample).should be_within(0.001).of(3)
 
-          sample = Hamster.vector(:odd_sample)
+          sample = Hamster.list(*odd_sample).freeze
           Rank.third_quartile(sample).should be_within(0.001).of(93.5)
         end
       end

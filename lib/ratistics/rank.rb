@@ -280,10 +280,6 @@ module Ratistics
     # probability to be computed against a specific field in a
     # data set of hashes or objects.
     #
-    # @note
-    #   The :sorted option is not yet implemented. Currently assumes
-    #   a sorted data sample.
-    #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -296,7 +292,7 @@ module Ratistics
     def first_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
       midpoint = (data.size / 2.0).floor - 1
-      return Average.median(Collection.slice(data, (0..midpoint)), &block)
+      return Average.median(Collection.slice(data, (0..midpoint)), opts, &block)
     end
 
     alias :lower_quartile :first_quartile
@@ -312,10 +308,6 @@ module Ratistics
     # probability to be computed against a specific field in a
     # data set of hashes or objects.
     #
-    # @note
-    #   The :sorted option is not yet implemented. Currently assumes
-    #   a sorted data sample.
-    #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -327,7 +319,7 @@ module Ratistics
     # @return [Numeric] value at the rank nearest to the given percentile
     def second_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
-      return Average.median(data, &block)
+      return Average.median(data, opts, &block)
     end
 
     # Calculate the value representing the upper-bound of the third
@@ -340,10 +332,6 @@ module Ratistics
     # element in the data set. Using a block in this way allows
     # probability to be computed against a specific field in a
     # data set of hashes or objects.
-    #
-    # @note
-    #   The :sorted option is not yet implemented. Currently assumes
-    #   a sorted data sample.
     #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
@@ -358,7 +346,7 @@ module Ratistics
       return nil if data.nil? || data.empty?
       midpoint = (data.size / 2.0).ceil
       high = data.size - 1
-      return Average.median(Collection.slice(data, (midpoint..high)), &block)
+      return Average.median(Collection.slice(data, (midpoint..high)), opts, &block)
     end
 
     alias :upper_quartile :third_quartile
