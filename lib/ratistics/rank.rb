@@ -270,7 +270,31 @@ module Ratistics
       return rank
     end
 
-    def first_quartile(data, &block)
+    # Calculate the value representing the upper-bound of the first
+    # quartile (percentile) of a data sample.
+    # 
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true or a block is given.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # @note
+    #   The :sorted option is not yet implemented. Currently assumes
+    #   a sorted data sample.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set against which percentile is computed
+    # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [true, false] :sorted indicates of the data is already sorted
+    #
+    # @return [Numeric] value at the rank nearest to the given percentile
+    def first_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
       midpoint = (data.size / 2.0).floor - 1
       return Average.median(Collection.slice(data, (0..midpoint)), &block)
@@ -278,12 +302,60 @@ module Ratistics
 
     alias :lower_quartile :first_quartile
 
-    def second_quartile(data, &block)
+    # Calculate the value representing the upper-bound of the second
+    # quartile (percentile) of a data sample.
+    # 
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true or a block is given.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # @note
+    #   The :sorted option is not yet implemented. Currently assumes
+    #   a sorted data sample.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set against which percentile is computed
+    # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [true, false] :sorted indicates of the data is already sorted
+    #
+    # @return [Numeric] value at the rank nearest to the given percentile
+    def second_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
       return Average.median(data, &block)
     end
 
-    def third_quartile(data, &block)
+    # Calculate the value representing the upper-bound of the third
+    # quartile (percentile) of a data sample.
+    # 
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true or a block is given.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # @note
+    #   The :sorted option is not yet implemented. Currently assumes
+    #   a sorted data sample.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set against which percentile is computed
+    # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [true, false] :sorted indicates of the data is already sorted
+    #
+    # @return [Numeric] value at the rank nearest to the given percentile
+    def third_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
       midpoint = (data.size / 2.0).ceil
       high = data.size - 1

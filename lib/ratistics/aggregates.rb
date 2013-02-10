@@ -3,9 +3,11 @@ require 'ratistics/distribution'
 
 module Ratistics
 
+  # A read-only, memoized class for calculating aggregate statistics
+  # (average, central tendency, distribution) against a data sample.
   class Aggregates
 
-    # Creates a new Aggregates object
+    # Creates a new Aggregates object.
     #
     # When a block is provided a new collection is constructed
     # by enumerating the original data set and applying the block

@@ -2,6 +2,8 @@ require 'ratistics/probability'
 
 module Ratistics
 
+  # A read-only, memoized class for calculating frequency and
+  # probability statistics against a data sample.
   class Frequencies
 
     attr_reader :distribution

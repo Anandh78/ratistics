@@ -3,7 +3,7 @@ require 'ratistics/math'
 
 module Ratistics
 
-  # Various average computation functions.
+  # Various average (central tendency) computation functions.
   module Average
     extend self
 
