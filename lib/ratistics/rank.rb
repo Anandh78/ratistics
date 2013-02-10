@@ -187,11 +187,5 @@ module Ratistics
       return rank
     end
 
-    #def lower_quartile
-    #def upper_quartile
-    #def first_quartile
-    #def second_quartile
-    #def third_quartile
-
   end
 end

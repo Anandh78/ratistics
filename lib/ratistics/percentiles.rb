@@ -1,3 +1,5 @@
+require 'ratistics/average'
+require 'ratistics/collection'
 require 'ratistics/rank'
 
 module Ratistics
@@ -26,7 +28,8 @@ module Ratistics
       @ranks ||= []
 
       @percent_ranks = {}
-      @percentiles = {}
+      @nearest_ranks = {}
+      @linear_ranks = {}
     end
 
     def percent_rank(index)
@@ -35,11 +38,32 @@ module Ratistics
 
     def nearest_rank(percentile, opts={})
       opts = opts.merge(:sorted => true)
-      @percentiles[percentile] ||= Rank.nearest_rank(@data, percentile, opts)
+      @nearest_ranks[percentile] ||= Rank.nearest_rank(@data, percentile, opts)
     end
 
     def linear_rank(percentile, opts={})
+      opts = opts.merge(:sorted => true)
+      @linear_ranks[percentile] ||= Rank.linear_rank(@data, percentile, opts)
     end
+
+    def first_quartile
+      midpoint = (@data.size / 2.0).floor - 1
+      @first_quartile ||= Average.median(Collection.slice(@data, (0..midpoint)))
+    end
+
+    alias :lower_quartile :first_quartile
+
+    def second_quartile
+      @second_quartile ||= Average.median(@data)
+    end
+
+    def third_quartile
+      midpoint = (@data.size / 2.0).ceil
+      high = @data.size - 1
+      @third_quartile ||= Average.median(Collection.slice(@data, (midpoint..high)))
+    end
+
+    alias :upper_quartile :third_quartile
 
   end
 end

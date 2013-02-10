@@ -160,71 +160,141 @@ module Ratistics
         rank = rank.percent_rank(3)
         rank.should be_within(0.001).of(41.667)
       end
+    end
 
-      context '#nearest_rank' do
+    context '#nearest_rank' do
 
-        it 'returns the exact rank of an exact match' do
+      it 'returns the exact rank of an exact match' do
+        sample = [15, 20, 35, 40, 50].freeze
+        percentiles = Percentiles.new(sample)
+        rank = percentiles.nearest_rank(30)
+        rank.should eq 20
+      end
+
+      it 'returns the nearest rank for a sample' do
+        sample = [15, 20, 35, 40, 50].freeze
+        percentiles = Percentiles.new(sample)
+        rank = percentiles.nearest_rank(35)
+        rank.should eq 20
+      end
+
+      it 'returns the nearest rank with block' do
+        sample = [
+          {:count => 15},
+          {:count => 20},
+          {:count => 35},
+          {:count => 40},
+          {:count => 50}
+        ].freeze
+        percentiles = Percentiles.new(sample){|item| item[:count]}
+        rank = percentiles.nearest_rank(35)
+        rank.should eq 20
+      end
+
+      context 'rank calculations' do
+
+        it 'uses the ordinal rank formula when :rank => :ordinal' do
+          Math.should_receive(:ordinal_rank).with(40, 5).and_return(2.5)
           sample = [15, 20, 35, 40, 50].freeze
           percentiles = Percentiles.new(sample)
-          rank = percentiles.nearest_rank(30)
-          rank.should eq 20
+          rank = percentiles.nearest_rank(40, :rank => :ordinal)
+          rank.should eq 35
         end
 
-        it 'returns the nearest rank for a sample' do
+        it 'uses the NIST primary formula when :rank => :nist_primary' do
+          Math.should_receive(:nist_primary_rank).with(40, 5).and_return(2.4)
           sample = [15, 20, 35, 40, 50].freeze
           percentiles = Percentiles.new(sample)
-          rank = percentiles.nearest_rank(35)
+          rank = percentiles.nearest_rank(40, :rank => :nist_primary)
           rank.should eq 20
         end
 
-        it 'returns the nearest rank with block' do
-          sample = [
-            {:count => 15},
-            {:count => 20},
-            {:count => 35},
-            {:count => 40},
-            {:count => 50}
-          ].freeze
-          percentiles = Percentiles.new(sample){|item| item[:count]}
-          rank = percentiles.nearest_rank(35)
-          rank.should eq 20
+        it 'uses the NIST alternate formula when :rank => :nist_alternate' do
+          Math.should_receive(:nist_alternate_rank).with(40, 5).and_return(2.6)
+          sample = [15, 20, 35, 40, 50].freeze
+          percentiles = Percentiles.new(sample)
+          rank = percentiles.nearest_rank(40, :rank => :nist_alternate)
+          rank.should eq 35
         end
 
-        context 'rank calculations' do
-
-          it 'uses the ordinal rank formula when :rank => :ordinal' do
-            Math.should_receive(:ordinal_rank).with(40, 5).and_return(2.5)
-            sample = [15, 20, 35, 40, 50].freeze
-            percentiles = Percentiles.new(sample)
-            rank = percentiles.nearest_rank(40, :rank => :ordinal)
-            rank.should eq 35
-          end
-
-          it 'uses the NIST primary formula when :rank => :nist_primary' do
-            Math.should_receive(:nist_primary_rank).with(40, 5).and_return(2.4)
-            sample = [15, 20, 35, 40, 50].freeze
-            percentiles = Percentiles.new(sample)
-            rank = percentiles.nearest_rank(40, :rank => :nist_primary)
-            rank.should eq 20
-          end
-
-          it 'uses the NIST alternate formula when :rank => :nist_alternate' do
-            Math.should_receive(:nist_alternate_rank).with(40, 5).and_return(2.6)
-            sample = [15, 20, 35, 40, 50].freeze
-            percentiles = Percentiles.new(sample)
-            rank = percentiles.nearest_rank(40, :rank => :nist_alternate)
-            rank.should eq 35
-          end
-
-          it 'uses the ordinal rank formula by default' do
-            Math.should_receive(:ordinal_rank).with(40, 5).and_return(2.5)
-            sample = [15, 20, 35, 40, 50].freeze
-            percentiles = Percentiles.new(sample)
-            rank = percentiles.nearest_rank(40)
-            rank.should eq 35
-          end
+        it 'uses the ordinal rank formula by default' do
+          Math.should_receive(:ordinal_rank).with(40, 5).and_return(2.5)
+          sample = [15, 20, 35, 40, 50].freeze
+          percentiles = Percentiles.new(sample)
+          rank = percentiles.nearest_rank(40)
+          rank.should eq 35
         end
       end
+    end
+
+    context '#linear_rank' do
+
+      it 'returns the value of the highest rank when the given percentile is higher' do
+        sample = [35, 20, 15, 40, 50].freeze
+        percentiles = Percentiles.new(sample)
+        rank = percentiles.linear_rank(95.0)
+        rank.should eq 50
+      end
+
+      it 'returns the value of the lowest rank when the given percentile is lower' do
+        sample = [35, 20, 15, 40, 50].freeze
+        percentiles = Percentiles.new(sample)
+        rank = percentiles.linear_rank(0.05)
+        rank.should eq 15
+      end
+
+      it 'returns the rank when the given value is an exact match' do
+        sample = [35, 20, 15, 40, 50].freeze
+        percentiles = Percentiles.new(sample)
+        rank = percentiles.linear_rank(70.0)
+        rank.should eq 40
+      end
+
+      it 'uses linear interpolation when the given value is not a match' do
+        sample = [35, 20, 15, 40, 50].freeze
+        percentiles = Percentiles.new(sample)
+        rank = percentiles.linear_rank(40)
+        rank.should be_within(0.001).of(27.5)
+      end
+
+      it 'returns the linear rank with block' do
+        sample = [
+          {:count => 15},
+          {:count => 20},
+          {:count => 35},
+          {:count => 40},
+          {:count => 50}
+        ].freeze
+
+        percentiles = Percentiles.new(sample){|item| item[:count]}
+        rank = percentiles.linear_rank(70.0)
+        rank.should eq 40
+      end
+    end
+
+    context 'quartiles' do
+
+      let(:odd_sample) { [73, 75, 80, 84, 90, 92, 93, 94, 96].freeze }
+      let(:even_sample) { [1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,4,4,5,6].freeze }
+
+      let(:odd) { Percentiles.new(odd_sample) }
+      let(:even) { Percentiles.new(even_sample) }
+
+      specify 'first' do
+        even.first_quartile.should be_within(0.001).of(2)
+        odd.first_quartile.should be_within(0.001).of(77.5)
+      end
+
+      specify 'second' do
+        even.second_quartile.should be_within(0.001).of(2)
+        odd.second_quartile.should be_within(0.001).of(90.0)
+      end
+
+      specify 'third ' do
+        even.third_quartile.should be_within(0.001).of(3)
+        odd.third_quartile.should be_within(0.001).of(93.5)
+      end
+
     end
 
   end
