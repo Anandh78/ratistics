@@ -82,24 +82,6 @@ module Ratistics
         centiles = Percentiles.new(sample){|item| item[:count]}
       end
 
-      it 'accepts :flatten => true with a block' do
-        sample = [
-          {:count => 22},
-          {:count => 40},
-          {:count => 40}
-        ].freeze
-
-        centiles = Percentiles.new(sample, :flatten => true){|item| item[:count]}
-        centiles = centiles.ranks
-        centiles.size.should eq 2
-
-        centiles[0][0].should eq 22
-        centiles[0][1].should be_within(0.001).of(16.667)
-
-        centiles[1][0].should eq 40
-        centiles[1][1].should be_within(0.001).of(83.333)
-      end
-
       it 'freezes the #ranks' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 

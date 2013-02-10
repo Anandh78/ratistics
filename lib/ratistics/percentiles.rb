@@ -24,7 +24,7 @@ module Ratistics
         @data = data.sort
       end
 
-      @ranks = Rank.ranks(data, opts, &block).freeze
+      @ranks = Rank.ranks(@data, {:sorted => true}).freeze
       @ranks ||= []
 
       @percent_ranks = {}
