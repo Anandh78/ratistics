@@ -1,3 +1,5 @@
+require 'ratistics/average'
+require 'ratistics/collection'
 require 'ratistics/math'
 require 'ratistics/probability'
 require 'ratistics/search'
@@ -267,6 +269,28 @@ module Ratistics
 
       return rank
     end
+
+    def first_quartile(data)
+      return nil if data.nil? || data.empty?
+      midpoint = (data.size / 2.0).floor - 1
+      return Average.median(Collection.slice(data, (0..midpoint)))
+    end
+
+    alias :lower_quartile :first_quartile
+
+    def second_quartile(data)
+      return nil if data.nil? || data.empty?
+      return Average.median(data)
+    end
+
+    def third_quartile(data)
+      return nil if data.nil? || data.empty?
+      midpoint = (data.size / 2.0).ceil
+      high = data.size - 1
+      return Average.median(Collection.slice(data, (midpoint..high)))
+    end
+
+    alias :upper_quartile :third_quartile
 
   end
 end

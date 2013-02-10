@@ -11,6 +11,10 @@ module Ratistics
         Rank.ranks(nil).should eq []
       end
 
+      it 'returns an empty array for an empty sample' do
+        Rank.ranks([].freeze).should eq []
+      end
+
       it 'returns 50.0 for the percentile in a one-element sample' do
         sample = [22].freeze
 
@@ -573,6 +577,98 @@ module Ratistics
         specify { Rank.linear_rank(vector, 70.0, :sorted => true).should eq 40 }
       end
     end
+
+
+
+
+
+
+
+
+
+
+
+
+    context 'quartiles' do
+
+      let(:odd_sample) { [73, 75, 80, 84, 90, 92, 93, 94, 96].freeze }
+      let(:even_sample) { [1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,4,4,5,6].freeze }
+
+      context 'first' do
+
+        it 'returns nil for a nil sample' do
+          Rank.first_quartile(nil).should be_nil
+        end
+
+        it 'returns nil for an empty set' do
+          Rank.first_quartile([]).should be_nil
+        end
+
+        it 'calculates the rank for an even-numbered sample' do
+          Rank.first_quartile(even_sample).should be_within(0.001).of(2)
+        end
+
+        it 'calculates the rank for an odd-numbered sample' do
+          Rank.first_quartile(odd_sample).should be_within(0.001).of(77.5)
+        end
+      end
+
+      context 'second' do
+
+        it 'returns nil for a nil sample' do
+          Rank.second_quartile(nil).should be_nil
+        end
+
+        it 'returns nil for an empty set' do
+          Rank.second_quartile([]).should be_nil
+        end
+
+        it 'calculates the rank for an even-numbered sample' do
+          Rank.second_quartile(even_sample).should be_within(0.001).of(2)
+        end
+
+        it 'calculates the rank for an odd-numbered sample' do
+          Rank.second_quartile(odd_sample).should be_within(0.001).of(90.0)
+        end
+      end
+
+      context 'third ' do
+
+        it 'returns nil for a nil sample' do
+          Rank.third_quartile(nil).should be_nil
+        end
+
+        it 'returns nil for an empty set' do
+          Rank.third_quartile([]).should be_nil
+        end
+
+        it 'calculates the rank for an even-numbered sample' do
+          Rank.third_quartile(even_sample).should be_within(0.001).of(3)
+        end
+
+        it 'calculates the rank for an odd-numbered sample' do
+          Rank.third_quartile(odd_sample).should be_within(0.001).of(93.5)
+        end
+      end
+    end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   end
 end

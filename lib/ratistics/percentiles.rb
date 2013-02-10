@@ -1,5 +1,3 @@
-require 'ratistics/average'
-require 'ratistics/collection'
 require 'ratistics/rank'
 
 module Ratistics
@@ -47,20 +45,17 @@ module Ratistics
     end
 
     def first_quartile
-      midpoint = (@data.size / 2.0).floor - 1
-      @first_quartile ||= Average.median(Collection.slice(@data, (0..midpoint)))
+      @first_quartile ||= Rank.first_quartile(@data)
     end
 
     alias :lower_quartile :first_quartile
 
     def second_quartile
-      @second_quartile ||= Average.median(@data)
+      @second_quartile ||= Rank.second_quartile(@data)
     end
 
     def third_quartile
-      midpoint = (@data.size / 2.0).ceil
-      high = @data.size - 1
-      @third_quartile ||= Average.median(Collection.slice(@data, (midpoint..high)))
+      @third_quartile ||= Rank.third_quartile(@data)
     end
 
     alias :upper_quartile :third_quartile
