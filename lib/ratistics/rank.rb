@@ -95,6 +95,35 @@ module Ratistics
       return rank
     end
 
+    #def percentile(data, value, opts={})
+    # http://easycalculation.com/statistics/percentile-rank.php
+    #
+    # sample = [5, 1, 9, 3, 14, 9, 7]
+    #
+    #  1 - 7/0/1/7.142857142857142
+    #  2 - 7/1/0/14.285714285714285
+    #  3 - 7/1/1/21.428571428571427
+    #  4 - 7/2/0/28.57142857142857
+    #  5 - 7/2/1/35.714285714285715
+    #  6 - 7/3/0/42.857142857142854
+    #  7 - 7/3/1/50
+    #  8 - 7/4/0/57.14285714285714
+    #  9 - 7/4/2/71.42857142857143
+    # 10 - 7/6/0/85.71428571428571
+    # 11 - 7/6/0/85.71428571428571
+    # 12 - 7/6/0/85.71428571428571
+    # 13 - 7/6/0/85.71428571428571
+    # 14 - 7/6/1/92.85714285714286
+    #
+    # Formula:
+    # PR% = L + ( 0.5 x S ) / N 
+    #
+    # Where,
+    # L = Number of below rank, 
+    # S = Number of same rank,
+    # N = Total numbers.
+    #end
+
     # Return the percentile rank nearest to the given percentile.
     #
     # Will sort the data set using natural sort order unless

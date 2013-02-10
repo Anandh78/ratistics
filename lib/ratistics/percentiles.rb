@@ -65,5 +65,17 @@ module Ratistics
 
     alias :upper_quartile :third_quartile
 
+    #def each(&block)
+    #end
+
+    #def each_rank(&block)
+    #end
+
+    #def each_percentile(&block)
+    #end
+
+    #def percentile(value)
+    #end
+
   end
 end
