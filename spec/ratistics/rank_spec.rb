@@ -248,19 +248,6 @@ module Ratistics
       end
     end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     context '#percentile' do
 
       it 'returns nil for a nil sample' do
@@ -356,15 +343,6 @@ module Ratistics
         specify { Rank.percentile(vector, 20, :sorted => true).should eq 25 }
       end
     end
-
-
-
-
-
-
-
-
-
 
     context '#nearest_rank' do
 
