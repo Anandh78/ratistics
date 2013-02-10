@@ -154,6 +154,7 @@ When working with sets of complex data use blocks to process the data without co
 
 ### Statistics Functions
 
+* first_quartile (alias: lower_quartile)
 * frequency
 * frequency_mean
 * linear_rank
@@ -164,12 +165,15 @@ When working with sets of complex data use blocks to process the data without co
 * nearest_rank
 * normalize_probability (alias: normalize_pmf)
 * percent_rank
+* percentile (alias: centile)
 * probability (alias: pmf)
 * probability_mean (alias: pmf_mean)
 * probability_variance (alias: pmf_variance)
 * range
 * ranks (alias: percentiles, centiles)
+* second_quartile
 * standard_deviation (alias: std_dev, stddev)
+* third_quartile (alias: upper_quartile)
 * truncated_mean (alias: trimmed_mean)
 * variance (alias: var)
 

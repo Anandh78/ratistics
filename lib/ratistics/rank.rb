@@ -270,24 +270,24 @@ module Ratistics
       return rank
     end
 
-    def first_quartile(data)
+    def first_quartile(data, &block)
       return nil if data.nil? || data.empty?
       midpoint = (data.size / 2.0).floor - 1
-      return Average.median(Collection.slice(data, (0..midpoint)))
+      return Average.median(Collection.slice(data, (0..midpoint)), &block)
     end
 
     alias :lower_quartile :first_quartile
 
-    def second_quartile(data)
+    def second_quartile(data, &block)
       return nil if data.nil? || data.empty?
-      return Average.median(data)
+      return Average.median(data, &block)
     end
 
-    def third_quartile(data)
+    def third_quartile(data, &block)
       return nil if data.nil? || data.empty?
       midpoint = (data.size / 2.0).ceil
       high = data.size - 1
-      return Average.median(Collection.slice(data, (midpoint..high)))
+      return Average.median(Collection.slice(data, (midpoint..high)), &block)
     end
 
     alias :upper_quartile :third_quartile

@@ -578,21 +578,28 @@ module Ratistics
       end
     end
 
-
-
-
-
-
-
-
-
-
-
-
     context 'quartiles' do
 
       let(:odd_sample) { [73, 75, 80, 84, 90, 92, 93, 94, 96].freeze }
       let(:even_sample) { [1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,4,4,5,6].freeze }
+
+      let(:block_sample) do
+        [
+          {:count => 73},
+          {:count => 75},
+          {:count => 80},
+          {:count => 84},
+          {:count => 90},
+          {:count => 92},
+          {:count => 93},
+          {:count => 94},
+          {:count => 96}
+        ].freeze
+      end
+
+      before(:all) { Racer.connect }
+
+      let(:ar_sample) { Racer.where('age > 0').order('age ASC') }
 
       context 'first' do
 
@@ -610,6 +617,26 @@ module Ratistics
 
         it 'calculates the rank for an odd-numbered sample' do
           Rank.first_quartile(odd_sample).should be_within(0.001).of(77.5)
+        end
+
+        it 'calculates the rank with a block' do
+          rank = Rank.first_quartile(block_sample){|item| item[:count]}
+          rank.should be_within(0.001).of(77.5)
+        end
+
+        specify 'with ActiveRecord', :ar => true do
+          rank = Rank.first_quartile(ar_sample){|r| r.age}
+          rank.should be_within(0.001).of(31.0)
+        end
+
+        specify 'with Hamster' do
+          pending
+
+          sample = Hamster.vector(:even_sample)
+          Rank.first_quartile(sample).should be_within(0.001).of(2)
+
+          sample = Hamster.vector(:odd_sample)
+          Rank.first_quartile(sample).should be_within(0.001).of(77.5)
         end
       end
 
@@ -630,6 +657,26 @@ module Ratistics
         it 'calculates the rank for an odd-numbered sample' do
           Rank.second_quartile(odd_sample).should be_within(0.001).of(90.0)
         end
+
+        it 'calculates the rank with a block' do
+          rank = Rank.second_quartile(block_sample){|item| item[:count]}
+          rank.should be_within(0.001).of(90.0)
+        end
+
+        specify 'with ActiveRecord', :ar => true do
+          rank = Rank.second_quartile(ar_sample){|r| r.age}
+          rank.should be_within(0.001).of(38.0)
+        end
+
+        specify 'with Hamster' do
+          pending
+
+          sample = Hamster.vector(:even_sample)
+          Rank.second_quartile(sample).should be_within(0.001).of(2)
+
+          sample = Hamster.vector(:odd_sample)
+          Rank.second_quartile(sample).should be_within(0.001).of(90.0)
+        end
       end
 
       context 'third ' do
@@ -649,26 +696,28 @@ module Ratistics
         it 'calculates the rank for an odd-numbered sample' do
           Rank.third_quartile(odd_sample).should be_within(0.001).of(93.5)
         end
+
+        it 'calculates the rank with a block' do
+          rank = Rank.third_quartile(block_sample){|item| item[:count]}
+          rank.should be_within(0.001).of(93.5)
+        end
+
+        specify 'with ActiveRecord', :ar => true do
+          rank = Rank.third_quartile(ar_sample){|r| r.age}
+          rank.should be_within(0.001).of(47.0)
+        end
+
+        specify 'with Hamster' do
+          pending
+
+          sample = Hamster.vector(:even_sample)
+          Rank.third_quartile(sample).should be_within(0.001).of(3)
+
+          sample = Hamster.vector(:odd_sample)
+          Rank.third_quartile(sample).should be_within(0.001).of(93.5)
+        end
       end
     end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   end
 end

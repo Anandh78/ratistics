@@ -4,11 +4,20 @@
 
 Release Date: TBD
 
-* Added Aggregates class
+* Added classes
+  * Aggregares
+  * Frequencies
+  * Probabilities
+* Added percentile functions
+  * percentile
+  * first_quartile (alias: lower_quartile)
+  * second_quartile
+  * thirs_quartile (alias: upper_quartile)
 * Added math functions
   * summation (alias: sum)
 * Added sorts and searches
   * insertion_sort!
+  * linear_search
 
 ### 0.2.1
 
