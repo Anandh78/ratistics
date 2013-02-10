@@ -144,6 +144,38 @@ module Ratistics
       end
     end
 
+    context '#percentile' do
+
+      it 'returns the exact percentile of an exact match' do
+        sample = [40, 15, 35, 20, 40, 50].freeze
+        percentiles = Percentiles.new(sample)
+        percentile = percentiles.percentile(20)
+        percentile.should eq 25
+      end
+
+      it 'returns the calculated percentile for a value not in the sample' do
+        sample = [40, 15, 35, 20, 40, 50].freeze
+        percentiles = Percentiles.new(sample)
+        percentile = percentiles.percentile(25)
+        percentile.should be_within(0.001).of(33.333)
+      end
+
+      it 'returns the nearest percentile with block' do
+        sample = [
+          {:count => 15},
+          {:count => 20},
+          {:count => 35},
+          {:count => 40},
+          {:count => 40},
+          {:count => 50}
+        ].freeze
+
+        percentiles = Percentiles.new(sample){|item| item[:count]}
+        percentile = percentiles.percentile(20)
+        percentile.should eq 25
+      end
+    end
+
     context '#nearest_rank' do
 
       it 'returns the exact rank of an exact match' do

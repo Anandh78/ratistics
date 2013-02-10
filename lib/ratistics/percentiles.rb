@@ -8,9 +8,6 @@ module Ratistics
 
     attr_reader :ranks
 
-    alias :percentiles :ranks
-    alias :centiles :ranks
-
     # Creates a new Percentiles object.
     #
     # When a block is provided a new collection is constructed
@@ -39,10 +36,20 @@ module Ratistics
       @ranks = Rank.ranks(@data, {:sorted => true}).freeze
       @ranks ||= []
 
+      @percentiles = {}
       @percent_ranks = {}
       @nearest_ranks = {}
       @linear_ranks = {}
     end
+
+    # Return the percentile of the given value.
+    #
+    # {Rank#percentile}
+    def percentile(value)
+      @percentiles[value] ||= Rank.percentile(@data, value, :sorted => true)
+    end
+
+    alias :centile :percentile
 
     # Calculate the percent rank for the given index within the sorted
     # data set.
@@ -96,9 +103,6 @@ module Ratistics
     end
 
     alias :upper_quartile :third_quartile
-
-    #def percentile
-    #end
 
     #def each(&block)
     #end

@@ -67,9 +67,6 @@ module Ratistics
       return ranks
     end
 
-    alias :percentiles :ranks
-    alias :centiles :ranks
-
     # Calculate the percent rank for the given index within the sorted
     # data set.
     #
@@ -98,6 +95,8 @@ module Ratistics
       return rank
     end
 
+    # Return the percentile of the given value.
+    #
     # http://easycalculation.com/statistics/percentile-rank.php
     #
     # sample = [5, 1, 9, 3, 14, 9, 7]

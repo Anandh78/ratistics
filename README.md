@@ -170,7 +170,7 @@ When working with sets of complex data use blocks to process the data without co
 * probability_mean (alias: pmf_mean)
 * probability_variance (alias: pmf_variance)
 * range
-* ranks (alias: percentiles, centiles)
+* ranks
 * second_quartile
 * standard_deviation (alias: std_dev, stddev)
 * third_quartile (alias: upper_quartile)
