@@ -17,8 +17,8 @@ Ratistics is pronounced *ra-TIS-tics*. Just like "statistics" but with an 'R'
 The project is hosted on the following sites:
 
 * [RubyGems project page](https://rubygems.org/gems/ratistics)
-* [Source code on GitHub](https://github.com/jdantonio/ratistics )
-* [YARD documentation on RubyDoc.org](http://rubydoc.info/github/jdantonio/ratistics/master/frames )
+* [Source code on GitHub](https://github.com/jdantonio/ratistics)
+* [YARD documentation on RubyDoc.org](http://rubydoc.info/github/jdantonio/ratistics/)
 * [Continuous integration on Travis-CI](https://travis-ci.org/jdantonio/ratistics)
 * [Dependency tracking on Gemnasium](https://gemnasium.com/jdantonio/ratistics)
 * [Follow me on Twitter](https://twitter.com/jerrydantonio)
