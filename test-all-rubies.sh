@@ -15,6 +15,11 @@ gem install bundler &>/dev/null
 bundle install &>/dev/null
 rake spec
 
+rvm use ruby-2.0.0-rc1@ratistics --create
+gem install bundler &>/dev/null 
+bundle install &>/dev/null
+rake spec
+
 rvm use jruby-1.6.7@ratistics --create
 gem install bundler &>/dev/null 
 bundle install &>/dev/null
