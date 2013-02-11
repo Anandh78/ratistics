@@ -64,6 +64,48 @@ module Ratistics
         frequency[21].should eq 1
       end
 
+      it 'returns an array when the :as options is set to :array' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
+
+        frequency = Probability.frequency(sample, :as => :array)
+
+        frequency.size.should eq 5
+        frequency.should include([13, 4])
+        frequency.should include([18, 1])
+        frequency.should include([14, 2])
+        frequency.should include([16, 1])
+        frequency.should include([21, 1])
+      end
+
+      it 'returns an array when :as is :array and a block is given' do
+        sample = [
+          {:count => 13},
+          {:count => 18},
+          {:count => 13},
+          {:count => 14},
+          {:count => 13},
+          {:count => 16},
+          {:count => 14},
+          {:count => 21},
+          {:count => 13},
+        ].freeze
+
+        frequency = Probability.frequency(sample, :as => :array){|item| item[:count]}
+
+        frequency.size.should eq 5
+        frequency.should include([13, 4])
+        frequency.should include([18, 1])
+        frequency.should include([14, 2])
+        frequency.should include([16, 1])
+        frequency.should include([21, 1])
+      end
+
+      it 'raises an error when the :as value is unrecognized' do
+        lambda {
+          Probability.frequency([1, 2, 3], :as => :bogus)
+        }.should raise_error
+      end
+
       context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }

@@ -6,11 +6,6 @@ module Ratistics
   # probability statistics against a data sample.
   class Frequencies
 
-    attr_reader :distribution
-
-    alias :frequency :distribution
-    alias :frequencies :distribution
-
     # Creates a new Frequencies object
     #
     # When a block is provided a new collection is constructed
@@ -27,9 +22,30 @@ module Ratistics
       if args.nil? || args.size == 0 || (args.size == 1 && args.first.nil?)
         raise ArgumentError.new('data cannot be nil') 
       end
-      @distribution = Probability.frequency([args].flatten, &block).freeze
-      @distribution ||= {}
+      @distribution = {}
+      @distribution[:hash] = Probability.frequency([args].flatten, &block).freeze
+      @distribution[:hash] ||= {}.freeze
     end
+
+    # Returns the frequency distribution for the data sample.
+    #
+    # @option opts [Symbol] :as sets the output to :hash or :array
+    #
+    # @return (see Probability#frequency)
+    def distribution(opts={})
+      if opts[:as].nil? || opts[:as] == :hash
+        @distribution[:hash]
+      elsif opts[:as] == :array
+        @distribution[:array] ||= @distribution[:hash].reduce([]) do |memo, frequency|
+          memo << frequency
+        end.freeze
+      else
+        raise ArgumentError.new("Unrecognized return type #{opts[:as]}")
+      end
+    end
+
+    alias :frequency :distribution
+    alias :frequencies :distribution
 
     # Calculate the mean from a frequency distribution.
     #

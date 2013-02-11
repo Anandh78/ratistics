@@ -13,21 +13,45 @@ module Ratistics
     # probability to be computed against a specific field in a
     # data set of hashes or objects.
     #
+    # The return value is a hash where the keys are the data elements
+    # from the sample and the values are the corresponding frequencies.
+    # When the *:as* option is set to *:array* the return value will
+    # be an array of arrays. Each element of the outer array will be
+    # a two-element array with the sample value at index 0 and the
+    # corresponding freqiency at index 1.
+    #
+    # @example
+    #   sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
+    #   Ratistics.frequency(sample) #=> {13=>4, 18=>1, 14=>2, 16=>1, 21=>1}
+    #   Ratistics.frequency(sample, :as => :array) #=> [[13, 4], [18, 1], [14, 2], [16, 1], [21, 1]]
+    #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
     # @param [Enumerable] data the data set to compute the frequency of
     # @param [Block] block optional block for per-item processing
     #
-    # @return [Hash, nil] the statistical frequency of the given data set
-    #   or nil if the data set is empty
+    # @option opts [Symbol] :as sets the output to :hash or :array
+    #   (default :hash)
+    #
+    # @return [Hash, Array, nil] the statistical frequency of the given
+    #   data set or nil if the data set is empty
     def frequency(data, opts={}, &block)
+      unless [nil, :hash, :array].include?(opts[:as])
+        raise ArgumentError.new("Unrecognized return type #{opts[:as]}")
+      end
       return nil if data.nil? || data.empty?
 
       freq = data.reduce({}) do |memo, datum|
         datum = yield(datum) if block_given?
         memo[datum] = memo[datum].to_i + 1
         memo
+      end
+
+      if opts[:as] == :array
+        freq = freq.reduce([]) do |memo, frequency|
+          memo << frequency
+        end
       end
 
       return freq

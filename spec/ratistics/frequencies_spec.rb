@@ -53,15 +53,6 @@ module Ratistics
         frequency.should == {10 => 1}
       end
 
-      it 'freezes the #distribution' do
-        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
-
-        frequency = Frequencies.new(sample)
-        lambda {
-          frequency.distribution[100] = 0
-        }.should raise_error
-      end
-
       it 'works with an ActiveRecord result set', :ar => true do
         Racer.connect
 
@@ -89,6 +80,44 @@ module Ratistics
         frequency[16].should eq 1
         frequency[18].should eq 1
         frequency[21].should eq 1
+      end
+    end
+
+    context '#distribution' do
+
+      let(:sample) { [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze }
+      let(:frequency) { Frequencies.new(sample) }
+
+      it 'returns a hash when the :as option is nil' do
+        frequency.distribution.should be_a Hash
+      end
+
+      it 'returns a hash when the :as option is :hash' do
+        frequency.distribution(:as => :hash).should be_a Hash
+      end
+
+      it 'returns an array when the :as option is :array' do
+        frequency.distribution(:as => :array).should be_a Array
+      end
+
+      it 'raises an error when the :as option is unrecognized' do
+        lambda {
+          frequency.distribution(:as => :bogus)
+        }.should raise_error
+      end
+
+      it 'freezes the hash #distribution' do
+        frequency = Frequencies.new(sample)
+        lambda {
+          frequency.distribution[100] = 0
+        }.should raise_error
+      end
+
+      it 'freezes the array #distribution' do
+        frequency = Frequencies.new(sample)
+        lambda {
+          frequency.distribution(:as => :array) << [1, 1]
+        }.should raise_error
       end
     end
 
