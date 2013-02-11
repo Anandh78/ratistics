@@ -30,12 +30,6 @@ module Ratistics
         }.should_not raise_exception
       end
 
-      it 'can be initialized from multiple arguments' do
-        lambda {
-          Aggregates.new(1, 2, 3, 4, 5, 6)
-        }.should_not raise_exception
-      end
-
       it 'can be initialized with a block' do
         sample = [
           {:count => 1},
@@ -66,35 +60,35 @@ module Ratistics
     context '#length' do
 
       it 'returns the length of the aggregated data set' do
-        Aggregates.new(1, 2, 3).length.should eq 3
+        Aggregates.new([1, 2, 3]).length.should eq 3
       end
     end
 
     context '#count' do
 
       it 'returns #length when no arguments are given' do
-        Aggregates.new(1, 2, 3, 4, 5).count.should eq 5
+        Aggregates.new([1, 2, 3, 4, 5]).count.should eq 5
       end
 
       it 'counts the sample when it does not respond to :length' do
-        sample = LengthTester.new(1, 2, 3, 4, 5)
+        sample = LengthTester.new([1, 2, 3, 4, 5])
         Aggregates.new(sample).count.should eq 5
       end
 
       it 'counts the elements of the given value when given an argument' do
-        ag = Aggregates.new(1, 2, 2, 2, 3, 4, 5, 6, 7)
+        ag = Aggregates.new([1, 2, 2, 2, 3, 4, 5, 6, 7])
         ag.count(0).should eq 0
         ag.count(1).should eq 1
         ag.count(2).should eq 3
       end
 
       it 'counts the elements for which the given block is true' do
-        ag = Aggregates.new(1, 2, 2, 2, 3, 4, 5, 6, 7)
+        ag = Aggregates.new([1, 2, 2, 2, 3, 4, 5, 6, 7])
         ag.count{|item| item > 2}.should eq 5
       end
 
       it 'prioritizes the item argument over a block' do
-        ag = Aggregates.new(1, 2, 2, 2, 3, 4, 5, 6, 7)
+        ag = Aggregates.new([1, 2, 2, 2, 3, 4, 5, 6, 7])
         ag.count(2){|item| item > 2}.should eq 3
       end
 

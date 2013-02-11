@@ -29,6 +29,7 @@ module Ratistics
     # @yieldparam item each element in the data set
     #
     # @param [Enumerable] data the data set to compute the frequency of
+    # @param [Hash] opts processing options
     # @param [Block] block optional block for per-item processing
     #
     # @option opts [Symbol] :as sets the output to :hash or :array

@@ -31,18 +31,6 @@ module Ratistics
         frequency[21].should eq 1
       end
 
-      it 'creates a #distribution for a valid argument list' do
-        frequency = Frequencies.new(13, 18, 13, 14, 13, 16, 14, 21, 13)
-        frequency = frequency.distribution
-
-        frequency.count.should eq 5
-        frequency[13].should eq 4
-        frequency[14].should eq 2
-        frequency[16].should eq 1
-        frequency[18].should eq 1
-        frequency[21].should eq 1
-      end
-
       it 'creates a #distribution when given a block' do
         sample = [
           {:count => 10},

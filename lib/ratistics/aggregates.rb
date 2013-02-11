@@ -19,14 +19,8 @@ module Ratistics
     #
     # @param [Objects, Enumerable] args the data set to aggregate
     # @param [Block] block optional block for per-item processing
-    def initialize(*args, &block)
-      if args.count == 0
-        raise ArgumentError.new('wrong number of arguments(0 for 1..*)')
-      elsif args.count == 1 && args.first.respond_to?(:each)
-        @data = args.first
-      else
-        @data = args
-      end
+    def initialize(data, opts={}, &block)
+      @data = data
 
       # use #each for maximum compatability
       if block_given?

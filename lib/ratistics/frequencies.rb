@@ -16,14 +16,13 @@ module Ratistics
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
-    # @param [Objects, Enumerable] args the data set calculate frequencies for
+    # @param [Objects, Enumerable] data the data set calculate frequencies for
     # @param [Block] block optional block for per-item processing
-    def initialize(*args, &block)
-      if args.nil? || args.size == 0 || (args.size == 1 && args.first.nil?)
-        raise ArgumentError.new('data cannot be nil') 
-      end
+    #   (default :hash)
+    def initialize(data, opts={}, &block)
+      raise ArgumentError.new('data cannot be nil') if data.nil?
       @distribution = {}
-      @distribution[:hash] = Probability.frequency([args].flatten, &block).freeze
+      @distribution[:hash] = Probability.frequency(data, &block).freeze
       @distribution[:hash] ||= {}.freeze
     end
 
