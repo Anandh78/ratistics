@@ -597,8 +597,6 @@ module Ratistics
         ].freeze
       end
 
-      before(:all) { Racer.connect }
-
       let(:ar_sample) { Racer.where('age > 0').order('age ASC') }
 
       context 'first' do
@@ -643,6 +641,7 @@ module Ratistics
         end
 
         specify 'with ActiveRecord', :ar => true do
+          Racer.connect
           rank = Rank.first_quartile(ar_sample){|r| r.age}
           rank.should be_within(0.001).of(31.0)
         end
@@ -699,6 +698,7 @@ module Ratistics
         end
 
         specify 'with ActiveRecord', :ar => true do
+          Racer.connect
           rank = Rank.second_quartile(ar_sample){|r| r.age}
           rank.should be_within(0.001).of(38.0)
         end
@@ -755,6 +755,7 @@ module Ratistics
         end
 
         specify 'with ActiveRecord', :ar => true do
+          Racer.connect
           rank = Rank.third_quartile(ar_sample){|r| r.age}
           rank.should be_within(0.001).of(47.0)
         end

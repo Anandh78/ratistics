@@ -54,7 +54,7 @@ module Ratistics
         lambda {
           sample = [31, 37, 26, 30, 2, 30, 1, 33, 5, 14, 11, 13, 17, 35, 4].freeze
           Sort.insertion_sort!(sample)
-        }.should raise_error(RuntimeError)
+        }.should raise_error
       end
     end
   end
