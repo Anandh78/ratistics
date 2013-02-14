@@ -108,16 +108,18 @@ module Ratistics
 
     alias :upper_quartile :third_quartile
 
-    #def each(&block)
-    #end
-
-    #def each_rank(&block)
-    #end
+    # Iterate over the encapsulated sample.
+    #
+    # @yield iterates over each element in the data sample.
+    # @yieldparam rank the rank from the data sample
+    # @yieldparam percentils the percentile from the data sample
+    def each(&block)
+      ranks.each do |rank|
+        yield(rank.first, rank.last)
+      end
+    end
 
     #def each_percentile(&block)
-    #end
-
-    #def percentile(value)
     #end
 
   end

@@ -308,7 +308,38 @@ module Ratistics
         even.third_quartile.should be_within(0.001).of(3)
         odd.third_quartile.should be_within(0.001).of(93.5)
       end
+    end
 
+    context 'iterators' do
+
+      let(:sample) { [ 1, 3, 5, 7,  9, 14 ].freeze }
+
+      let(:ranks) {
+        [[1, 8.333333333333334],
+          [3, 25.0],
+          [5, 41.666666666666664],
+          [7, 58.333333333333336],
+          [9, 75.0],
+          [14, 91.66666666666667]].freeze
+      }
+
+      let(:rank_map) {
+        {1 => 8.333333333333334,
+         3 => 25.0,
+         5 => 41.666666666666664,
+         7 => 58.333333333333336,
+         9 => 75.0,
+         14 => 91.66666666666667}.freeze
+      }
+
+      subject { Percentiles.new(sample) }
+
+      specify '#each' do
+
+        subject.each do |value, percentile|
+          rank_map[value].should be_within(0.001).of(percentile)
+        end
+      end
     end
 
   end
