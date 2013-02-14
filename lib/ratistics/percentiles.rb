@@ -59,6 +59,8 @@ module Ratistics
       @percent_ranks[index] ||= Rank.percent_rank(@data, index, :sorted => true)
     end
 
+    alias :percentile_rank :percent_rank
+
     # Return the percentile rank nearest to the given percentile.
     #
     # {Rank#nearest_rank}
@@ -75,6 +77,8 @@ module Ratistics
       opts = opts.merge(:sorted => true)
       @linear_ranks[percentile] ||= Rank.linear_rank(@data, percentile, opts)
     end
+
+    alias :linear_interpolation_rank :linear_rank
 
     # Calculate the value representing the upper-bound of the first
     # quartile (percentile) of a data sample.

@@ -6,10 +6,47 @@ require 'ratistics/search'
 
 module Ratistics
 
+  # From Wikipedia:
+  # 
+  #    In statistics, a percentile (or centile) is the value of a variable below
+  #    which a certain percent of observations fall. For example, the 20th percentile
+  #    is the value (or score) below which 20 percent of the observations may be found.
+  #    The term percentile and the related term percentile rank are often used in the
+  #    reporting of scores from norm-referenced tests. For example, if a score is in
+  #    the 86th percentile, it is higher than 85% of the other scores.
+  #
+  #    The 25th percentile is also known as the first quartile (Q1), the 50th percentile
+  #    as the median or second quartile (Q2), and the 75th percentile as the third
+  #    quartile (Q3).
+  #
+  #    ...
+  #
+  #    The percentile rank of a score is the percentage of scores in its frequency
+  #    distribution that are the same or lower than it. For example, a test score that
+  #    is greater than 75% of the scores of people taking the test is said to be at the
+  #    75th percentile rank.
+  #    
+  #    Percentile ranks are commonly used to clarify the interpretation of scores on
+  #    standardized tests. For the test theory, the percentile rank of a raw score is
+  #    interpreted as the percentages of examinees in the norm group who scored below
+  #    the score of interest. 
+  #
+  # Unfortunately, statisticians do not agree on one single formula for caclulating
+  # percentiles and percentile ranks. This module implements several of the most
+  # common methods. Each calculation is internally consistent. Results for all data
+  # sets will be consistent according to the rules of any given functions. Results
+  # with a single data set may be inconsistent across different functions. This is
+  # the nature of percentiles and percentile ranks.
+  #
+  # @see http://en.wikipedia.org/wiki/Percentile
+  # @see http://en.wikipedia.org/wiki/Percentile_rank
+  # @see http://en.wikipedia.org/wiki/Quantile
   module Rank
     extend self
 
     # Calculate the set of percentile ranks for every element in the sample.
+    #
+    #   P = 100 * ( i - 0.5 ) / N
     #
     # Will sort the data set using natural sort order unless
     # the :sorted option is true or a block is given. When the :flatten
@@ -46,6 +83,8 @@ module Ratistics
     # @option opts [String] :flatten remove duplicate data values
     #
     # @return [Array] set of values and percentiles
+    #
+    # @see http://en.wikipedia.org/wiki/Percentile_rank
     def ranks(data, opts={}, &block)
       return [] if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
@@ -68,7 +107,12 @@ module Ratistics
     end
 
     # Calculate the percent rank for the given index within the sorted
-    # data set.
+    # data set. This is the same calculation performed by the {#ranks}
+    # method. Where that method calculates the percentile for every
+    # element in the data set, this gives just the percentile of the
+    # value at the given index.
+    #
+    #   R = ( 100 / N ) * ( i - 0.5 )
     #
     # Will sort the data set using natural sort order unless
     # the :sorted option is true.
@@ -85,7 +129,11 @@ module Ratistics
     #
     # @option opts [true, false] :sorted indicates of the data is already sorted
     #
+    # @see #ranks
+    #
     # @return [Numeric] percentile of the given index
+    #
+    # @see http://en.wikipedia.org/wiki/Percentile_rank
     def percent_rank(data, index, opts={})
       return nil if data.nil? || data.empty?
       return nil if index <= 0 || index > data.size
@@ -95,71 +143,46 @@ module Ratistics
       return rank
     end
 
-    # Return the percentile of the given value.
+    alias :percentile_rank :percent_rank
+
+    # Calculate the percentile of the given value.
+    # 
+    #   P = L + ( 0.5 * S ) / N 
     #
-    # http://easycalculation.com/statistics/percentile-rank.php
+    #   Where,
+    #     L = Number of below rank, 
+    #     S = Number of same rank,
+    #     N = Total numbers.
     #
-    # sample = [5, 1, 9, 3, 14, 9, 7]
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true. Will calculate the
+    # {Probability#frequency} of the sample first unless the frequency
+    # distribution is passed as the :frequency option.
     #
-    #  1 - 7/0/1/7.142857142857142
-    #  2 - 7/1/0/14.285714285714285
-    #  3 - 7/1/1/21.428571428571427
-    #  4 - 7/2/0/28.57142857142857
-    #  5 - 7/2/1/35.714285714285715
-    #  6 - 7/3/0/42.857142857142854
-    #  7 - 7/3/1/50
-    #  8 - 7/4/0/57.14285714285714
-    #  9 - 7/4/2/71.42857142857143
-    # 10 - 7/6/0/85.71428571428571
-    # 11 - 7/6/0/85.71428571428571
-    # 12 - 7/6/0/85.71428571428571
-    # 13 - 7/6/0/85.71428571428571
-    # 14 - 7/6/1/92.85714285714286
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
     #
-    # sample = [40, 15, 35, 20, 40, 50]
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
     #
-    #  5 - 6/0/0/0
-    # 10 - 6/0/0/0
-    # 15 - 6/0/1/8.333333333333332
-    # 20 - 6/1/1/25
-    # 25 - 6/2/0/33.33333333333333
-    # 30 - 6/2/0/33.33333333333333
-    # 35 - 6/2/1/41.66666666666667
-    # 40 - 6/3/2/66.66666666666666
-    # 45 - 6/5/0/83.33333333333334
-    # 50 - 6/5/1/91.66666666666666
-    # 55 - 6/6/0/100  
+    # @param [Enumerable] data the data set against which percentile is computed
+    # @param [Float] value the value to calculate the percentile of
+    # @param [Hash] opts computation options
+    # @param [Block] block optional block for per-item processing
     #
-    # sample = [1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,4,4,5,6]
+    # @option opts [true, false] :sorted indicates of the data is already sorted
+    # @option opts [true, false] :ranked indicates of the data is already ranked
+    #   by the {#ranks} function
     #
-    # 1 - 22/0/5/11.363636363636363
-    # 2 - 22/5/8/40.909090909090914
-    # 3 - 22/13/5/70.45454545454545
-    # 4 - 22/18/2/86.36363636363636
-    # 5 - 22/20/1/93.18181818181817
-    # 6 - 22/21/1/97.72727272727273
+    # @return [Numeric] approximate percentile of the given value within the sample
     #
-    # Formula:
-    # PR% = L + ( 0.5 x S ) / N 
-    #
-    # Where,
-    # L = Number of below rank, 
-    # S = Number of same rank,
-    # N = Total numbers.
+    # @see Probability#frequency
+    # @see http://easycalculation.com/statistics/percentile-rank.php
     def percentile(data, value, opts={}, &block)
       return nil if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
-      
-      #return 0 if value < data.first
-      #return 100 if value > data.last
-      
-      # Formula:
-      # PR% = L + ( 0.5 x S ) / N 
-      #
-      # Where,
-      # L = Number of below rank, 
-      # S = Number of same rank,
-      # N = Total numbers.
       
       frequency = opts[:frequency] || Probability.frequency(data, &block)
       ranks = frequency.keys.sort
@@ -177,7 +200,16 @@ module Ratistics
 
     alias :centile :percentile
 
-    # Return the percentile rank nearest to the given percentile.
+    # Calculate the percentile rank nearest to the given percentile.
+    #
+    #   Ordinal:
+    #     n = ( P / 100 * N ) + 0.5 
+    #
+    #   NIST Primary:
+    #     n = ( P / 100 ) * ( N + 1 )
+    #
+    #   NIST ALternate:
+    #     n = ( ( P / 100 ) * ( N - 1 ) ) + 1 
     #
     # Will sort the data set using natural sort order unless
     # the :sorted option is true or a block is given.
@@ -200,6 +232,11 @@ module Ratistics
     #   rank: :ordinal, :nist_primary, :nist_alternate (default: ordinal)
     #
     # @return [Numeric] value at the rank nearest to the given percentile
+    #
+    # @see Math#ordinal_rank
+    # @see Math#nist_primary_rank
+    # @see Math#nist_alternate_rank
+    # @see http://en.wikipedia.org/wiki/Percentile
     def nearest_rank(data, percentile, opts={}, &block)
       return nil if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
@@ -220,6 +257,10 @@ module Ratistics
 
     # Return the percentile rank nearest to the given percentile using
     # linear interpolation between closest ranks 
+    #
+    #   P = ( 100 / N ) * ( n - 0.5 )
+    #
+    #   v = vk + ( N * ( P - pk ) / 100.0 * ( vk1 - vk ) ) 
     # 
     # Will sort the data set using natural sort order unless
     # the :sorted option is true or a block is given.
@@ -244,6 +285,8 @@ module Ratistics
     # @return [Numeric] value at the rank nearest to the given percentile
     #
     # @see #ranks
+    #
+    # @see http://en.wikipedia.org/wiki/Percentile
     def linear_rank(data, percentile, opts={}, &block)
       return nil if data.nil? || data.empty?
       
@@ -269,8 +312,12 @@ module Ratistics
       return rank
     end
 
+    alias :linear_interpolation_rank :linear_rank
+
     # Calculate the value representing the upper-bound of the first
-    # quartile (percentile) of a data sample.
+    # quartile (percentile) of a data sample. This is the equivalent
+    # of the median of the subset of the sample from the lower bound to
+    # the sample-median.
     # 
     # Will sort the data set using natural sort order unless
     # the :sorted option is true or a block is given.
@@ -289,6 +336,9 @@ module Ratistics
     # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Numeric] value at the rank nearest to the given percentile
+    #
+    # @see {Average#median}
+    # @see http://en.wikipedia.org/wiki/Quantile
     def first_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
       midpoint = (data.size / 2.0).floor - 1
@@ -298,7 +348,8 @@ module Ratistics
     alias :lower_quartile :first_quartile
 
     # Calculate the value representing the upper-bound of the second
-    # quartile (percentile) of a data sample.
+    # quartile (percentile) of a data sample. This is the equivalent
+    # of the sample median.
     # 
     # Will sort the data set using natural sort order unless
     # the :sorted option is true or a block is given.
@@ -317,13 +368,18 @@ module Ratistics
     # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Numeric] value at the rank nearest to the given percentile
+    #
+    # @see {Average#median}
+    # @see http://en.wikipedia.org/wiki/Quantile
     def second_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
       return Average.median(data, opts, &block)
     end
 
     # Calculate the value representing the upper-bound of the third
-    # quartile (percentile) of a data sample.
+    # quartile (percentile) of a data sample. This is the equivalent
+    # of the median of the subset of the sample from the sample-median
+    # to the upper bound.
     # 
     # Will sort the data set using natural sort order unless
     # the :sorted option is true or a block is given.
@@ -342,6 +398,9 @@ module Ratistics
     # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Numeric] value at the rank nearest to the given percentile
+    #
+    # @see {Average#median}
+    # @see http://en.wikipedia.org/wiki/Quantile
     def third_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
       midpoint = (data.size / 2.0).ceil
