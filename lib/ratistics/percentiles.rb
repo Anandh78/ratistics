@@ -108,19 +108,72 @@ module Ratistics
 
     alias :upper_quartile :third_quartile
 
-    # Iterate over the encapsulated sample.
+    # Iterate over the encapsulated sample and the associated percentiles.
     #
     # @yield iterates over each element in the data sample.
     # @yieldparam rank the rank from the data sample
-    # @yieldparam percentils the percentile from the data sample
+    # @yieldparam percentile the percentile from the data sample
     def each(&block)
       ranks.each do |rank|
         yield(rank.first, rank.last)
       end
     end
 
-    #def each_percentile(&block)
-    #end
+    # Iterate over the encapsulated sample and the associated percent ranks.
+    #
+    # @yield iterates over each element in the data sample.
+    # @yieldparam index the statistical (1-based) index of the sample
+    # @yieldparam percent the percent rank of the value at the index
+    def each_percent_rank(&block)
+      (1..@data.size).each do |index|
+        yield(index, percent_rank(index))
+      end
+    end
+
+    # Iterate over the given range of percentile values (defaults to
+    # 1 through 99) and returns the percentile and associated linear rank.
+    #
+    # @yield iterates over each element in the data sample.
+    # @yieldparam rank the rank from the data sample
+    # @yieldparam percentile the percentile from the data sample
+    def each_with_linear_rank(range=nil, &block)
+      range = (1..99) if range.nil?
+      range = (1..range.max) if range.min < 1
+      range = (range.min..99) if range.max > 99
+      
+      range.each do |percentile|
+        yield(percentile, linear_rank(percentile))
+      end
+    end
+
+    # Iterate over the given range of percentile values (defaults to
+    # 1 through 99) and returns each percentile and associated nearest rank.
+    #
+    # @yield iterates over each element in the data sample.
+    # @yieldparam rank the rank from the data sample
+    # @yieldparam percentile the percentile from the data sample
+    def each_with_nearest_rank(range=nil, &block)
+      range = (1..99) if range.nil?
+      range = (1..range.max) if range.min < 1
+      range = (range.min..99) if range.max > 99
+      
+      range.each do |percentile|
+        yield(percentile, nearest_rank(percentile))
+      end
+    end
+
+    # Iterate over all integer ranks from the sample minimum (rounded
+    # down) and the sample maximum (rounded up) and returns each rank
+    # and the associated percentile.
+    #
+    # @yield iterates over each element in the data sample.
+    # @yieldparam rank the rank from the data sample
+    # @yieldparam percentile the percentile from the data sample
+    def each_rank_and_percentile(&block)
+      (@data.first.floor..@data.last.ceil).each do |rank|
+        yield(rank, percentile(rank))
+      end
+    end
 
   end
 end
