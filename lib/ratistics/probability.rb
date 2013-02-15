@@ -231,15 +231,37 @@ module Ratistics
 
     alias :pmf_variance :probability_variance
 
+    # Calculate the probability that a random variable will be at or below
+    # a given value based on the given sample (aka cumulative distribution
+    # function, CDF).
+    #
+    #   0 <= P <= 1
+    #
+    # When a block is given the block will be applied to every element in
+    # the data set. Using a block in this way allows probability to be
+    # computed against a specific field in a data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data sample
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [0, Float, 1] the probability of a random variable being at
+    #   or below the given value. Returns zero if the value is lower than
+    #   the lowest value in the sample and one if the value is higher than
+    #   the highest value in the sample. Returns zero for a nil or empty
+    #   sample.
+    #
     # @see http://www.cumulativedistributionfunction.com/
     # @see http://en.wikipedia.org/wiki/Cumulative_distribution_function
-    def cumulative_distribution_function(data, rank, opts={}, &block) 
+    def cumulative_distribution_function(data, value, opts={}, &block)
       return 0 if data.nil? || data.empty?
 
       count = 0
       data.each do |datum|
         datum = yield(datum) if block_given?
-        count = count + 1 if datum <= rank
+        count = count + 1 if datum <= value
       end
 
       return 0 if count == 0
