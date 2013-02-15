@@ -155,6 +155,7 @@ When working with sets of complex data use blocks to process the data without co
 
 ### Statistics Functions
 
+* cumulative_distribution_function (alias: cdf, cumulative_distribution)
 * first_quartile (alias: lower_quartile)
 * frequency
 * frequency_mean

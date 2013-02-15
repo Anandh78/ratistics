@@ -4,6 +4,9 @@
 
 Release Date: TBD
 
+Added functions
+* Rank.cumulative_distribution_function (alias: cdf, cumulative_distribution)
+
 ### 0.2.2
 
 Release Date: February 14, 2012
