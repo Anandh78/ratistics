@@ -410,23 +410,5 @@ module Ratistics
 
     alias :upper_quartile :third_quartile
 
-    # @see http://en.wikipedia.org/wiki/Cumulative_distribution_function
-    def cumulative_distribution_function(data, rank, opts={}, &block) 
-      return 0 if data.nil? || data.empty?
-
-      count = 0
-      data.each do |datum|
-        datum = yield(datum) if block_given?
-        count = count + 1 if datum <= rank
-      end
-
-      return 0 if count == 0
-      return 1 if count == data.size
-      return count / data.size.to_f
-    end
-
-    alias :cdf :cumulative_distribution_function
-    alias :cumulative_distribution :cumulative_distribution_function
-
   end
 end
