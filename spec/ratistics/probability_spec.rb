@@ -732,10 +732,10 @@ module Ratistics
         Probability.cdf([].freeze, 2).should eq 0
       end
 
-      it 'returns the probability of the given rank' do
-        (0..5).each do |rank|
-          probability = Probability.cdf(sorted_sample, rank)
-          probability.should be_within(0.001).of(cdf_values[rank])
+      it 'returns the probability of the given value' do
+        (0..5).each do |value|
+          probability = Probability.cdf(sorted_sample, value)
+          probability.should be_within(0.001).of(cdf_values[value])
         end
       end
 
@@ -750,16 +750,16 @@ module Ratistics
       end
 
       it 'returns the probability when given a block' do
-        (0..5).each do |rank|
-          probability = Probability.cdf(sample_for_block, rank){|item| item[:count]}
-          probability.should be_within(0.001).of(cdf_values[rank])
+        (0..5).each do |value|
+          probability = Probability.cdf(sample_for_block, value){|item| item[:count]}
+          probability.should be_within(0.001).of(cdf_values[value])
         end
       end
 
       it 'returns the probability on an unsorted sample' do
-        (0..5).each do |rank|
-          probability = Probability.cdf(unsorted_sample, rank)
-          probability.should be_within(0.001).of(cdf_values[rank])
+        (0..5).each do |value|
+          probability = Probability.cdf(unsorted_sample, value)
+          probability.should be_within(0.001).of(cdf_values[value])
         end
       end
 

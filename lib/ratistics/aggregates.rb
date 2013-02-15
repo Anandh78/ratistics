@@ -32,6 +32,7 @@ module Ratistics
       @truncated_means = {}
       @standard_deviations = {}
       @variances = {}
+      @cdf = {}
     end
 
     # Returns the number of elements in the sample. May be zero. 
@@ -143,6 +144,17 @@ module Ratistics
     def range
       @range ||= Distribution.range(@data)
     end
+
+    # Calculates the cumulative distribution function (CDF) of a probability
+    # distribution.
+    #
+    # {Probability#cumulative_distribution_function}
+    def cumulative_distribution_function(value)
+      @cdf[value] ||= Probability.cumulative_distribution_function(@data, value)
+    end
+
+    alias :cdf :cumulative_distribution_function
+    alias :cumulative_distribution :cumulative_distribution_function
 
   end
 end

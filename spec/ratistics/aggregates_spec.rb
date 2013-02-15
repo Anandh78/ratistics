@@ -396,5 +396,39 @@ module Ratistics
       end
     end
 
+    context '#cumulative_distribution_function' do
+
+      let(:sample) { [1, 2, 2, 3, 5].freeze }
+      let(:ag) { Aggregates.new(sample) }
+
+      let(:cdf_values) do
+        {
+          0 => 0,
+          1 => 0.2,
+          2 => 0.6,
+          3 => 0.8,
+          4 => 0.8,
+          5 => 1
+        }
+      end
+
+      it 'returns the probability of the given value' do
+        (0..5).each do |value|
+          probability = ag.cdf(value)
+          probability.should be_within(0.001).of(cdf_values[value])
+        end
+      end
+
+      it 'returns zero when the value is smaller than the sample minumin' do
+        probability = ag.cdf(0)
+        probability.should eq 0
+      end
+
+      it 'returns one when the value is greater than the sample maximum' do
+        probability = ag.cdf(6)
+        probability.should eq 1
+      end
+    end
+
   end
 end
