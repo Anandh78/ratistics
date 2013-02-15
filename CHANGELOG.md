@@ -4,6 +4,10 @@
 
 Release Date: TBD
 
+### 0.2.2
+
+Release Date: February 14, 2012
+
 * Added classes
   * Aggregares
   * Frequencies
