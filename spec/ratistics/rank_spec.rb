@@ -7,10 +7,6 @@ module Ratistics
 
     context '#ranks' do
 
-      context ':as option' do
-        pending
-      end
-
       it 'returns an nil for a nil sample' do
         Rank.ranks(nil).should be_nil
       end
