@@ -592,13 +592,13 @@ module Ratistics
       end
 
       it 'returns the linear rank for ranked data' do
-        ranks = Rank.ranks([15, 20, 35, 40, 50].freeze, :flatten => true)
+        ranks = Rank.ranks([15, 20, 35, 40, 50].freeze, :flatten => true, :as => :array)
         rank = Rank.linear_rank(ranks, 40, :ranked => true)
         rank.should be_within(0.001).of(27.5)
       end
 
       it 'does not re-rank previously ranked data' do
-        ranks = Rank.ranks([15, 20, 35, 40, 50].freeze, :flatten => true)
+        ranks = Rank.ranks([15, 20, 35, 40, 50].freeze, :flatten => true, :as => :array)
         Rank.should_not_receive(:percent_rank)
         Rank.linear_rank(ranks, 40, :ranked => true)
       end

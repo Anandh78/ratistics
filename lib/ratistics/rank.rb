@@ -314,7 +314,7 @@ module Ratistics
       if opts[:ranked] == true
         ranks = data
       else
-        ranks = Rank.ranks(data, opts.merge(:flatten => true), &block)
+        ranks = Rank.ranks(data, opts.merge(:flatten => true, :as => :array), &block)
       end
 
       opts = { :sorted => true, :delta => opts[:delta] }
