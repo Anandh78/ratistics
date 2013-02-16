@@ -82,6 +82,9 @@ module Ratistics
     # @option opts [true, false] :sorted indicates of the data is already sorted
     # @option opts [String] :flatten remove duplicate data values
     #
+    # @option opts [Symbol] :as sets the output to :hash or :array
+    #   (default :hash)
+    #
     # @return [Array] set of values and percentiles
     #
     # @see http://en.wikipedia.org/wiki/Percentile_rank
@@ -154,10 +157,10 @@ module Ratistics
     #     S = Number of same rank,
     #     N = Total numbers.
     #
-    # Will sort the data set using natural sort order unless
-    # the :sorted option is true. Will calculate the
-    # {Probability#frequency} of the sample first unless the frequency
-    # distribution is passed as the :frequency option.
+    # Will sort the data set using natural sort order unless the :sorted
+    # option is true. Will calculate the {Probability#frequency} of the
+    # sample first unless the frequency distribution is passed as the
+    # :frequency option.
     #
     # When a block is given the block will be applied to every
     # element in the data set. Using a block in this way allows

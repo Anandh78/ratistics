@@ -7,6 +7,10 @@ module Ratistics
 
     context '#ranks' do
 
+      context ':as option' do
+        pending
+      end
+
       it 'returns an empty array for a nil sample' do
         Rank.ranks(nil).should eq []
       end

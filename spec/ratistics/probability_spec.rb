@@ -235,6 +235,10 @@ module Ratistics
 
     context '#probability' do
 
+      context ':as option' do
+        pending
+      end
+
       context ':from option' do
         pending
       end
