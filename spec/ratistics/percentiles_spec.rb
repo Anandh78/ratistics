@@ -13,15 +13,15 @@ module Ratistics
         }.should raise_error
       end
 
-      it 'creates an empty #ranks if the sample is empty' do
+      it 'nil nil if the sample is empty' do
         percentiles = Percentiles.new([])
-        percentiles.ranks.should == []
+        percentiles.ranks.should be_nil
       end
 
       it 'creates a #ranks for a valid sample array' do
         sample = [5, 1, 9, 3, 14, 9, 7].freeze
 
-        centiles = Percentiles.new(sample).ranks
+        centiles = Percentiles.new(sample).ranks(:as => :array)
         centiles.size.should eq 7
 
         centiles[0][0].should eq 1
@@ -53,7 +53,7 @@ module Ratistics
         ].freeze
 
         centiles = Percentiles.new(sample){|item| item[:count]}
-        centiles = centiles.ranks
+        centiles = centiles.ranks(:as => :array)
         centiles.size.should eq 2
 
         centiles[0][0].should eq 22
@@ -96,7 +96,7 @@ module Ratistics
         sample = Racer.where('age > 0').order('age ASC')
 
         centiles = Percentiles.new(sample, :sorted => true){|r| r.age}
-        centiles = centiles.ranks
+        centiles = centiles.ranks(:as => :array)
         centiles.size.should eq 1597
 
         centiles[0][0].should eq 10
@@ -106,7 +106,7 @@ module Ratistics
       it 'works with Hamster' do
         sample = Hamster.vector(1, 3, 5, 7, 9, 9, 14).freeze
         centiles = Percentiles.new(sample, :sorted => true)
-        centiles = centiles.ranks
+        centiles = centiles.ranks(:as => :array)
         centiles.size.should eq 7
 
         centiles[0][0].should eq 1

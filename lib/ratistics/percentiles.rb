@@ -6,8 +6,6 @@ module Ratistics
   # against a data sample.
   class Percentiles
 
-    attr_reader :ranks
-
     # Creates a new Percentiles object.
     #
     # When a block is provided a new collection is constructed
@@ -33,13 +31,16 @@ module Ratistics
         @data = data.sort
       end
 
-      @ranks = Rank.ranks(@data, {:sorted => true}).freeze
-      @ranks ||= []
-
+      @ranks = {}
       @percentiles = {}
       @percent_ranks = {}
       @nearest_ranks = {}
       @linear_ranks = {}
+    end
+
+    def ranks(opts={})
+      as = opts[:as] || :hash
+      @ranks[as] ||= Rank.ranks(@data, :sorted => true, :as => as).freeze
     end
 
     # Return the percentile of the given value.
@@ -114,7 +115,7 @@ module Ratistics
     # @yieldparam rank the rank from the data sample
     # @yieldparam percentile the percentile from the data sample
     def each(&block)
-      ranks.each do |rank|
+      ranks(:as => :array).each do |rank|
         yield(rank.first, rank.last)
       end
     end
