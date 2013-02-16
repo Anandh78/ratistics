@@ -53,17 +53,26 @@ module Ratistics
     # option is true duplicate values will be removed from the sample and
     # only the highest percentile for that value will be returned.
     #
-    # When a block is given the block will be applied to every
-    # element in the data set. Using a block in this way allows
-    # probability to be computed against a specific field in a
-    # data set of hashes or objects.
+    # When a block is given the block will be applied to every element
+    # in the data set. Using a block in this way allows computation against
+    # a specific field in a data set of hashes or objects.
     #
-    # The return value is an array of arrays. Each element in the outer
-    # array represents one value in the sample. Each value will be a
-    # two-element array where the first value is the element itself and
-    # the second element will be the percentile.
+    # The return value is a hash where the keys are the data elements
+    # from the sample and the values are the corresponding percentiles.
+    # When the *:as* option is set to *:array* the return value will
+    # be an array of arrays. Each element of the outer array will be
+    # a two-element array with the sample value at index 0 and the
+    # corresponding percentile at index 1.
     #
     # @example
+    #   {1 => 7.142857142857143,
+    #    3 => 21.428571428571427,
+    #    5 => 35.714285714285715,
+    #    7 => 50.0,
+    #    9 => 64.28571428571429,
+    #    9 => 78.57142857142857,
+    #    14 => 92.85714285714286}
+    #
     #   [[1, 7.142857142857143],
     #    [3, 21.428571428571427],
     #    [5, 35.714285714285715],
@@ -75,35 +84,44 @@ module Ratistics
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
-    # @param [Enumerable] data the data set to compute the percentiles for
-    # @param [Hash] opts computation options
+    # @param [Enumerable] data the data to perform the calculation against
+    # @param [Hash] opts processing options
     # @param [Block] block optional block for per-item processing
     #
     # @option opts [true, false] :sorted indicates of the data is already sorted
-    # @option opts [String] :flatten remove duplicate data values
+    # @option opts [String] :flatten remove duplicate data values; :flatten is
+    #   always set to true when the return value is set :as => :hash
     #
     # @option opts [Symbol] :as sets the output to :hash or :array
     #   (default :hash)
     #
-    # @return [Array] set of values and percentiles
+    # @return [Hash, Array, nil] set of values and percentiles
     #
     # @see http://en.wikipedia.org/wiki/Percentile_rank
     def ranks(data, opts={}, &block)
-      return [] if data.nil? || data.empty?
+      return nil if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
 
-      ranks = []
+      as = (opts[:as] == :array ? :array : :hash)
+      flatten = (as == :hash || opts[:flatten] == true)
+
+      ranks = [] if as == :array
+      ranks = {} if as == :hash
 
       data.size.times do |index|
 
         p = 100.0 * ((index+1).to_f - 0.5) / data.size.to_f
 
         item = block_given? ? yield(data[index]) : data[index]
-        if opts[:flatten] == true && index > 0 && ranks.last[0] == item
-          ranks.pop
-        end
 
-        ranks << [item, p]
+        if as == :hash
+          ranks[item] = p
+        else
+          if flatten && index > 0 && ranks.last[0] == item
+            ranks.pop
+          end
+          ranks << [item, p]
+        end
       end
 
       return ranks

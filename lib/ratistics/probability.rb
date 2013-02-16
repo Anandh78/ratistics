@@ -17,7 +17,7 @@ module Ratistics
     # When the *:as* option is set to *:array* the return value will
     # be an array of arrays. Each element of the outer array will be
     # a two-element array with the sample value at index 0 and the
-    # corresponding freqiency at index 1.
+    # corresponding frequency at index 1.
     #
     # @example
     #   sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
