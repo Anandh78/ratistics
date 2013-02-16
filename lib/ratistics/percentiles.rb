@@ -140,7 +140,7 @@ module Ratistics
       range = (1..99) if range.nil?
       range = (1..range.max) if range.min < 1
       range = (range.min..99) if range.max > 99
-      
+
       range.each do |percentile|
         yield(percentile, linear_rank(percentile))
       end
@@ -156,7 +156,7 @@ module Ratistics
       range = (1..99) if range.nil?
       range = (1..range.max) if range.min < 1
       range = (range.min..99) if range.max > 99
-      
+
       range.each do |percentile|
         yield(percentile, nearest_rank(percentile))
       end

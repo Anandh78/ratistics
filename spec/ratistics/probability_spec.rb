@@ -166,6 +166,10 @@ module Ratistics
 
     context '#frequency_mean' do
 
+      context ':from option' do
+        pending
+      end
+
       it 'returns zero for a nil sample' do
         Probability.frequency_mean(nil).should eq 0
       end
@@ -230,6 +234,10 @@ module Ratistics
     end
 
     context '#probability' do
+
+      context ':from option' do
+        pending
+      end
 
       it 'returns nil for a nil sample' do
         Probability.probability(nil).should be_nil 
@@ -478,6 +486,10 @@ module Ratistics
 
     context '#probability_mean' do
 
+      context ':from option' do
+        pending
+      end
+
       it 'returns zero for a nil sample' do
         Probability.probability_mean(nil).should eq 0
       end
@@ -593,6 +605,10 @@ module Ratistics
 
     context '#probability_variance' do
 
+      context ':from option' do
+        pending
+      end
+
       it 'returns zero for a nil sample' do
         Probability.probability_variance(nil).should eq 0
       end
@@ -698,6 +714,10 @@ module Ratistics
     end
 
     context '#cumulative_distribution_function' do
+
+      context ':from option' do
+        pending
+      end
 
       let(:sorted_sample) { [1, 2, 2, 3, 5].freeze }
       let(:unsorted_sample) { [5, 2, 1, 3, 2].freeze }

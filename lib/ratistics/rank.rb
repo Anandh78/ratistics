@@ -183,7 +183,7 @@ module Ratistics
     def percentile(data, value, opts={}, &block)
       return nil if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
-      
+
       frequency = opts[:frequency] || Probability.frequency(data, &block)
       ranks = frequency.keys.sort
       l, s = Search.binary_search(ranks, value)
@@ -289,7 +289,7 @@ module Ratistics
     # @see http://en.wikipedia.org/wiki/Percentile
     def linear_rank(data, percentile, opts={}, &block)
       return nil if data.nil? || data.empty?
-      
+
       if opts[:ranked] == true
         ranks = data
       else
