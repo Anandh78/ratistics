@@ -7,6 +7,11 @@ Release Date: TBD
 Added functions
 * Rank.cumulative_distribution_function (alias: cdf, cumulative_distribution)
 
+Added more input and output options:
+* :as => :has/array to probability functions
+* :as => :has/array to percentile functions
+* :from => :sample/frequency/probability to frequency and probabilty functions
+
 ### 0.2.2
 
 Release Date: February 14, 2012
