@@ -354,7 +354,7 @@ the [27th Anniversary Edition James Joyce Ramble 10K](27th Anniversary Edition J
 
 ## Copyright
 
-Ratistics is Copyright &copy; 2013 [Jerry D'Antonio](https://twitter.com/jerrydantonio).
+*Ratistics* is Copyright &copy; 2013 [Jerry D'Antonio](https://twitter.com/jerrydantonio).
 It is free software and may be redistributed under the terms specified in
 the LICENSE file.
 
