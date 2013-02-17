@@ -1,11 +1,11 @@
 # Ratistics - Ruby Statistics Gem [![Build Status](https://secure.travis-ci.org/jdantonio/ratistics.png)](http://travis-ci.org/jdantonio/ratistics?branch=master) [![Dependency Status](https://gemnasium.com/jdantonio/ratistics.png)](https://gemnasium.com/jdantonio/ratistics)
 
-Ratistics is a purely functional library that provides basic statistical
+*Ratistics* is a purely functional library that provides basic statistical
 computation functions to Ruby programmers. It is intended for small data
 sets only. This gem was designed for simplicity. Only basic consideration
 was given to performance.
 
-Ratistics functions operate any any enumerable object and support block
+*Ratistics* functions operate any any enumerable object and support block
 syntax for accessing complex data. This makes it possible to perform
 statistical computations on a wide range of collections, including
 ActiveRecord record sets.
@@ -25,6 +25,10 @@ The project is hosted on the following sites:
 
 See the [changelog](https://github.com/jdantonio/ratistics/blob/master/CHANGELOG.md)
 for information on the latest updates.
+
+And check out these extension libraries:
+
+* [Ratistics Charts](https://github.com/jdantonio/ratistics-charts)
 
 # About
 
@@ -126,7 +130,7 @@ or add the following line to Gemfile:
 
     gem 'ratistics'
 
-and run bundle install from your shell.
+and run *bundle install* from your shell.
 
 ## Usage
 
