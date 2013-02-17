@@ -105,7 +105,7 @@ module Ratistics
       return Ratistics.nearest_rank(self, *args, &block)
     end
 
-    # @see Collection::binary_search
+    # @see Search::binary_search
     def binary_search(*args, &block)
       return Ratistics.binary_search(self, *args, &block)
     end
@@ -126,11 +126,6 @@ module Ratistics
     # @see Search::linear_search
     def linear_search(*args, &block)
       return Ratistics.linear_search(self, *args, &block)
-    end
-
-    # @see Search::binary_search
-    def binary_search(*args, &block)
-      return Ratistics.binary_search(self, *args, &block)
     end
 
     # @see Sort::insertion_sort!

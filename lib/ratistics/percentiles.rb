@@ -6,8 +6,6 @@ module Ratistics
   # against a data sample.
   class Percentiles
 
-    attr_reader :ranks
-
     # Creates a new Percentiles object.
     #
     # When a block is provided a new collection is constructed
@@ -33,13 +31,16 @@ module Ratistics
         @data = data.sort
       end
 
-      @ranks = Rank.ranks(@data, {:sorted => true}).freeze
-      @ranks ||= []
-
+      @ranks = {}
       @percentiles = {}
       @percent_ranks = {}
       @nearest_ranks = {}
       @linear_ranks = {}
+    end
+
+    def ranks(opts={})
+      as = opts[:as] || :hash
+      @ranks[as] ||= Rank.ranks(@data, :sorted => true, :as => as).freeze
     end
 
     # Return the percentile of the given value.
@@ -59,6 +60,8 @@ module Ratistics
       @percent_ranks[index] ||= Rank.percent_rank(@data, index, :sorted => true)
     end
 
+    alias :percentile_rank :percent_rank
+
     # Return the percentile rank nearest to the given percentile.
     #
     # {Rank#nearest_rank}
@@ -75,6 +78,8 @@ module Ratistics
       opts = opts.merge(:sorted => true)
       @linear_ranks[percentile] ||= Rank.linear_rank(@data, percentile, opts)
     end
+
+    alias :linear_interpolation_rank :linear_rank
 
     # Calculate the value representing the upper-bound of the first
     # quartile (percentile) of a data sample.
@@ -104,17 +109,72 @@ module Ratistics
 
     alias :upper_quartile :third_quartile
 
-    #def each(&block)
-    #end
+    # Iterate over the encapsulated sample and the associated percentiles.
+    #
+    # @yield iterates over each element in the data sample.
+    # @yieldparam rank the rank from the data sample
+    # @yieldparam percentile the percentile from the data sample
+    def each(&block)
+      ranks(:as => :array).each do |rank|
+        yield(rank.first, rank.last)
+      end
+    end
 
-    #def each_rank(&block)
-    #end
+    # Iterate over the encapsulated sample and the associated percent ranks.
+    #
+    # @yield iterates over each element in the data sample.
+    # @yieldparam index the statistical (1-based) index of the sample
+    # @yieldparam percent the percent rank of the value at the index
+    def each_percent_rank(&block)
+      (1..@data.size).each do |index|
+        yield(index, percent_rank(index))
+      end
+    end
 
-    #def each_percentile(&block)
-    #end
+    # Iterate over the given range of percentile values (defaults to
+    # 1 through 99) and returns the percentile and associated linear rank.
+    #
+    # @yield iterates over each element in the data sample.
+    # @yieldparam rank the rank from the data sample
+    # @yieldparam percentile the percentile from the data sample
+    def each_with_linear_rank(range=nil, &block)
+      range = (1..99) if range.nil?
+      range = (1..range.max) if range.min < 1
+      range = (range.min..99) if range.max > 99
 
-    #def percentile(value)
-    #end
+      range.each do |percentile|
+        yield(percentile, linear_rank(percentile))
+      end
+    end
+
+    # Iterate over the given range of percentile values (defaults to
+    # 1 through 99) and returns each percentile and associated nearest rank.
+    #
+    # @yield iterates over each element in the data sample.
+    # @yieldparam rank the rank from the data sample
+    # @yieldparam percentile the percentile from the data sample
+    def each_with_nearest_rank(range=nil, &block)
+      range = (1..99) if range.nil?
+      range = (1..range.max) if range.min < 1
+      range = (range.min..99) if range.max > 99
+
+      range.each do |percentile|
+        yield(percentile, nearest_rank(percentile))
+      end
+    end
+
+    # Iterate over all integer ranks from the sample minimum (rounded
+    # down) and the sample maximum (rounded up) and returns each rank
+    # and the associated percentile.
+    #
+    # @yield iterates over each element in the data sample.
+    # @yieldparam rank the rank from the data sample
+    # @yieldparam percentile the percentile from the data sample
+    def each_rank_and_percentile(&block)
+      (@data.first.floor..@data.last.ceil).each do |rank|
+        yield(rank, percentile(rank))
+      end
+    end
 
   end
 end

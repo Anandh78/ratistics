@@ -4,6 +4,22 @@
 
 Release Date: TBD
 
+* Added functions
+  * Rank.cumulative_distribution_function (alias: cdf, cumulative_distribution)
+* Greater consistency of return values and processing options
+* Added more input and output options:
+* :as => :has/array to probability functions
+* :as => :has/array to percentile functions
+* :from => :sample/frequency/probability to frequency and probabilty functions
+* Changed reurns values for Rank.ranks
+  * returns nil when the sample is nil or empty
+  * returns :hash by default
+  * only returns an array when :as => :array
+
+### 0.2.2
+
+Release Date: February 14, 2012
+
 * Added classes
   * Aggregares
   * Frequencies

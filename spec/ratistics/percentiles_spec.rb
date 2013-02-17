@@ -13,15 +13,15 @@ module Ratistics
         }.should raise_error
       end
 
-      it 'creates an empty #ranks if the sample is empty' do
+      it 'nil nil if the sample is empty' do
         percentiles = Percentiles.new([])
-        percentiles.ranks.should == []
+        percentiles.ranks.should be_nil
       end
 
       it 'creates a #ranks for a valid sample array' do
         sample = [5, 1, 9, 3, 14, 9, 7].freeze
 
-        centiles = Percentiles.new(sample).ranks
+        centiles = Percentiles.new(sample).ranks(:as => :array)
         centiles.size.should eq 7
 
         centiles[0][0].should eq 1
@@ -53,7 +53,7 @@ module Ratistics
         ].freeze
 
         centiles = Percentiles.new(sample){|item| item[:count]}
-        centiles = centiles.ranks
+        centiles = centiles.ranks(:as => :array)
         centiles.size.should eq 2
 
         centiles[0][0].should eq 22
@@ -96,7 +96,7 @@ module Ratistics
         sample = Racer.where('age > 0').order('age ASC')
 
         centiles = Percentiles.new(sample, :sorted => true){|r| r.age}
-        centiles = centiles.ranks
+        centiles = centiles.ranks(:as => :array)
         centiles.size.should eq 1597
 
         centiles[0][0].should eq 10
@@ -106,7 +106,7 @@ module Ratistics
       it 'works with Hamster' do
         sample = Hamster.vector(1, 3, 5, 7, 9, 9, 14).freeze
         centiles = Percentiles.new(sample, :sorted => true)
-        centiles = centiles.ranks
+        centiles = centiles.ranks(:as => :array)
         centiles.size.should eq 7
 
         centiles[0][0].should eq 1
@@ -308,7 +308,184 @@ module Ratistics
         even.third_quartile.should be_within(0.001).of(3)
         odd.third_quartile.should be_within(0.001).of(93.5)
       end
+    end
 
+    context 'iterators' do
+
+      let(:sample) { [ 1, 3, 5, 7,  9, 14 ].freeze }
+
+      let(:ranks) {
+        [[1, 8.333333333333334],
+          [3, 25.0],
+          [5, 41.666666666666664],
+          [7, 58.333333333333336],
+          [9, 75.0],
+          [14, 91.66666666666667]].freeze
+      }
+
+      let(:rank_map) {
+        {1 => 8.333333333333334,
+         3 => 25.0,
+         5 => 41.666666666666664,
+         7 => 58.333333333333336,
+         9 => 75.0,
+         14 => 91.66666666666667}.freeze
+      }
+
+      let(:percentile_map) {
+        {1 => 8.333333333333332,
+         2 => 16.666666666666664,
+         3 => 25.0,
+         4 => 33.33333333333333,
+         5 => 41.66666666666667,
+         6 => 50.0,
+         7 => 58.333333333333336,
+         8 => 66.66666666666666,
+         9 => 75.0,
+         10 => 83.33333333333334,
+         11 => 83.33333333333334,
+         12 => 83.33333333333334,
+         13 => 83.33333333333334,
+         14 => 91.66666666666666}
+      }
+
+      subject { Percentiles.new(sample) }
+
+      specify '#each' do
+
+        subject.each do |value, percentile|
+          rank_map[value].should be_within(0.001).of(percentile)
+        end
+      end
+
+      specify '#each_percent_rank' do
+
+        current = 1
+        subject.each_percent_rank do |index, percent_rank|
+          index.should eq current
+          percent_rank.should be_within(0.001).of(ranks[index-1].last)
+          current = current + 1
+        end
+        current.should eq sample.size + 1
+      end
+
+      context '#each_with_linear_rank' do
+
+        it 'returns percentiles from 1 to 99 when no range is given' do
+          current = 1
+          subject.each_with_linear_rank do |percentile, rank|
+            percentile.should eq current
+            rank.should be_within(0.001).of(subject.linear_rank(percentile))
+            current = current + 1
+          end
+          current.should eq 100
+        end
+
+        it 'returns percentiles for a given range' do
+          current = 30
+          subject.each_with_linear_rank(30..50) do |percentile, rank|
+            percentile.should eq current
+            rank.should be_within(0.001).of(subject.linear_rank(percentile))
+            current = current + 1
+          end
+          current.should eq 51
+        end
+
+        it 'sets the lower bound to 1 when given an invalid lower bound' do
+          current = 1
+          subject.each_with_linear_rank(-100..9) do |percentile, rank|
+            current = current + 1
+          end
+          current.should eq 10
+        end
+
+        it 'sets the upper bound to 99 when given an invalid upper bound' do
+          current = 90
+          subject.each_with_linear_rank(90..1001) do |percentile, rank|
+            current = current + 1
+          end
+          current.should eq 100
+        end
+      end
+
+      context '#each_with_nearest_rank' do
+
+        it 'returns percentiles from 1 to 99 when no range is given' do
+          current = 1
+          subject.each_with_nearest_rank do |percentile, rank|
+            sample.should include(rank)
+            current = current + 1
+          end
+          current.should eq 100
+        end
+
+        it 'returns percentiles for a given range' do
+          current = 30
+          subject.each_with_nearest_rank(30..50) do |percentile, rank|
+            percentile.should eq current
+            sample.should include(rank)
+            current = current + 1
+          end
+          current.should eq 51
+        end
+
+        it 'sets the lower bound to 1 when given an invalid lower bound' do
+          current = 1
+          subject.each_with_nearest_rank(-100..9) do |percentile, rank|
+            current = current + 1
+          end
+          current.should eq 10
+        end
+
+        it 'sets the upper bound to 99 when given an invalid upper bound' do
+          current = 90
+          subject.each_with_nearest_rank(90..1001) do |percentile, rank|
+            current = current + 1
+          end
+          current.should eq 100
+        end
+      end
+
+      context '#each_rank_and_percentile' do
+
+        it 'iterates over all integers between the sample lower and upper bounds' do
+          current = sample.min.floor
+          subject.each_rank_and_percentile do |rank, percentile|
+            current.should eq rank
+            current = current + 1
+          end
+
+          max = sample.max
+          if max.is_a?(Integer)
+            current.should eq max + 1
+          else
+            current.should eq max.ceil
+          end
+        end
+
+        it 'returns the approximate percentile for each rank' do
+          subject.each_rank_and_percentile do |rank, percentile|
+            percentile_map[rank].should be_within(0.001).of(percentile)
+          end
+        end
+
+        it 'sets the lower bound equal to the first rank rounded down' do
+          percentiles = Percentiles.new([5.98, 9.05])
+          percentiles.each_rank_and_percentile do |rank, percentile|
+            rank.should eq 5
+            break
+          end
+        end
+
+        it 'sets the upper bound equal to the last rank rounded up' do
+          percentiles = Percentiles.new([5.98, 9.05])
+          current = 5
+          percentiles.each_rank_and_percentile do |rank, percentile|
+            current = current + 1
+          end
+          current.should eq 11
+        end
+      end
     end
 
   end

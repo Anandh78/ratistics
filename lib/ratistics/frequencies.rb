@@ -83,6 +83,17 @@ module Ratistics
 
     alias :pmf_variance :probability_variance
 
+    # Calculates the cumulative distribution function (CDF) of a probability
+    # distribution.
+    #
+    # {Probability#cumulative_distribution_function}
+    def cumulative_distribution_function(value)
+      @cdf[value] ||= Probability.cumulative_distribution_function(frequency, value, :from => :freq)
+    end
+
+    alias :cdf :cumulative_distribution_function
+    alias :cumulative_distribution :cumulative_distribution_function
+
     # Returns the frequency of occurency for the given value. Returns zero
     # if the value was not in the original data sample.
     #

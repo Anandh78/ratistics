@@ -32,6 +32,7 @@ module Ratistics
       @truncated_means = {}
       @standard_deviations = {}
       @variances = {}
+      @cdf = {}
     end
 
     # Returns the number of elements in the sample. May be zero. 

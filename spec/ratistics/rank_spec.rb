@@ -7,18 +7,18 @@ module Ratistics
 
     context '#ranks' do
 
-      it 'returns an empty array for a nil sample' do
-        Rank.ranks(nil).should eq []
+      it 'returns an nil for a nil sample' do
+        Rank.ranks(nil).should be_nil
       end
 
-      it 'returns an empty array for an empty sample' do
-        Rank.ranks([].freeze).should eq []
+      it 'returns an nil for an empty sample' do
+        Rank.ranks([].freeze).should be_nil
       end
 
       it 'returns 50.0 for the percentile in a one-element sample' do
         sample = [22].freeze
 
-        centiles = Rank.ranks(sample)
+        centiles = Rank.ranks(sample, :as => :array)
         centiles.size.should eq 1
 
         centiles[0][0].should eq 22
@@ -28,7 +28,7 @@ module Ratistics
       it 'return 25.0 and 50.0 for the ranks in a two-element sample' do
         sample = [22, 40].freeze
 
-        centiles = Rank.ranks(sample)
+        centiles = Rank.ranks(sample, :as => :array)
         centiles.size.should eq 2
 
         centiles[0][0].should eq 22
@@ -41,7 +41,7 @@ module Ratistics
       it 'returns the ranks in a multi-element sample' do
         sample = [5, 1, 9, 3, 14, 9, 7].freeze
 
-        centiles = Rank.ranks(sample)
+        centiles = Rank.ranks(sample, :as => :array)
         centiles.size.should eq 7
 
         centiles[0][0].should eq 1
@@ -72,7 +72,7 @@ module Ratistics
           {:count => 40}
         ].freeze
 
-        centiles = Rank.ranks(sample){|item| item[:count]}
+        centiles = Rank.ranks(sample, :as => :array){|item| item[:count]}
         centiles.size.should eq 2
 
         centiles[0][0].should eq 22
@@ -80,6 +80,50 @@ module Ratistics
 
         centiles[1][0].should eq 40
         centiles[1][1].should be_within(0.001).of(75.0)
+      end
+
+      it 'returns a hash when :as option is not set' do
+        sample = [22].freeze
+
+        centiles = Rank.ranks(sample)
+        centiles.size.should eq 1
+
+        centiles.should be_kind_of Hash
+        centiles[22].should be_within(0.001).of(50.0)
+      end
+
+      it 'returns a hash when the :as options is set to :hash' do
+        sample = [5, 1, 9, 3, 14, 9, 7].freeze
+
+        centiles = Rank.ranks(sample, :as => :hash)
+        centiles.size.should eq 6
+
+        centiles[1].should be_within(0.001).of(7.143)
+        centiles[3].should be_within(0.001).of(21.429)
+        centiles[5].should be_within(0.001).of(35.714)
+        centiles[7].should be_within(0.001).of(50.0)
+        centiles[9].should be_within(0.001).of(78.571)
+        centiles[14].should be_within(0.001).of(92.857)
+      end
+
+      it 'returns an array when :as is :array and a block is given' do
+        sample = [
+          {:count => 22},
+          {:count => 40}
+        ].freeze
+
+        centiles = Rank.ranks(sample, :as => :hash){|item| item[:count]}
+        centiles.size.should eq 2
+
+        centiles[22].should be_within(0.001).of(25.0)
+        centiles[40].should be_within(0.001).of(75.0)
+      end
+
+      it 'flattens the result set when :as is :hash' do
+        sample = [5, 1, 9, 3, 14, 9, 7].freeze
+        centiles = Rank.ranks(sample, :flatten => false, :as => :hash)
+        centiles.size.should eq 6
+        centiles[9].should be_within(0.001).of(78.571)
       end
 
       it 'does not re-sort a sorted sample' do
@@ -104,7 +148,7 @@ module Ratistics
       it 'returns only the higest percentile for duplicate values when :flatten => true' do
         sample = [5, 1, 9, 3, 14, 9, 7].freeze
 
-        centiles = Rank.ranks(sample, :flatten => true)
+        centiles = Rank.ranks(sample, :flatten => true, :as => :array)
         centiles.size.should eq 6
 
         centiles[0][0].should eq 1
@@ -133,7 +177,7 @@ module Ratistics
           {:count => 40}
         ].freeze
 
-        centiles = Rank.ranks(sample, :flatten => true){|item| item[:count]}
+        centiles = Rank.ranks(sample, :flatten => true, :as => :array){|item| item[:count]}
         centiles.size.should eq 2
 
         centiles[0][0].should eq 22
@@ -150,7 +194,7 @@ module Ratistics
         specify do
           sample = Racer.where('age > 0').order('age ASC')
 
-          centiles = Rank.ranks(sample){|r| r.age}
+          centiles = Rank.ranks(sample, :as => :array){|r| r.age}
           centiles.size.should eq 1597
 
           centiles[0][0].should eq 10
@@ -165,7 +209,7 @@ module Ratistics
         let(:set) { Hamster.set(1, 3, 5, 7, 9, 14).freeze }
 
         specify do
-          centiles = Rank.ranks(list)
+          centiles = Rank.ranks(list, :as => :array)
           centiles.size.should eq 7
 
           centiles[0][0].should eq 1
@@ -173,7 +217,7 @@ module Ratistics
         end 
 
         specify do
-          centiles = Rank.ranks(vector, :sorted => true)
+          centiles = Rank.ranks(vector, :sorted => true, :as => :array)
           centiles.size.should eq 7
 
           centiles[0][0].should eq 1
@@ -181,7 +225,7 @@ module Ratistics
         end 
 
         specify do
-          centiles = Rank.ranks(set)
+          centiles = Rank.ranks(set, :as => :array)
           centiles.size.should eq 6
 
           centiles[0][0].should eq 1
@@ -544,13 +588,13 @@ module Ratistics
       end
 
       it 'returns the linear rank for ranked data' do
-        ranks = Rank.ranks([15, 20, 35, 40, 50].freeze, :flatten => true)
+        ranks = Rank.ranks([15, 20, 35, 40, 50].freeze, :flatten => true, :as => :array)
         rank = Rank.linear_rank(ranks, 40, :ranked => true)
         rank.should be_within(0.001).of(27.5)
       end
 
       it 'does not re-rank previously ranked data' do
-        ranks = Rank.ranks([15, 20, 35, 40, 50].freeze, :flatten => true)
+        ranks = Rank.ranks([15, 20, 35, 40, 50].freeze, :flatten => true, :as => :array)
         Rank.should_not_receive(:percent_rank)
         Rank.linear_rank(ranks, 40, :ranked => true)
       end

@@ -185,6 +185,8 @@ module Ratistics
 
     # Calculate percentile rank using the ordinal method
     #
+    #   N = ( P / 100 * N ) + 0.5 
+    #
     # @param [Float] percentile percentile value (0 < P < 100)
     # @param [Integer] size the size of the data sample (N)
     #
@@ -196,6 +198,8 @@ module Ratistics
 
     # Calculate percentile rank using the NIST primary method
     #
+    #   n = ( P / 100 ) * ( N + 1 )
+    #
     # @param [Float] percentile percentile value (0 < P < 100)
     # @param [Integer] size the size of the data sample (N)
     #
@@ -206,6 +210,8 @@ module Ratistics
     end
 
     # Calculate percentile rank using the NIST alternate method
+    #
+    #   n = ( ( P / 100 ) * ( N - 1 ) ) + 1 
     #
     # @param [Float] percentile percentile value (0 < P < 100)
     # @param [Integer] size the size of the data sample (N)
