@@ -111,7 +111,7 @@ module Ratistics
     # @option opts [Symbol] :as sets the output to :hash or :array
     #   (default :hash)
     #
-    # @return [Hash, nil] the statistical probability of the given data set
+    # @return [Array, Hash, nil] the statistical probability of the given data set
     #   or nil if the data set is empty
     #
     # @see #frequency
