@@ -1,3 +1,5 @@
+require 'ratistics/inflect'
+
 require 'ratistics/aggregates'
 require 'ratistics/average'
 require 'ratistics/collection'
@@ -17,6 +19,7 @@ module Ratistics
     include Average
     include Collection
     include Distribution
+    include Inflect
     include Math
     include Probability
     include Rank
