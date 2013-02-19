@@ -4,6 +4,59 @@ module Ratistics
 
   describe Collection do
 
+    context '#collect' do
+
+      it 'returns an empty array when given a nil sample' do
+        Collection.collect(nil).should eq []
+      end
+
+      it 'returns an empty array when given an empty sample' do
+        Collection.collect([]).should eq []
+      end
+
+      it 'returns an array when given a valid sample' do
+        sample = [1, 2, 3, 4, 5]
+        collected = Collection.collect(sample)
+        collected.size.should eq sample.size
+        collected.each {|item| sample.should include(item)}
+        sample.each {|item| collected.should include(item)}
+      end
+
+      it 'returns an array when given a sample with a block' do
+        sample = [
+          {:count => 1},
+          {:count => 2},
+          {:count => 3}
+        ]
+
+        collected = Collection.collect(sample){|item| item[:count]}
+        collected.size.should eq sample.size
+        sample.each {|item| collected.should include(item.values.first)}
+      end
+
+      context 'with ActiveRecord', :ar => true do
+
+        specify do
+          Racer.connect
+          sample = Racer.all
+
+          collected = Collection.collect(sample){|r| r.age}
+          collected.size.should eq sample.size
+        end
+      end
+
+      context 'with Hamster' do
+
+        specify do
+          sample = Hamster.vector(1, 2, 3, 4, 5)
+          collected = Collection.collect(sample)
+          collected.size.should eq sample.size
+          collected.each {|item| sample.should include(item)}
+          sample.each {|item| collected.should include(item)}
+        end
+      end
+    end
+
     context 'predicates' do
 
       context '#ascending?' do

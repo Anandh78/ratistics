@@ -6,6 +6,9 @@ Release Date: TBD
 
 * Added functions
   * Rank.cumulative_distribution_function (alias: cdf, cumulative_distribution)
+  * Collection.collect
+* Added Inflect module
+* Added NilSampleError
 * Greater consistency of return values and processing options
 * Added more input and output options:
 * :as => :has/array to probability functions

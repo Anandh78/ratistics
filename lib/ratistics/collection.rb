@@ -2,7 +2,34 @@ module Ratistics
 
   module Collection
     extend self
+
+    # Collect sample data from a generic collection, processing each item
+    # with a block when given.
+    # 
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
     #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to be collected
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Array] an array of zero or more items
+    def collect(data, opts={}, &block)
+      return [] if data.nil?
+      sample = []
+      data.each do |datum|
+        if block_given?
+          sample << yield(datum)
+        else
+          sample << datum
+        end
+      end
+      return sample
+    end
+
     # Scan a collection and determine if the elements are all in
     # ascending order. Returns true for an empty set and false for
     # a nil sample.

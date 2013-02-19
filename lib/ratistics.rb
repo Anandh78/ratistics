@@ -15,6 +15,14 @@ require 'ratistics/sort'
 require 'ratistics/version'
 
 module Ratistics
+
+  class NilSampleError < StandardError
+    def initialize(msg=nil)
+      msg = 'the sample cannot be nil' if msg.nil?
+      super(msg)
+    end
+  end
+
   class << self
     include Average
     include Collection
