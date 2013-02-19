@@ -17,7 +17,7 @@ module Ratistics
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
-    # @param [Objects, Enumerable] args the data set to aggregate
+    # @param [Objects, Enumerable] data the data set to aggregate
     # @param [Block] block optional block for per-item processing
     def initialize(data, opts={}, &block)
       @data = data

@@ -152,7 +152,7 @@ module Ratistics
     #
     # @see #probability
     #
-    # @param [Enumerable] data the data to perform the calculation against
+    # @param [Enumerable] pmf the data to perform the calculation against
     # 
     # @return [Hash] a new, normalized probability distribution.
     def normalize_probability(pmf, opts={}, &block)

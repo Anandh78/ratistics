@@ -11,11 +11,11 @@ module Ratistics
       end
 
       it 'returns an empty array when given an empty sample' do
-        Collection.collect([]).should eq []
+        Collection.collect([].freeze).should eq []
       end
 
       it 'returns an array when given a valid sample' do
-        sample = [1, 2, 3, 4, 5]
+        sample = [1, 2, 3, 4, 5].freeze
         collected = Collection.collect(sample)
         collected.size.should eq sample.size
         collected.each {|item| sample.should include(item)}
@@ -27,7 +27,7 @@ module Ratistics
           {:count => 1},
           {:count => 2},
           {:count => 3}
-        ]
+        ].freeze
 
         collected = Collection.collect(sample){|item| item[:count]}
         collected.size.should eq sample.size
@@ -48,7 +48,7 @@ module Ratistics
       context 'with Hamster' do
 
         specify do
-          sample = Hamster.vector(1, 2, 3, 4, 5)
+          sample = Hamster.vector(1, 2, 3, 4, 5).freeze
           collected = Collection.collect(sample)
           collected.size.should eq sample.size
           collected.each {|item| sample.should include(item)}
@@ -57,26 +57,17 @@ module Ratistics
       end
     end
 
-
-
-
-
-
-
-
-
-
     context '#catalog' do
 
-      let(:sample) { [13, 18, 13, 14, 13, 16, 14, 21, 13] }
-      let(:expected) { [ [0, 13], [1, 18], [2, 13], [3, 14], [4, 13], [5, 16], [6, 14], [7, 21], [8, 13] ] }
+      let(:sample) { [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze }
+      let(:expected) { [ [0, 13], [1, 18], [2, 13], [3, 14], [4, 13], [5, 16], [6, 14], [7, 21], [8, 13] ].freeze }
 
       it 'returns an empty array when given a nil sample' do
         Collection.catalog(nil).should eq []
       end
 
       it 'returns an empty array when given an empty sample' do
-        Collection.catalog([]).should eq []
+        Collection.catalog([].freeze).should eq []
       end
 
       it 'returns an array when given a valid sample' do
@@ -89,7 +80,7 @@ module Ratistics
           {:count => 13}, {:count => 18}, {:count => 13},
           {:count => 14}, {:count => 13}, {:count => 16},
           {:count => 14}, {:count => 21}, {:count => 13}
-        ]
+        ].freeze
 
         cataloged = Collection.catalog(sample){|item| item[:count]}
         cataloged.should eq expected
@@ -115,23 +106,12 @@ module Ratistics
       context 'with Hamster' do
 
         specify do
-          vector = Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13)
+          vector = Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze
           cataloged = Collection.catalog(vector)
           cataloged.should eq expected
         end
       end
     end
-
-
-
-
-
-
-
-
-
-
-
 
     context 'predicates' do
 
