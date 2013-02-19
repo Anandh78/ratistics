@@ -57,6 +57,82 @@ module Ratistics
       end
     end
 
+
+
+
+
+
+
+
+
+
+    context '#catalog' do
+
+      let(:sample) { [13, 18, 13, 14, 13, 16, 14, 21, 13] }
+      let(:expected) { [ [0, 13], [1, 18], [2, 13], [3, 14], [4, 13], [5, 16], [6, 14], [7, 21], [8, 13] ] }
+
+      it 'returns an empty array when given a nil sample' do
+        Collection.catalog(nil).should eq []
+      end
+
+      it 'returns an empty array when given an empty sample' do
+        Collection.catalog([]).should eq []
+      end
+
+      it 'returns an array when given a valid sample' do
+        cataloged = Collection.catalog(sample)
+        cataloged.should eq expected
+      end
+
+      it 'returns an array when given a sample with a block' do
+        sample = [
+          {:count => 13}, {:count => 18}, {:count => 13},
+          {:count => 14}, {:count => 13}, {:count => 16},
+          {:count => 14}, {:count => 21}, {:count => 13}
+        ]
+
+        cataloged = Collection.catalog(sample){|item| item[:count]}
+        cataloged.should eq expected
+      end
+
+      context 'with ActiveRecord', :ar => true do
+
+        specify do
+          Racer.connect
+          sample = Racer.all
+
+          cataloged = Collection.catalog(sample){|r| r.age}
+          cataloged.size.should eq sample.size
+          index = 0
+          cataloged.each do |item|
+            item.size.should eq 2
+            item.first.should eq index
+            index = index + 1
+          end
+        end
+      end
+
+      context 'with Hamster' do
+
+        specify do
+          vector = Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13)
+          cataloged = Collection.catalog(vector)
+          cataloged.should eq expected
+        end
+      end
+    end
+
+
+
+
+
+
+
+
+
+
+
+
     context 'predicates' do
 
       context '#ascending?' do

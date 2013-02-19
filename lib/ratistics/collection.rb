@@ -4,7 +4,8 @@ module Ratistics
     extend self
 
     # Collect sample data from a generic collection, processing each item
-    # with a block when given.
+    # with a block when given. Returns an array of the items from +data+
+    # in order.
     # 
     # When a block is given the block will be applied to both arguments.
     # Using a block in this way allows computation against a specific field
@@ -21,14 +22,47 @@ module Ratistics
       return [] if data.nil?
       sample = []
       data.each do |datum|
-        if block_given?
-          sample << yield(datum)
-        else
-          sample << datum
-        end
+        datum = yield(datum) if block_given?
+        sample << datum
       end
       return sample
     end
+
+    # Collect sample data from a generic collection, processing each item
+    # with a block when given. Returns an array of arrays. Each element
+    # is a two-element array where the first element is the index within
+    # the outer array and the second element is the corresponding item
+    # from within +data+. The elements in the returned array are in the
+    # same order as the original +data+ collection.
+    #
+    # @example
+    #   sample = [5, 1, 9, 3, 14, 9, 7]
+    #   Collection.catalog(sample) #=> [[0, 5], [1, 1], [2, 9], [3, 3], [4, 14], [5, 9], [6, 7]]
+    # 
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set to be collected
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Array] an array of zero or more items
+    def catalog(data, opts={}, &block)
+      return [] if data.nil?
+      sample = []
+      index = 0
+      data.each do |datum|
+        datum = yield(datum) if block_given?
+        sample << [index, datum]
+        index = index + 1
+      end
+      return sample
+    end
+
+    alias :catalogue :catalog
 
     # Scan a collection and determine if the elements are all in
     # ascending order. Returns true for an empty set and false for
