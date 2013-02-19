@@ -56,22 +56,18 @@ module Ratistics
 
     context '#extensionize' do
 
-      specify { Inflect.extensionize('my_file.png').should eq 'my_file.png' }
       specify { Inflect.extensionize('my_file.png', :jpg).should eq 'my_file.jpg' }
       specify { Inflect.extensionize('my_file.png', 'jpg').should eq 'my_file.jpg' }
       specify { Inflect.extensionize('my_file.png', '.jpg').should eq 'my_file.jpg' }
 
-      specify { Inflect.extensionize('my_file').should eq 'my_file.png' }
       specify { Inflect.extensionize('my_file', :png).should eq 'my_file.png' }
       specify { Inflect.extensionize('my_file', 'png').should eq 'my_file.png' }
       specify { Inflect.extensionize('my_file', '.png').should eq 'my_file.png' }
 
-      specify { Inflect.extensionize('My File').should eq 'My File.png' }
       specify { Inflect.extensionize('My File', :png).should eq 'My File.png' }
       specify { Inflect.extensionize('My File', 'png').should eq 'My File.png' }
       specify { Inflect.extensionize('My File', '.png').should eq 'My File.png' }
 
-      specify { Inflect.extensionize('My File  ').should eq 'My File.png' }
       specify { Inflect.extensionize('My File  ', :png).should eq 'My File.png' }
       specify { Inflect.extensionize('My File  ', 'png').should eq 'My File.png' }
       specify { Inflect.extensionize('My File  ', '.png').should eq 'My File.png' }

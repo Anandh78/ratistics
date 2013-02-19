@@ -100,19 +100,17 @@ module Ratistics
     # if present.
     #
     # @example
-    #   extensionize('my_file')           #=> 'my_file.png'
     #   extensionize('my_file.png')       #=> 'my_file.png'
     #   extensionize('my_file', :png)     #=> 'my_file.png'
     #   extensionize('my_file.png', :jpg) #=> 'my_file.jpg'
     #   extensionize('My File', :png)     #=> 'My File.png'
-    #   extensionize('My File    ')       #=> 'My File.png'
+    #   extensionize('My File    ', :png) #=> 'My File.png'
     #
     # @param [String] fname the name of the file to add an extension to
-    #   (default :png)
     # @param [String, Symbol] ext the extension to append, with or without a leading dot
     #
     # @return [String] the *fname* with *ext* appended
-    def extensionize(fname, ext='png')
+    def extensionize(fname, ext)
       extname = File.extname(fname)
       fname = fname.strip.gsub(/#{extname}$/, '')
       return fname + '.' + ext.to_s.gsub(/^\./, '')
