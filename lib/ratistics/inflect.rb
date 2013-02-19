@@ -108,12 +108,16 @@ module Ratistics
     #
     # @param [String] fname the name of the file to add an extension to
     # @param [String, Symbol] ext the extension to append, with or without a leading dot
+    # @param [Hash] opts processing options
+    #
+    # @option opts [Symbol] :chomp when true removes the existing entension
+    #   from the file name (default: false)
     #
     # @return [String] the *fname* with *ext* appended
-    def extensionize(fname, ext)
+    def extensionize(fname, ext, opts={})
       extname = File.extname(fname)
-      fname = fname.strip.gsub(/#{extname}$/, '')
-      return fname + '.' + ext.to_s.gsub(/^\./, '')
+      fname = fname.gsub(/#{extname}$/, '') if opts[:chomp] == true
+      return fname.strip + '.' + ext.to_s.gsub(/^\./, '')
     end
 
   end
