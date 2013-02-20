@@ -1,18 +1,20 @@
 require 'ratistics/inflect'
 
-require 'ratistics/aggregates'
 require 'ratistics/average'
 require 'ratistics/collection'
 require 'ratistics/distribution'
-require 'ratistics/frequencies'
 require 'ratistics/math'
 require 'ratistics/load'
-require 'ratistics/percentiles'
 require 'ratistics/probability'
 require 'ratistics/rank'
 require 'ratistics/search'
 require 'ratistics/sort'
 require 'ratistics/version'
+
+require 'ratistics/aggregates'
+require 'ratistics/catalog'
+require 'ratistics/frequencies'
+require 'ratistics/percentiles'
 
 module Ratistics
 
