@@ -56,6 +56,11 @@ module Ratistics
 
     context '#extensionize' do
 
+      specify { Inflect.extensionize('my_file.png', :png).should eq 'my_file.png' }
+      specify { Inflect.extensionize('my_file.png', 'png').should eq 'my_file.png' }
+      specify { Inflect.extensionize('my_file.png', '.png').should eq 'my_file.png' }
+      specify { Inflect.extensionize('MY_FILE.PNG', '.png').should eq 'MY_FILE.PNG' }
+
       specify { Inflect.extensionize('my_file.png', :jpg).should eq 'my_file.png.jpg' }
       specify { Inflect.extensionize('my_file.png', 'jpg').should eq 'my_file.png.jpg' }
       specify { Inflect.extensionize('my_file.png', '.jpg').should eq 'my_file.png.jpg' }

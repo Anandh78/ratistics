@@ -97,14 +97,16 @@ module Ratistics
 
     # Add the given extension to the given file name. Removes the current
     # extension if one exists. Strips trailing characters from the file name
-    # if present.
+    # if present. Does nothing if the file name already has the given
+    # extension.
     #
     # @example
-    #   extensionize('my_file.png')       #=> 'my_file.png'
+    #   extensionize('my_file.png', :png) #=> 'my_file.png'
     #   extensionize('my_file', :png)     #=> 'my_file.png'
-    #   extensionize('my_file.png', :jpg) #=> 'my_file.jpg'
+    #   extensionize('my_file.png', :jpg) #=> 'my_file.png.jpg'
     #   extensionize('My File', :png)     #=> 'My File.png'
     #   extensionize('My File    ', :png) #=> 'My File.png'
+    #   extensionize('my_file.png', :jpg, :chomp => true) #=> 'my_file.jpg'
     #
     # @param [String] fname the name of the file to add an extension to
     # @param [String, Symbol] ext the extension to append, with or without a leading dot
@@ -116,6 +118,7 @@ module Ratistics
     # @return [String] the *fname* with *ext* appended
     def extensionize(fname, ext, opts={})
       extname = File.extname(fname)
+      return fname if (extname =~ /\.?#{ext}$/i) == 0
       fname = fname.gsub(/#{extname}$/, '') if opts[:chomp] == true
       return fname.strip + '.' + ext.to_s.gsub(/^\./, '')
     end
