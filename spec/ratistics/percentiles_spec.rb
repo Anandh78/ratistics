@@ -5,9 +5,7 @@ module Ratistics
 
     let(:racers) { Racer.from_csv }
 
-    context 'initialization' do
-
-      it 'always collects the sample data'
+    context '#initialize' do
 
       it 'raises an exception if the sample is nil' do
         lambda {
@@ -15,9 +13,15 @@ module Ratistics
         }.should raise_error
       end
 
-      it 'nil nil if the sample is empty' do
+      it 'returns nil if the sample is empty' do
         percentiles = Percentiles.new([])
         percentiles.ranks.should be_nil
+      end
+
+      it 'always collects the sample data' do
+        sample = [5, 1, 9, 3, 14, 9, 7].freeze
+        centiles = Percentiles.new(sample)
+        centiles.data.object_id.should_not eq sample.object_id
       end
 
       it 'creates a #ranks for a valid sample array' do

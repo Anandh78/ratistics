@@ -17,8 +17,6 @@ module Ratistics
 
     context '#initialize' do
 
-      it 'always collects the sample data'
-
       it 'requires at least one argument' do
         lambda {
           Aggregates.new
@@ -41,6 +39,12 @@ module Ratistics
         lambda {
           Aggregates.new(sample){|item| item[:count]}
         }.should_not raise_exception
+      end
+
+      it 'always collects the sample data' do
+        sample = [1, 2, 3, 4, 5, 6].freeze
+        ag = Aggregates.new(sample)
+        ag.data.object_id.should_not eq sample.object_id
       end
 
       it 'can be initialized from an ActiveRecord result set', :ar => true do

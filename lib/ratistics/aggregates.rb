@@ -1,4 +1,5 @@
 require 'ratistics/average'
+require 'ratistics/collection'
 require 'ratistics/distribution'
 
 module Ratistics
@@ -6,6 +7,8 @@ module Ratistics
   # A read-only, memoized class for calculating aggregate statistics
   # (average, central tendency, distribution) against a data sample.
   class Aggregates
+
+    attr_reader :data
 
     # Creates a new Aggregates object.
     #
@@ -20,14 +23,7 @@ module Ratistics
     # @param [Objects, Enumerable] data the data set to aggregate
     # @param [Block] block optional block for per-item processing
     def initialize(data, opts={}, &block)
-      @data = data
-
-      # use #each for maximum compatability
-      if block_given?
-        col = []
-        @data.each{|item| col << yield(item) }
-        @data = col
-      end
+      @data = Collection.collect(data, &block).freeze
 
       @truncated_means = {}
       @standard_deviations = {}
@@ -68,10 +64,8 @@ module Ratistics
         @data.each do |datum|
           count = count + 1 if yield(datum)
         end
-      elsif @data.respond_to? :length
-        count = @data.length
       else
-        @data.each { count = count + 1 }
+        count = @data.length
       end
 
       return count

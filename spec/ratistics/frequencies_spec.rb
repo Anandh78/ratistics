@@ -4,14 +4,18 @@ module Ratistics
 
   describe Frequencies do
 
-    context 'initialization' do
-
-      it 'always collects the sample data'
+    context '#initialize' do
 
       it 'raises an exception if the sample is nil' do
         lambda {
           Frequencies.new(nil)
         }.should raise_error
+      end
+
+      it 'always collects the sample data' do
+        sample = [1, 2, 3, 4, 5, 6].freeze
+        frequency = Frequencies.new(sample)
+        frequency.data.object_id.should_not eq sample.object_id
       end
 
       it 'creates an empty #distribution if the sample is empty' do

@@ -1,3 +1,4 @@
+require 'ratistics/collection'
 require 'ratistics/rank'
 
 module Ratistics
@@ -5,6 +6,8 @@ module Ratistics
   # A read-only, memoized class for calculating percentile statistics
   # against a data sample.
   class Percentiles
+
+    attr_reader :data
 
     # Creates a new Percentiles object.
     #
@@ -20,16 +23,10 @@ module Ratistics
     # @param [Block] block optional block for per-item processing
     def initialize(data, opts={}, &block)
       raise ArgumentError.new('data cannot be nil') if data.nil?
-      if block_given?
-        @data = []
-        data.each do |item|
-          @data << yield(item)
-        end
-      elsif opts[:sorted] == true
-        @data = data
-      else 
-        @data = data.sort
-      end
+
+      @data = Collection.collect(data, &block)
+      @data.sort! unless block_given? || opts[:sorted] == true
+      @data.freeze
 
       @ranks = {}
       @percentiles = {}

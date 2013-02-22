@@ -1,3 +1,4 @@
+require 'ratistics/collection'
 require 'ratistics/probability'
 
 module Ratistics
@@ -5,6 +6,8 @@ module Ratistics
   # A read-only, memoized class for calculating frequency and
   # probability statistics against a data sample.
   class Frequencies
+
+    attr_reader :data
 
     # Creates a new Frequencies object
     #
@@ -21,8 +24,9 @@ module Ratistics
     #   (default :hash)
     def initialize(data, opts={}, &block)
       raise ArgumentError.new('data cannot be nil') if data.nil?
+      @data = Collection.collect(data, &block).freeze
       @distribution = {}
-      @distribution[:hash] = Probability.frequency(data, &block).freeze
+      @distribution[:hash] = Probability.frequency(@data).freeze
       @distribution[:hash] ||= {}.freeze
       @cdf = {}
     end
