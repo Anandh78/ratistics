@@ -29,6 +29,7 @@ for information on the latest updates.
 And check out these extension libraries:
 
 * [Ratistics Charts](https://github.com/jdantonio/ratistics-charts)
+* [Ratistics Charts.js](https://github.com/jdantonio/ratistics-charts-js)
 
 # About
 
