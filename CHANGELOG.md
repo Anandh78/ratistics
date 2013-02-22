@@ -6,14 +6,17 @@ Release Date: TBD
 
 * Added functions
   * Rank.cumulative_distribution_function (alias: cdf, cumulative_distribution)
+  * Frequencies.cumulative_distribution_function (alias: cdf, cumulative_distribution)
   * Collection.collect
   * Collection.catalog (alias: catalogue)
+  * Collection.catalog_hash(alias: catalogue_hash)
+  * Collection.hash_catalog(alias: hash_catalogue)
 * Added Inflect module
 * Added NilSampleError
 * Greater consistency of return values and processing options
 * Added more input and output options:
-* :as => :has/array to probability functions
-* :as => :has/array to percentile functions
+* :as => :hash/:map/:array/:catalog/:catalogue to probability functions
+* :as => :hash/:map/:array/:catalog/:catalogue to percentile functions
 * :from => :sample/frequency/probability to frequency and probabilty functions
 * Changed reurns values for Rank.ranks
   * returns nil when the sample is nil or empty
