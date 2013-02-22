@@ -51,7 +51,7 @@ module Ratistics
           {:count => 16},
           {:count => 14},
           {:count => 21},
-          {:count => 13},
+          {:count => 13}
         ].freeze
 
         frequency = Probability.frequency(sample){|item| item[:count]}
@@ -87,7 +87,7 @@ module Ratistics
           {:count => 16},
           {:count => 14},
           {:count => 21},
-          {:count => 13},
+          {:count => 13}
         ].freeze
 
         frequency = Probability.frequency(sample, :as => :array){|item| item[:count]}
@@ -166,16 +166,12 @@ module Ratistics
 
     context '#frequency_mean' do
 
-      context ':from option' do
-        pending
-      end
-
       it 'returns zero for a nil sample' do
-        Probability.frequency_mean(nil).should eq 0
+        Probability.frequency_mean(nil, :from => :frequency).should eq 0
       end
 
       it 'returns zero for an empty sample' do
-        Probability.frequency_mean({}.freeze).should eq 0
+        Probability.frequency_mean({}.freeze, :from => :frequency).should eq 0
       end
 
       it 'calculates the mean of a sample' do
@@ -188,10 +184,10 @@ module Ratistics
           32 => 12,
           37 => 8,
           42 => 3,
-          47 => 2,
+          47 => 2
         }.freeze
 
-        mean = Probability.frequency_mean(sample)
+        mean = Probability.frequency_mean(sample, :from => :frequency)
         mean.should be_within(0.01).of(23.6923)
       end
 
@@ -205,11 +201,47 @@ module Ratistics
           {:count => 32} => 12,
           {:count => 37} => 8,
           {:count => 42} => 3,
-          {:count => 47} => 2,
+          {:count => 47} => 2
         }.freeze
 
-        mean = Probability.frequency_mean(sample) {|item| item[:count] }
+        mean = Probability.frequency_mean(sample, :from => :frequency){|item| item[:count] }
         mean.should be_within(0.01).of(23.6923)
+      end
+
+      it 'calculates the frequency mean from a raw sample' do
+        sample = [1, 1, 1, 2, 2, 3].freeze
+
+        mean = Probability.frequency_mean(sample, :from => :sample)
+        mean.should be_within(0.01).of(1.6666666666666665)
+      end
+
+      it 'calculates the frequency mean from a frequency distribution' do
+        frequency = {
+          1 => 3,
+          2 => 2,
+          3 => 1
+        }.freeze
+
+        mean = Probability.frequency_mean(frequency, :from => :frequency)
+        mean.should be_within(0.01).of(1.6666666666666665)
+      end
+
+      it 'calculates the frequency mean from a probability distribution' do
+        probability = {
+          1 => 0.5,
+          2 => 0.3333333333333333,
+          3 => 0.16666666666666666
+        }.freeze
+
+        mean = Probability.frequency_mean(probability, :from => :probability)
+        mean.should be_within(0.01).of(1.6666666666666665)
+      end
+
+      it 'defaults the :from option to sample' do
+        sample = [1, 1, 1, 2, 2, 3].freeze
+
+        mean = Probability.frequency_mean(sample)
+        mean.should be_within(0.01).of(1.6666666666666665)
       end
 
       context 'with Hamster' do
@@ -224,10 +256,10 @@ module Ratistics
             32 => 12,
             37 => 8,
             42 => 3,
-            47 => 2,
+            47 => 2
           }).freeze
 
-          mean = Probability.frequency_mean(sample)
+          mean = Probability.frequency_mean(sample, :from => :frequency)
           mean.should be_within(0.01).of(23.6923)
         end
       end
@@ -236,10 +268,6 @@ module Ratistics
     context '#probability' do
 
       context ':as option' do
-        pending
-      end
-
-      context ':from option' do
         pending
       end
 
@@ -270,16 +298,25 @@ module Ratistics
         probability[21].should be_within(0.01).of(0.111)
       end
 
+      it 'calculates the probability from a raw sample' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
+
+        probability = Probability.probability(sample, :from => :sample)
+
+        probability.count.should eq 5
+        probability[13].should be_within(0.01).of(0.444)
+      end
+
       it 'calculates the probability from a frequency distribution' do
         sample = {
           13 => 4,
           18 => 1,
           14 => 2,
           16 => 1,
-          21 => 1,
+          21 => 1
         }.freeze
 
-        probability = Probability.probability(sample)
+        probability = Probability.probability(sample, :from => :frequency)
 
         probability.count.should eq 5
         probability[13].should be_within(0.01).of(0.444)
@@ -308,7 +345,7 @@ module Ratistics
           {:count => 16},
           {:count => 14},
           {:count => 21},
-          {:count => 13},
+          {:count => 13}
         ].freeze
 
         probability = Probability.probability(sample){|item| item[:count]}
@@ -327,10 +364,10 @@ module Ratistics
           {:count => 18} => 1,
           {:count => 14} => 2,
           {:count => 16} => 1,
-          {:count => 21} => 1,
+          {:count => 21} => 1
         }.freeze
 
-        probability = Probability.probability(sample){|item| item[:count]}
+        probability = Probability.probability(sample, :from => :frequency){|item| item[:count]}
 
         probability.count.should eq 5
         probability[13].should be_within(0.01).of(0.444)
@@ -368,7 +405,7 @@ module Ratistics
             18 => 1,
             14 => 2,
             16 => 1,
-            21 => 1,
+            21 => 1
           }).freeze
         end
 
@@ -406,7 +443,7 @@ module Ratistics
         end
 
         specify do
-          probability = Probability.probability(frequency)
+          probability = Probability.probability(frequency, :from => :frequency)
 
           probability.count.should eq 5
           probability[13].should be_within(0.01).of(0.444)
@@ -435,7 +472,7 @@ module Ratistics
           18 => 0.1111111111111111,
           14 => 0.2222222222222222,
           16 => 0.1111111111111111,
-          21 => 0.1111111111111111,
+          21 => 0.1111111111111111
         }.freeze
 
         probability = Probability.normalize_probability(sample)
@@ -454,7 +491,7 @@ module Ratistics
           18 => 22.2222222222222222,
           14 => 44.4444444444444444,
           16 => 22.2222222222222222,
-          21 => 22.2222222222222222,
+          21 => 22.2222222222222222
         }.freeze
 
         probability = Probability.normalize_probability(sample)
@@ -473,7 +510,7 @@ module Ratistics
           18 => 0.0011111111111111,
           14 => 0.0022222222222222,
           16 => 0.0011111111111111,
-          21 => 0.0011111111111111,
+          21 => 0.0011111111111111
         }.freeze
 
         probability = Probability.normalize_probability(sample)
@@ -489,10 +526,6 @@ module Ratistics
     end
 
     context '#probability_mean' do
-
-      context ':from option' do
-        pending
-      end
 
       it 'returns zero for a nil sample' do
         Probability.probability_mean(nil).should eq 0
@@ -524,10 +557,10 @@ module Ratistics
           32 => 0.184,
           37 => 0.123,
           42 => 0.046,
-          47 => 0.030,
+          47 => 0.030
         }.freeze
 
-        mean = Probability.probability_mean(sample)
+        mean = Probability.probability_mean(sample, :from => :probability)
         mean.should be_within(0.01).of(23.599)
       end
 
@@ -542,7 +575,7 @@ module Ratistics
           {:count => 6},
           {:count => 6},
           {:count => 6},
-          {:count => 6},
+          {:count => 6}
         ].freeze
 
         mean = Probability.probability_mean(sample){|item| item[:count]}
@@ -559,10 +592,10 @@ module Ratistics
           {:count => 32} => 0.184,
           {:count => 37} => 0.123,
           {:count => 42} => 0.046,
-          {:count => 47} => 0.030,
+          {:count => 47} => 0.030
         }.freeze
 
-        mean = Probability.probability_mean(sample){|item| item[:count]}
+        mean = Probability.probability_mean(sample, :from => :probability){|item| item[:count]}
         mean.should be_within(0.01).of(23.599)
       end
 
@@ -571,7 +604,7 @@ module Ratistics
         let(:list) { Hamster.list(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
         let(:vector) { Hamster.vector(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
         let(:set) { Hamster.set(1, 2, 3, 4, 5, 6).freeze }
-        let(:frequency) do
+        let(:probability) do
           Hamster.hash({
             7  => 0.123,
             12 => 0.123,
@@ -581,7 +614,7 @@ module Ratistics
             32 => 0.184,
             37 => 0.123,
             42 => 0.046,
-            47 => 0.030,
+            47 => 0.030
           }).freeze
         end
 
@@ -601,17 +634,13 @@ module Ratistics
         end
 
         specify do
-          mean = Probability.probability_mean(frequency)
+          mean = Probability.probability_mean(probability, :from => :probability)
           mean.should be_within(0.01).of(23.599)
         end
       end
     end
 
     context '#probability_variance' do
-
-      context ':from option' do
-        pending
-      end
 
       it 'returns zero for a nil sample' do
         Probability.probability_variance(nil).should eq 0
@@ -633,17 +662,37 @@ module Ratistics
         variance.should be_within(0.01).of(3.25)
       end
 
+      it 'recognizes the :from => :sample option' do
+        sample = [1, 2, 3, 4, 5, 6, 6, 6, 6, 6].freeze
+        variance = Probability.probability_variance(sample, :from => :sample)
+        variance.should be_within(0.01).of(3.25)
+      end
+
+      it 'calculates the variance from a frequency distribution' do
+        frequency = {
+          1 => 1,
+          2 => 1,
+          3 => 1,
+          4 => 1,
+          5 => 1,
+          6 => 5
+        }.freeze
+
+        variance = Probability.probability_variance(frequency, :from => :frequency)
+        variance.should be_within(0.01).of(3.25)
+      end
+
       it 'calculates the variance from a probability distribution' do
-        sample = {
+        probability = {
           1 => 0.1,
           2 => 0.1,
           3 => 0.1,
           4 => 0.1,
           5 => 0.1,
-          6 => 0.5,
+          6 => 0.5
         }.freeze
 
-        variance = Probability.probability_variance(sample)
+        variance = Probability.probability_variance(probability, :from => :probability)
         variance.should be_within(0.01).of(3.25)
       end
 
@@ -658,10 +707,24 @@ module Ratistics
           {:count => 6},
           {:count => 6},
           {:count => 6},
-          {:count => 6},
+          {:count => 6}
         ].freeze
 
         variance = Probability.probability_variance(sample){|item| item[:count]}
+        variance.should be_within(0.01).of(3.25)
+      end
+
+      it 'calculates the variance from a frequency distribution with a block' do
+        sample = {
+          {:count => 1} => 1,
+          {:count => 2} => 1,
+          {:count => 3} => 1,
+          {:count => 4} => 1,
+          {:count => 5} => 1,
+          {:count => 6} => 5
+        }.freeze
+
+        variance = Probability.probability_variance(sample, :from => :frequency){|item| item[:count]}
         variance.should be_within(0.01).of(3.25)
       end
 
@@ -672,10 +735,10 @@ module Ratistics
           {:count => 3} => 0.1,
           {:count => 4} => 0.1,
           {:count => 5} => 0.1,
-          {:count => 6} => 0.5,
+          {:count => 6} => 0.5
         }.freeze
 
-        variance = Probability.probability_variance(sample){|item| item[:count]}
+        variance = Probability.probability_variance(sample, :from => :probability){|item| item[:count]}
         variance.should be_within(0.01).of(3.25)
       end
 
@@ -684,14 +747,14 @@ module Ratistics
         let(:list) { Hamster.list(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
         let(:vector) { Hamster.vector(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
         let(:set) { Hamster.set(1, 2, 3, 4, 5, 6).freeze }
-        let(:frequency) do
+        let(:probability) do
           Hamster.hash({
             1 => 0.1,
             2 => 0.1,
             3 => 0.1,
             4 => 0.1,
             5 => 0.1,
-            6 => 0.5,
+            6 => 0.5
           }).freeze
         end
 
@@ -711,17 +774,13 @@ module Ratistics
         end
 
         specify do
-          mean = Probability.probability_variance(frequency)
+          mean = Probability.probability_variance(probability, :from => :probability)
           mean.should be_within(0.01).of(3.25)
         end
       end
     end
 
     context '#cumulative_distribution_function' do
-
-      context ':from option' do
-        pending
-      end
 
       let(:sorted_sample) { [1, 2, 2, 3, 5].freeze }
       let(:unsorted_sample) { [5, 2, 1, 3, 2].freeze }
@@ -735,6 +794,24 @@ module Ratistics
           {:count => 3},
           {:count => 5}
         ]
+      end
+
+      let(:frequency) do
+        {
+          1 => 1,
+          2 => 2,
+          3 => 1,
+          5 => 1
+        }
+      end
+
+      let(:frequency_with_block) do
+        {
+          {:count => 1} => 1,
+          {:count => 2} => 2,
+          {:count => 3} => 1,
+          {:count => 5} => 1
+        }
       end
 
       let(:cdf_values) do
@@ -790,6 +867,27 @@ module Ratistics
       it 'returns the probability on a relatively flat sample' do
         probability = Probability.cdf(flat_sample,2)
         probability.should be_within(0.001).of(0.9)
+      end
+
+      it 'recognizes the option :from => :sample' do
+        (0..5).each do |value|
+          probability = Probability.cdf(sorted_sample, value, :from => :sample)
+          probability.should be_within(0.001).of(cdf_values[value])
+        end
+      end
+
+      it 'returns the probability when given a frequency' do
+        (0..5).each do |value|
+          probability = Probability.cdf(frequency, value, :from => :frequency)
+          probability.should be_within(0.001).of(cdf_values[value])
+        end
+      end
+
+      it 'returns the probability when given a frequency with a block' do
+        (0..5).each do |value|
+          probability = Probability.cdf(frequency_with_block, value, :from => :frequency){|item| item[:count]}
+          probability.should be_within(0.001).of(cdf_values[value])
+        end
       end
 
       it 'does not attempt to sort when a using a block' do

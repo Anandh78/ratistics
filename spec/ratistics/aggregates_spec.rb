@@ -17,6 +17,8 @@ module Ratistics
 
     context '#initialize' do
 
+      it 'always collects the sample data'
+
       it 'requires at least one argument' do
         lambda {
           Aggregates.new

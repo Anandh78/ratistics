@@ -50,7 +50,7 @@ module Ratistics
     #
     # {Probability#frequency_mean}
     def frequency_mean
-      @mean ||= Probability.frequency_mean(distribution)
+      @mean ||= Probability.frequency_mean(distribution, :from => :frequency)
     end
 
     alias :mean :frequency_mean
@@ -59,7 +59,7 @@ module Ratistics
     #
     # {Probability#probability}
     def probability
-      @probability ||= Probability.probability(distribution).freeze
+      @probability ||= Probability.probability(distribution, :from => :frequency).freeze
     end
 
     alias :pmf :probability
@@ -69,7 +69,7 @@ module Ratistics
     # 
     # {Probability#probability_mean}
     def probability_mean
-      @probability_mean ||= Probability.probability_mean(probability)
+      @probability_mean ||= Probability.probability_mean(probability, :from => :probability)
     end
 
     alias :pmf_mean :probability_mean
@@ -78,7 +78,7 @@ module Ratistics
     #
     # {Probability#probability_variance}
     def probability_variance
-      @probability_variance ||= Probability.probability_variance(probability)
+      @probability_variance ||= Probability.probability_variance(probability, :from => :probability)
     end
 
     alias :pmf_variance :probability_variance

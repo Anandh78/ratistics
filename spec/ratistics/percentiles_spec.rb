@@ -5,7 +5,9 @@ module Ratistics
 
     let(:racers) { Racer.from_csv }
 
-    context 'construction' do
+    context 'initialization' do
+
+      it 'always collects the sample data'
 
       it 'raises an exception if the sample is nil' do
         lambda {

@@ -162,7 +162,6 @@ When working with sets of complex data use blocks to process the data without co
 * cumulative_distribution_function (alias: cdf, cumulative_distribution)
 * first_quartile (alias: lower_quartile)
 * frequency
-* frequency_mean
 * linear_rank (alias: linear_interpolation_rank)
 * mean (alias: average, avg)
 * median
@@ -173,7 +172,7 @@ When working with sets of complex data use blocks to process the data without co
 * percent_rank (alias: percentile_rank)
 * percentile (alias: centile)
 * probability (alias: pmf)
-* probability_mean (alias: pmf_mean)
+* probability_mean (alias: pmf_mean, :frequency_mean)
 * probability_variance (alias: pmf_variance)
 * range
 * ranks
