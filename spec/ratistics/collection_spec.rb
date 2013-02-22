@@ -113,6 +113,156 @@ module Ratistics
       end
     end
 
+    context '#catalog_hash' do
+
+      it 'returns an empty catalog when the hash is nil' do
+        Collection.catalog_hash(nil).should eq []
+      end
+
+      it 'returns an empty catalog when the hash is empty' do
+        Collection.catalog_hash({}.freeze).should eq []
+      end
+
+      it 'returns a catalog when given a populated hash' do
+        sample = {
+          7  => 8,
+          12 => 8,
+          17 => 14,
+          22 => 4,
+          27 => 6,
+          32 => 12,
+          37 => 8,
+          42 => 3,
+          47 => 2
+        }.freeze
+
+        catalog = Collection.catalog_hash(sample)
+        catalog.size.should eq sample.size
+
+        catalog[0].should eq [7, 8]
+        catalog[1].should eq [12, 8]
+        catalog[2].should eq [17, 14]
+        catalog[3].should eq [22, 4]
+        catalog[4].should eq [27, 6]
+        catalog[5].should eq [32, 12]
+        catalog[6].should eq [37, 8]
+        catalog[7].should eq [42, 3]
+        catalog[8].should eq [47, 2]
+      end
+
+      it 'applies the supplied block to every value in the hash' do
+        sample = {
+          7  => {:count => 8},
+          12 => {:count => 8},
+          17 => {:count => 14},
+          22 => {:count => 4},
+          27 => {:count => 6},
+          32 => {:count => 12},
+          37 => {:count => 8},
+          42 => {:count => 3},
+          47 => {:count => 2}
+        }.freeze
+
+        catalog = Collection.catalog_hash(sample){|item| item[:count]}
+        catalog.size.should eq sample.size
+
+        catalog[0].should eq [7, 8]
+        catalog[1].should eq [12, 8]
+        catalog[2].should eq [17, 14]
+        catalog[3].should eq [22, 4]
+        catalog[4].should eq [27, 6]
+        catalog[5].should eq [32, 12]
+        catalog[6].should eq [37, 8]
+        catalog[7].should eq [42, 3]
+        catalog[8].should eq [47, 2]
+      end
+    end
+
+    context '#hash_catalog' do
+
+      it 'returns an empty hash when the catalog is nil' do
+        Collection.hash_catalog(nil).should == {}
+      end
+
+      it 'returns an empty hash when the catalog is empty' do
+        Collection.hash_catalog({}.freeze).should == {}
+      end
+
+      it 'returns a hash when given a catalog hash' do
+        sample = [
+          [7, 8],
+          [12, 8],
+          [17, 14],
+          [22, 4],
+          [27, 6],
+          [32, 12],
+          [37, 8],
+          [42, 3],
+          [47, 2]
+        ].freeze
+
+        hash = Collection.hash_catalog(sample)
+        hash.size.should eq sample.size
+
+        hash[7].should eq 8
+        hash[12].should eq 8
+        hash[17].should eq 14
+        hash[22].should eq 4
+        hash[27].should eq 6
+        hash[32].should eq 12
+        hash[37].should eq 8
+        hash[42].should eq 3
+        hash[47].should eq 2
+      end
+
+      it 'keeps the last value when duplicate keys exist' do
+        sample = [
+          [7, 0],
+          [12, 1],
+          [12, 2],
+          [12, 3],
+          [12, 4],
+          [12, 5],
+          [12, 6],
+          [47, 7]
+        ].freeze
+
+        hash = Collection.hash_catalog(sample)
+        hash.size.should eq 3
+
+        hash[7].should eq 0
+        hash[12].should eq 6
+        hash[47].should eq 7
+      end
+
+      it 'applies the supplied block to every value in the hash' do
+        sample = [
+          [7, {:count => 8}],
+          [12, {:count => 8}],
+          [17, {:count => 14}],
+          [22, {:count => 4}],
+          [27, {:count => 6}],
+          [32, {:count => 12}],
+          [37, {:count => 8}],
+          [42, {:count => 3}],
+          [47, {:count => 2}]
+        ].freeze
+
+        hash = Collection.hash_catalog(sample){|item| item[:count]}
+        hash.size.should eq sample.size
+
+        hash[7].should eq 8
+        hash[12].should eq 8
+        hash[17].should eq 14
+        hash[22].should eq 4
+        hash[27].should eq 6
+        hash[32].should eq 12
+        hash[37].should eq 8
+        hash[42].should eq 3
+        hash[47].should eq 2
+      end
+    end
+
     context 'predicates' do
 
       context '#ascending?' do

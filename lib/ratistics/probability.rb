@@ -1,3 +1,4 @@
+require 'ratistics/collection'
 require 'ratistics/math'
 
 module Ratistics
@@ -31,15 +32,12 @@ module Ratistics
     # @param [Hash] opts processing options
     # @param [Block] block optional block for per-item processing
     #
-    # @option opts [Symbol] :as sets the output to :hash or :array
-    #   (default :hash)
+    # @option opts [Symbol] :as sets the output to :hash/:map or
+    #   :array/:catalog/:catalogue (default :hash)
     #
     # @return [Hash, Array, nil] the statistical frequency of the given
     #   data set or nil if the data set is empty
     def frequency(data, opts={}, &block)
-      unless [nil, :hash, :array].include?(opts[:as])
-        raise ArgumentError.new("Unrecognized return type #{opts[:as]}")
-      end
       return nil if data.nil? || data.empty?
 
       freq = data.reduce({}) do |memo, datum|
@@ -48,10 +46,8 @@ module Ratistics
         memo
       end
 
-      if opts[:as] == :array
-        freq = freq.reduce([]) do |memo, frequency|
-          memo << frequency
-        end
+      if (opts[:as] == :array || opts[:as] == :catalog || opts[:as] == :catalogue)
+        freq = Collection.catalog_hash(freq)
       end
 
       return freq
@@ -102,6 +98,10 @@ module Ratistics
         key = yield(key) if from_frequency && block_given?
         memo[key] = value.to_f / count.to_f
         memo
+      end
+
+      if (opts[:as] == :array || opts[:as] == :catalog || opts[:as] == :catalogue)
+        prob = Collection.catalog_hash(prob)
       end
 
       return prob

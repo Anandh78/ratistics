@@ -64,10 +64,10 @@ module Ratistics
         frequency[21].should eq 1
       end
 
-      it 'returns an array when the :as options is set to :array' do
+      it 'returns a catalog when the :as options is set to :catalog' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
 
-        frequency = Probability.frequency(sample, :as => :array)
+        frequency = Probability.frequency(sample, :as => :catalog)
 
         frequency.size.should eq 5
         frequency.should include([13, 4])
@@ -98,12 +98,6 @@ module Ratistics
         frequency.should include([14, 2])
         frequency.should include([16, 1])
         frequency.should include([21, 1])
-      end
-
-      it 'raises an error when the :as value is unrecognized' do
-        lambda {
-          Probability.frequency([1, 2, 3], :as => :bogus)
-        }.should raise_error
       end
 
       context 'with ActiveRecord', :ar => true do
@@ -267,10 +261,6 @@ module Ratistics
 
     context '#probability' do
 
-      context ':as option' do
-        pending
-      end
-
       it 'returns nil for a nil sample' do
         Probability.probability(nil).should be_nil 
       end
@@ -375,6 +365,42 @@ module Ratistics
         probability[16].should be_within(0.01).of(0.111)
         probability[18].should be_within(0.01).of(0.111)
         probability[21].should be_within(0.01).of(0.111)
+      end
+
+      it 'returns a array when the :as options is set to :array' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
+
+        probability = Probability.probability(sample, :as => :array)
+
+        probability.count.should eq 5
+        probability[0].last.should be_within(0.01).of(0.444)
+        probability[1].last.should be_within(0.01).of(0.111)
+        probability[2].last.should be_within(0.01).of(0.222)
+        probability[3].last.should be_within(0.01).of(0.111)
+        probability[4].last.should be_within(0.01).of(0.111)
+      end
+
+      it 'returns a catalog when :as is :catalog and a block is given' do
+        sample = [
+          {:count => 13},
+          {:count => 18},
+          {:count => 13},
+          {:count => 14},
+          {:count => 13},
+          {:count => 16},
+          {:count => 14},
+          {:count => 21},
+          {:count => 13}
+        ].freeze
+
+        probability = Probability.probability(sample, :as => :catalog){|item| item[:count]}
+
+        probability.count.should eq 5
+        probability[0].last.should be_within(0.01).of(0.444)
+        probability[1].last.should be_within(0.01).of(0.111)
+        probability[2].last.should be_within(0.01).of(0.222)
+        probability[3].last.should be_within(0.01).of(0.111)
+        probability[4].last.should be_within(0.01).of(0.111)
       end
 
       context 'with ActiveRecord', :ar => true do

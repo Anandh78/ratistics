@@ -64,6 +64,30 @@ module Ratistics
 
     alias :catalogue :catalog
 
+    def catalog_hash(data, opts={}, &block)
+      return [] if data.nil? || data.empty?
+      catalog = []
+      data.each do |key, value|
+        value = yield(value) if block_given?
+        catalog << [key, value]
+      end
+      return catalog
+    end
+
+    alias :catalogue_hash :catalog_hash
+
+    def hash_catalog(data, opts={}, &block)
+      return {} if data.nil? || data.empty?
+      hash = {}
+      data.each do |item|
+        value = (block_given? ? yield(item.last) : item.last)
+        hash[item.first] = value
+      end
+      return hash
+    end
+
+    alias :hash_catalogue :hash_catalog
+
     # Scan a collection and determine if the elements are all in
     # ascending order. Returns true for an empty set and false for
     # a nil sample.
