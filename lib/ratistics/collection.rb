@@ -64,6 +64,20 @@ module Ratistics
 
     alias :catalogue :catalog
 
+    # Convert a hash to catalog.
+    # 
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data to convert
+    # @param [Hash] opts search options
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Array] if the data set is in ascending order
     def catalog_hash(data, opts={}, &block)
       return [] if data.nil? || data.empty?
       catalog = []
@@ -76,6 +90,21 @@ module Ratistics
 
     alias :catalogue_hash :catalog_hash
 
+    # Convert a catalog to a hash. Keeps the last value when keys are
+    # duplicated.
+    # 
+    # When a block is given the block will be applied to both arguments.
+    # Using a block in this way allows computation against a specific field
+    # in a data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data to convert
+    # @param [Hash] opts search options
+    # @param [Block] block optional block for per-item processing
+    #
+    # @return [Hash] if the data set is in ascending order
     def hash_catalog(data, opts={}, &block)
       return {} if data.nil? || data.empty?
       hash = {}
