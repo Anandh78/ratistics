@@ -24,6 +24,7 @@ module Ratistics
       @distribution = {}
       @distribution[:hash] = Probability.frequency(data, &block).freeze
       @distribution[:hash] ||= {}.freeze
+      @cdf = {}
     end
 
     # Returns the frequency distribution for the data sample.
@@ -88,7 +89,7 @@ module Ratistics
     #
     # {Probability#cumulative_distribution_function}
     def cumulative_distribution_function(value)
-      @cdf[value] ||= Probability.cumulative_distribution_function(frequency, value, :from => :freq)
+      @cdf[value] ||= Probability.cumulative_distribution_function(frequency, value, :from => :frequency)
     end
 
     alias :cdf :cumulative_distribution_function

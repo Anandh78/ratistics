@@ -330,7 +330,6 @@ module Ratistics
       end
 
       it 'returns the probability of the given value' do
-        pending
         (0..5).each do |value|
           probability = frequencies.cdf(value)
           probability.should be_within(0.001).of(cdf_values[value])
@@ -338,13 +337,11 @@ module Ratistics
       end
 
       it 'returns zero when the value is smaller than the sample minumin' do
-        pending
         probability = frequencies.cdf(0)
         probability.should eq 0
       end
 
       it 'returns one when the value is greater than the sample maximum' do
-        pending
         probability = frequencies.cdf(6)
         probability.should eq 1
       end
