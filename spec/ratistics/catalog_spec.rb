@@ -1005,24 +1005,70 @@ module Ratistics
       end
     end
 
-    context '#to_a' do
-      pending
+    context 'conversion' do
+
+      let(:sample) {
+        [
+          [7, 8],
+          [17, 14],
+          [47, 2]
+        ].freeze
+      }
+
+      let(:sample_as_hash) {
+        {
+          7 => 8,
+          17 => 14,
+          47 => 2
+        }.freeze
+      }
+
+      let(:sample_as_array) {
+        [7, 8, 17, 14, 47, 2]
+      }
+
+      let(:catalog) { Catalog.new(sample) }
+
+      context '#to_a' do
+
+        specify { Catalog.new.to_a.should eq [] }
+
+        specify { catalog.to_a.should eq sample_as_array }
+      end
+
+      context '#to_hash' do
+
+        specify { Catalog.new.to_hash.should == {} }
+
+        specify { catalog.to_hash.should eq sample_as_hash }
+      end
+
+      context '#to_catalog' do
+        specify { Catalog.new.to_catalog.should eq [] }
+
+        specify do
+          cat = catalog.to_catalog
+          cat.should eq sample
+          cat.should be_a Array
+        end
+      end
+
+      context '#to_s' do
+
+        specify { Catalog.new.to_s.should eq '[]' }
+
+        specify { Catalog.from_hash(:one => 1, :two => 2).to_s.should eq '[[:one, 1], [:two, 2]]' }
+      end
     end
 
-    context '#to_hash' do
-      pending
+    context 'deletion' do
+
+      specify 'delete'
+
+      specify 'delete_at'
+
+      specify 'delete_if'
+
     end
-
-    context '#to_catalog' do
-      pending
-    end
-
-    context '#to_s' do
-
-      specify { Catalog.new.to_s.should eq '[]' }
-
-      specify { Catalog.from_hash(:one => 1, :two => 2).to_s.should eq '[[:one, 1], [:two, 2]]' }
-    end
-
   end
 end

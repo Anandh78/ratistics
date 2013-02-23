@@ -298,6 +298,28 @@ module Ratistics
       return self
     end
 
+    def to_a
+      catalog = []
+      @data.each do |item|
+        catalog << item.first << item.last
+      end
+      return catalog
+    end
+
+    def to_hash
+      catalog = {}
+      @data.each do |item|
+        catalog[item.first] = item.last
+      end
+      return catalog
+    end
+
+    def to_catalog
+      return @data.dup
+    end
+
+    alias :to_catalogue :to_catalog
+
   end
 
   class Catalogue < Catalog; end
