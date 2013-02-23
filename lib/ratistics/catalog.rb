@@ -89,6 +89,31 @@ module Ratistics
       return @data.dup
     end
 
+    def ==(other)
+      return (@data == other.instance_variable_get(:@data))
+    end
+
+    def [](index)
+      datum = @data[index]
+      return (datum.nil? ? nil : datum.dup)
+    end
+
+    def []=(index, value)
+      if (index >= 0 && index >= @data.size) || (index < 0 && index.abs > @data.size)
+        raise ArgumentError.new('index must reference an existing element')
+      elsif value.is_a?(Hash) && value.size == 1
+        @data[index] = [value.keys.first, value.values.first]
+      elsif value.is_a?(Array) && value.size == 2
+        @data[index] = value.dup
+      else
+        raise ArgumentError.new('value must be a one-element hash or a two-element array')
+      end
+    end
+
+    def to_s
+      return @data.to_s
+    end
+
   end
 
   class Catalogue < Catalog; end

@@ -212,15 +212,91 @@ module Ratistics
     end
 
     context '#==' do
-      pending
+      
+      it 'returns true for equal catalogs' do
+        catalog_1 = Catalog.from_hash(hash_sample)
+        catalog_2 = Catalog.from_hash(hash_sample)
+        catalog_1.should eq catalog_2
+      end
+
+      
+      it 'returns false for unequal catalogs' do
+        catalog_1 = Catalog.new
+        catalog_2 = Catalog.from_hash(hash_sample)
+        catalog_1.should_not eq catalog_2
+      end
     end
 
     context '#[]' do
-      pending
+
+      it 'returns nil when empty' do
+        catalog = Catalog.new
+        catalog[0].should be_nil
+      end
+
+      it 'returns the element at a valid positive index' do
+        catalog = Catalog.from_catalog(catalog_sample)
+        catalog[0].should eq catalog_sample[0]
+      end
+
+      it 'returns the element at a valid negative index' do
+        catalog = Catalog.from_catalog(catalog_sample)
+        catalog[-1].should eq catalog_sample[-1]
+      end
+
+      it 'returns nil for an invalid positive index' do
+        catalog = Catalog.from_catalog(catalog_sample)
+        catalog[100].should be_nil
+      end
+
+      it 'returns nil for an invalid negative index' do
+        catalog = Catalog.from_catalog(catalog_sample)
+        catalog[-100].should be_nil
+      end
     end
 
     context '#[]=' do
-      pending
+
+      let(:catalog) { Catalog.from_hash(:one => 1, :two => 2, :three => 3) }
+
+      it 'accepts a one-element hash as a value' do
+        catalog[0] = {:foo => :bar}
+        catalog[0].should eq [:foo, :bar]
+      end
+
+      it 'accepts a two-element array as a value' do
+        catalog[0] = [:foo, :bar]
+        catalog[0].should eq [:foo, :bar]
+      end
+
+      it 'raises an exception when given in invalid value' do
+        lambda {
+          catalog[0] = :foo
+        }.should raise_error(ArgumentError)
+      end
+
+      it 'updates the index when given a valid positive index' do
+        catalog[1] = [:foo, :bar]
+        catalog.raw.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+      end
+
+      it 'updates the index when given an invalid negative index' do
+        catalog[-2] = [:foo, :bar]
+        catalog.raw.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+      end
+
+      it 'raises an exception when given an invalid positive index' do
+        lambda {
+          catalog[100] = [:foo, :bar]
+        }.should raise_error(ArgumentError)
+      end
+
+      it 'raises an exception when given an invalid negative index' do
+        lambda {
+          catalog[-100] = [:foo, :bar]
+        }.should raise_error(ArgumentError)
+      end
+
     end
 
     context '#&' do
@@ -376,6 +452,13 @@ module Ratistics
 
     context '#to_catalog' do
       pending
+    end
+
+    context '#to_s' do
+
+      specify { Catalog.new.to_s.should eq '[]' }
+
+      specify { Catalog.from_hash(:one => 1, :two => 2).to_s.should eq '[[:one, 1], [:two, 2]]' }
     end
 
   end
