@@ -680,24 +680,60 @@ module Ratistics
       end
     end
 
-    context '#each' do
-      pending
-    end
+    context '#iterators' do
 
-    context '#each_pair' do
-      pending
-    end
+      let(:sample) {
+        [
+          [7, 8],
+          [17, 14],
+          [27, 6],
+          [32, 12],
+          [37, 8],
+          [22, 4],
+          [42, 3],
+          [12, 8],
+          [47, 2]
+        ].freeze
+      }
 
-    context '#each_key' do
-      pending
-    end
+      let(:catalog) { Catalog.new(sample) }
 
-    context '#each_value' do
-      pending
-    end
+      specify '#each' do
 
-    context '#each_with_index' do
-      pending
+        index = 0
+        catalog.each do |item|
+          item.should eq sample[index]
+          index = index + 1
+        end
+      end
+
+      specify '#each_pair' do
+
+        index = 0
+        catalog.each_pair do |key, value|
+          key.should eq sample[index].first
+          value.should eq sample[index].last
+          index = index + 1
+        end
+      end
+
+      specify '#each_key' do
+
+        index = 0
+        catalog.each_key do |key|
+          key.should eq sample[index].first
+          index = index + 1
+        end
+      end
+
+      specify '#each_value' do
+
+        index = 0
+        catalog.each_value do |value|
+          value.should eq sample[index].last
+          index = index + 1
+        end
+      end
     end
 
     context '#empty?' do
@@ -714,7 +750,36 @@ module Ratistics
     end
 
     context '#include?' do
-      pending
+
+      it 'returns false when empty' do
+        Catalog.new.include?([1, 1]).should be_false
+      end
+
+      it 'returns true when the key/value array is found' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog.include?([2, 2]).should be_true
+      end
+
+      it 'returns true when the key/value pair is found' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog.include?(2, 2).should be_true
+      end
+
+      it 'returns true for given a one-element hash that matches' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog.include?({2 => 2}).should be_true
+      end
+
+      it 'returns true for an implicit one-element hash that matches' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog.include?(2 => 2).should be_true
+      end
+
+      it 'returns false when not found' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog.include?([4, 4]).should be_false
+      end
+
     end
 
     context 'raw' do
@@ -744,11 +809,87 @@ module Ratistics
     end
 
     context '#slice' do
-      pending
+
+      let(:catalog) {
+        Catalog.new([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]])
+      }
+
+      it 'returns the element at index' do
+        slice = catalog.slice(2)
+        slice.should eq [[3, 3]]
+        slice.should be_a Catalog
+        catalog.should eq [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]
+      end
+
+      it 'returns the elements from index through length' do
+        slice = catalog.slice(1, 2)
+        slice.should eq [[2, 2], [3, 3]]
+        slice.should be_a Catalog
+        catalog.should eq [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]
+      end
+
+      it 'returns a catalog specified by range' do
+        slice = catalog.slice(1..2)
+        slice.should eq [[2, 2], [3, 3]]
+        slice.should be_a Catalog
+        catalog.should eq [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]
+      end
+
+      it 'returns the element at the negative index' do
+        slice = catalog.slice(-3)
+        slice.should eq [[3, 3]]
+        slice.should be_a Catalog
+        catalog.should eq [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]
+      end
+
+      it 'returns an empty Catalog if the index is out of range' do
+        slice = catalog.slice(10, 2)
+        slice.should be_empty
+        slice.should be_a Catalog
+        catalog.should eq [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]
+      end
     end
 
     context '#slice!' do
-      pending
+
+      let(:catalog) {
+        Catalog.new([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]])
+      }
+
+      it 'returns the element at index' do
+        slice = catalog.slice!(2)
+        slice.should eq [[3, 3]]
+        slice.should be_a Catalog
+        catalog.should eq [[1, 1], [2, 2], [4, 4], [5, 5]]
+      end
+
+      it 'returns the elements from index through length' do
+        slice = catalog.slice!(1, 2)
+        slice.should eq [[2, 2], [3, 3]]
+        slice.should be_a Catalog
+        catalog.should eq [[1, 1], [4, 4], [5, 5]]
+      end
+
+      it 'returns a catalog specified by range' do
+        slice = catalog.slice!(1..2)
+        slice.should eq [[2, 2], [3, 3]]
+        slice.should be_a Catalog
+        catalog.should eq [[1, 1], [4, 4], [5, 5]]
+      end
+
+      it 'returns the element at the negative index' do
+        slice = catalog.slice!(-3)
+        slice.should eq [[3, 3]]
+        slice.should be_a Catalog
+        catalog.should eq [[1, 1], [2, 2], [4, 4], [5, 5]]
+      end
+
+      it 'returns an empty Catalog if the index is out of range' do
+        slice = catalog.slice!(10, 2)
+        slice.should be_empty
+        slice.should be_a Catalog
+        catalog.should eq [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]
+      end
     end
 
     context '#sort_by_key' do

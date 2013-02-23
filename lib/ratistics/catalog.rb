@@ -214,6 +214,60 @@ module Ratistics
       return @data.collect{|item| item.last}
     end
 
+    def each(&block)
+      @data.each do |item|
+        yield(item)
+      end
+    end
+
+    def each_pair(&block)
+      @data.each do |item|
+        yield(item.first, item.last)
+      end
+    end
+
+    def each_key(&block)
+      @data.each do |item|
+        yield(item.first)
+      end
+    end
+
+    def each_value(&block)
+      @data.each do |item|
+        yield(item.last)
+      end
+    end
+
+    def include?(key=nil, value=nil)
+      if key && value
+        return @data.include?([key, value])
+      elsif key.is_a?(Array)
+        return @data.include?(key)
+      elsif key.is_a?(Hash) && key.size == 1
+        return @data.include?([key.keys.first, key.values.first])
+      else
+        return false
+      end
+    end
+
+    def slice(index, length=nil)
+      if length.nil?
+        catalog = @data.slice(index)
+      else
+        catalog = @data.slice(index, length)
+      end
+      return Catalog.new(catalog)
+    end
+
+    def slice!(index, length=nil)
+      if length.nil?
+        catalog = @data.slice!(index)
+      else
+        catalog = @data.slice!(index, length)
+      end
+      return Catalog.new(catalog)
+    end
+
   end
 
   class Catalogue < Catalog; end
