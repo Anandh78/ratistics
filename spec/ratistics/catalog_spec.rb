@@ -561,10 +561,6 @@ module Ratistics
       end   
     end
 
-    #context '#<<' do
-      #pending
-    #end
-
     context '#push' do
 
       it 'returns the Catalog' do
@@ -892,20 +888,121 @@ module Ratistics
       end
     end
 
-    context '#sort_by_key' do
-      pending
-    end
+    context 'sorting' do
 
-    context '#sort_by_key!' do
-      pending
-    end
+      let(:unsorted_catalog) {
+        [
+          [7, 8],
+          [17, 14],
+          [27, 6],
+          [32, 12],
+          [37, 9],
+          [22, 4],
+          [42, 3],
+          [12, 10],
+          [47, 2]
+        ].freeze
+      }
 
-    context '#sort_by_value' do
-      pending
-    end
+      let(:catalog_sorted_by_key) {
+        [
+          [7, 8],
+          [12, 10],
+          [17, 14],
+          [22, 4],
+          [27, 6],
+          [32, 12],
+          [37, 9],
+          [42, 3],
+          [47, 2]
+        ].freeze
+      }
 
-    context '#sort_by_value!' do
-      pending
+      let(:catalog_sorted_by_value) {
+        [
+          [47, 2],
+          [42, 3],
+          [22, 4],
+          [27, 6],
+          [7, 8],
+          [37, 9],
+          [12, 10],
+          [32, 12],
+          [17, 14]
+        ].freeze
+      }
+
+      let(:catalog_reversed) {
+        [
+          [47, 2],
+          [42, 3],
+          [37, 9],
+          [32, 12],
+          [27, 6],
+          [22, 4],
+          [17, 14],
+          [12, 10],
+          [7, 8]
+        ].freeze
+      }
+
+      let(:catalog) { Catalog.new(unsorted_catalog) }
+
+      specify '#sort_by_key' do
+        sorted = catalog.sort_by_key
+        sorted.should eq catalog_sorted_by_key
+        catalog.should eq unsorted_catalog
+        sorted.should be_a Catalog
+      end
+
+      specify '#sort_by_key!' do
+        sorted = catalog.sort_by_key!
+        sorted.should eq catalog_sorted_by_key
+        catalog.should eq catalog_sorted_by_key
+        sorted.object_id.should eq catalog.object_id
+      end
+
+      specify '#sort_by_value' do
+        sorted = catalog.sort_by_value
+        sorted.should eq catalog_sorted_by_value
+        catalog.should eq unsorted_catalog
+        sorted.should be_a Catalog
+      end
+
+      specify '#sort_by_value!' do
+        sorted = catalog.sort_by_value!
+        sorted.should eq catalog_sorted_by_value
+        catalog.should eq catalog_sorted_by_value
+        sorted.object_id.should eq catalog.object_id
+      end
+
+      specify '#sort' do
+        sorted = catalog.sort
+        sorted.should eq catalog_sorted_by_key
+        catalog.should eq unsorted_catalog
+        sorted.should be_a Catalog
+      end
+
+      specify '#sort!' do
+        sorted = catalog.sort!
+        sorted.should eq catalog_sorted_by_key
+        catalog.should eq catalog_sorted_by_key
+        sorted.object_id.should eq catalog.object_id
+      end
+
+      specify '#sort with block' do
+        sorted = catalog.sort{|a, b| b <=> a}
+        sorted.should eq catalog_reversed
+        catalog.should eq unsorted_catalog
+        sorted.should be_a Catalog
+      end
+
+      specify '#sort! with block' do
+        sorted = catalog.sort!{|a, b| b <=> a}
+        sorted.should eq catalog_reversed
+        catalog.should eq catalog_reversed
+        sorted.should be_a Catalog
+      end
     end
 
     context '#to_a' do

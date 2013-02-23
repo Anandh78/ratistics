@@ -268,6 +268,36 @@ module Ratistics
       return Catalog.new(catalog)
     end
 
+    def sort_by_key
+      sorted = @data.sort{|a, b| a.first <=> b.first}
+      return Catalog.new(sorted)
+    end
+
+    def sort_by_key!
+      sorted = @data.sort!{|a, b| a.first <=> b.first}
+      return self
+    end
+
+    def sort_by_value
+      sorted = @data.sort{|a, b| a.last <=> b.last}
+      return Catalog.new(sorted)
+    end
+
+    def sort_by_value!
+      sorted = @data.sort!{|a, b| a.last <=> b.last}
+      return self
+    end
+
+    def sort(&block)
+      sorted = @data.sort(&block)
+      return Catalog.new(sorted)
+    end
+
+    def sort!(&block)
+      sorted = @data.sort!(&block)
+      return self
+    end
+
   end
 
   class Catalogue < Catalog; end
