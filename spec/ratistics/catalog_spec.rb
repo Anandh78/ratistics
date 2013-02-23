@@ -60,11 +60,43 @@ module Ratistics
       ].freeze
     }
 
-    context '#creation' do
+    context 'creation' do
 
-      it 'creates an empty Catalog when no arguments are given' do
-        catalog = Catalog.new
-        catalog.should be_empty
+      context '#initialize' do
+
+        it 'creates an empty Catalog when no arguments are given' do
+          catalog = Catalog.new
+          catalog.should be_empty
+        end
+
+        it 'creates a Catalog from a hash' do
+          catalog = Catalog.new(hash_sample, :from => :hash)
+          catalog.size.should eq 9
+        end
+
+        it 'creates a Catalog from an array' do
+          catalog = Catalog.new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], :from => :array)
+          catalog.size.should eq 5
+          catalog.first.should eq [1, 2]
+          catalog.last.should eq [9, 10]
+        end
+
+        it 'creates a Catalog from a catalog' do
+          catalog = Catalog.new(catalog_sample, :from => :catalog)
+          catalog.size.should eq 9
+          catalog.first.should eq catalog_sample.first
+          catalog.last.should eq catalog_sample.last
+
+          catalog = Catalog.new(catalog_sample, :from => :catalogue)
+          catalog.size.should eq 9
+          catalog.first.should eq catalog_sample.first
+          catalog.last.should eq catalog_sample.last
+        end
+
+        it 'creates an empty Catalog when :from is unrecognized' do
+          catalog = Catalog.new(hash_sample, :from => :bogus)
+          catalog.should be_empty
+        end
       end
 
       context '#from_array' do
@@ -114,7 +146,7 @@ module Ratistics
 
       context '#from_hash' do
 
-        it 'creates a Catalog from a Hash' do
+        it 'creates a Catalog from a hash' do
           catalog = Catalog.from_hash(hash_sample)
           catalog.size.should eq 9
 
@@ -122,12 +154,12 @@ module Ratistics
           catalog.size.should eq 3
         end
 
-        it 'creates an empty Catalog from an empty Hash' do
+        it 'creates an empty Catalog from an empty hash' do
           catalog = Catalog.from_hash({})
           catalog.should be_empty
         end
 
-        it 'creates a Catalog when given a Hash and a block' do
+        it 'creates a Catalog when given a hash and a block' do
           catalog = Catalog.from_hash(hash_sample_for_block){|item| item[:count]}
           catalog.size.should eq 9
         end
@@ -282,6 +314,19 @@ module Ratistics
 
     context '#include?' do
       pending
+    end
+
+    context 'raw' do
+
+      it 'returns a new, empty array when empty' do
+        catalog = Catalog.new
+        catalog.raw.object_id.should_not eq catalog.instance_variable_get(:@data).object_id
+      end
+
+      it 'returns a copy of the internal data when not empty' do
+        catalog = Catalog.from_hash(:one => 1, :two => 2, :three => 3)
+        catalog.raw.object_id.should_not eq catalog.instance_variable_get(:@data).object_id
+      end
     end
 
     context '#size' do

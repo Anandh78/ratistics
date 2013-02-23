@@ -2,10 +2,14 @@ module Ratistics
 
   class Catalog
 
-    attr_reader :data
-
-    def initialize
-      @data = []
+    def initialize(data=nil, opts={})
+      from = "from_#{opts[:from]}".to_sym
+      if Catalog.respond_to?(from)
+        @data = Catalog.send(from, data)
+        @data = @data.instance_variable_get(:@data)
+      else
+        @data = []
+      end
     end
 
     def self.from_hash(data = {}, &block)
@@ -79,6 +83,10 @@ module Ratistics
 
     def last
       @data.last
+    end
+
+    def raw
+      return @data.dup
     end
 
   end
