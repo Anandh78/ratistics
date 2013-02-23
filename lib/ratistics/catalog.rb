@@ -103,6 +103,8 @@ module Ratistics
       end
     end
 
+    alias :eq '=='.to_sym
+
     def [](index)
       datum = @data[index]
       return (datum.nil? ? nil : datum.dup)
