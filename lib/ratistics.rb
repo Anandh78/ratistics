@@ -12,6 +12,7 @@ require 'ratistics/sort'
 require 'ratistics/version'
 
 require 'ratistics/aggregates'
+require 'ratistics/catalog'
 require 'ratistics/frequencies'
 require 'ratistics/percentiles'
 
