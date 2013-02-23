@@ -4,15 +4,27 @@ module Ratistics
 
     def initialize(data=nil, opts={})
 
-      from = "from_#{opts[:from]}".to_sym
-      if Catalog.respond_to?(from)
-        @data = Catalog.send(from, data)
-        @data = @data.instance_variable_get(:@data)
-      elsif opts[:from].nil? && !data.nil?
-        @data = Catalog.from_catalog(data)
-        @data = @data.instance_variable_get(:@data)
-      else
+      if block_given?
+
         @data = []
+        data.each do |item|
+          @data << yield(item)
+        end
+
+      else
+        from = opts[:from]
+        from = :array if [:set, :list, :stack, :queue, :vector].include?(from)
+        from = "from_#{from}".to_sym
+
+        if Catalog.respond_to?(from)
+          @data = Catalog.send(from, data)
+          @data = @data.instance_variable_get(:@data)
+        elsif opts[:from].nil? && !data.nil?
+          @data = Catalog.from_catalog(data)
+          @data = @data.instance_variable_get(:@data)
+        else
+          @data = []
+        end
       end
     end
 

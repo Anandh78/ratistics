@@ -104,6 +104,19 @@ module Ratistics
           catalog = Catalog.new(hash_sample, :from => :bogus)
           catalog.should be_empty
         end
+
+        it 'uses the given block to create key/value pairs' do
+          sample = [
+            {:x => 1, :y => 2},
+            {:x => 3, :y => 4},
+            {:x => 5, :y => 6}
+          ]
+
+          expected = [ [1, 2], [3, 4], [5, 6] ]
+
+          catalog = Catalog.new(sample){|item| [ item[:x], item[:y] ] }
+          catalog.should eq expected
+        end
       end
 
       context '#from_array' do
@@ -240,11 +253,56 @@ module Ratistics
       end
 
       context 'with ActiveRecord', :ar => true do
-        pending
+
+        before(:all) { Racer.connect }
+
+        let(:racers) { Racer.all.freeze }
+
+        specify do
+          catalog = Catalog.new(racers){|r| [r.id, r.age] }
+          catalog.first.should eq [1, 22]
+          catalog.last.should eq [1633, 32]
+        end
       end
 
       context 'with Hamster' do
-        pending
+
+        let(:hash) { {1 => 18, 2 => 14, 3 => 16, 4 => 21 }.freeze }
+        let(:set) { Hamster.set(1, 18, 2, 14, 3, 16, 4, 21).freeze }
+        let(:list) { Hamster.list(1, 18, 2, 14, 3, 16, 4, 21).freeze }
+        let(:stack) { Hamster.stack(1, 18, 2, 14, 3, 16, 4, 21).freeze }
+        let(:queue) { Hamster.queue(1, 18, 2, 14, 3, 16, 4, 21).freeze }
+        let(:vector) { Hamster.vector(1, 18, 2, 14, 3, 16, 4, 21).freeze }
+
+        specify 'Hamster::hash' do
+          catalog = Catalog.new(hash, :from => :hash)
+          catalog.should eq [[1, 18], [2, 14], [3, 16], [4, 21]]
+        end
+
+        specify 'Hamster::set' do
+          catalog = Catalog.new(set, :from => :set)
+          catalog.size.should eq 4
+        end
+
+        specify 'Hamster::list' do
+          catalog = Catalog.new(list, :from => :list)
+          catalog.should eq [[1, 18], [2, 14], [3, 16], [4, 21]]
+        end
+
+        specify 'Hamster::stack' do
+          catalog = Catalog.new(stack, :from => :stack)
+          catalog.should eq [[21, 4], [16, 3], [14, 2], [18, 1]]
+        end
+
+        specify 'Hamster::queue' do
+          catalog = Catalog.new(queue, :from => :queue)
+          catalog.should eq [[1, 18], [2, 14], [3, 16], [4, 21]]
+        end
+
+        specify 'Hamster::vector' do
+          catalog = Catalog.new(vector, :from => :vector)
+          catalog.should eq [[1, 18], [2, 14], [3, 16], [4, 21]]
+        end
       end
     end
 
@@ -1130,14 +1188,6 @@ module Ratistics
       end
 
       context 'delete_if' do
-
-      #let(:sample) {
-        #[
-          #[7, 8],
-          #[17, 14],
-          #[47, 2]
-        #].freeze
-      #}
 
         it 'can yield the key/value pair on iteration' do
           catalog.delete_if {|item| item.last > 5}
