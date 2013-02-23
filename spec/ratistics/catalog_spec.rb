@@ -1063,11 +1063,113 @@ module Ratistics
 
     context 'deletion' do
 
-      specify 'delete'
+      let(:sample) {
+        [
+          [7, 8],
+          [17, 14],
+          [47, 2]
+        ].freeze
+      }
 
-      specify 'delete_at'
+      let(:catalog) { Catalog.new(sample) }
 
-      specify 'delete_if'
+      context 'delete' do
+
+        it 'deletes the specified item' do
+          item = catalog.delete([17, 14])
+          item.should eq [17, 14]
+          catalog.should eq [[7, 8], [47, 2]]
+        end
+
+        it 'deletes the item matching the given key/value pair' do
+          item = catalog.delete(17, 14)
+          item.should eq [17, 14]
+          catalog.should eq [[7, 8], [47, 2]]
+        end
+
+        it 'deletes the item matching the given one-item hash' do
+          item = catalog.delete({17 => 14})
+          item.should eq [17, 14]
+          catalog.should eq [[7, 8], [47, 2]]
+        end
+
+        it 'deletes the item matching the implied one-item hash' do
+          item = catalog.delete(17 => 14)
+          item.should eq [17, 14]
+          catalog.should eq [[7, 8], [47, 2]]
+        end
+
+        it 'returns nil if the item is not found' do
+          item = catalog.delete([1, 2])
+          item.should be_nil
+        end
+
+        it 'returns the result of the given block if the item is not found' do
+          item = catalog.delete([1, 2]){ 'not found' }
+          item.should eq 'not found'
+        end
+      end
+
+      context 'delete_at' do
+
+        it 'deletes the item at the specified index' do
+          item = catalog.delete_at(1)
+          item.should eq [17, 14]
+          catalog.should eq [[7, 8], [47, 2]]
+        end
+
+        it 'returns nil if the index is out of range' do
+          item = catalog.delete_at(100)
+          item.should be_nil
+        end
+
+        it 'returns the result of the given block if the index is out of range' do
+          item = catalog.delete_at(100){ 'not found' }
+          item.should eq 'not found'
+        end
+      end
+
+      context 'delete_if' do
+
+      #let(:sample) {
+        #[
+          #[7, 8],
+          #[17, 14],
+          #[47, 2]
+        #].freeze
+      #}
+
+        it 'can yield the key/value pair on iteration' do
+          catalog.delete_if {|item| item.last > 5}
+          catalog.should eq [[47, 2]]
+        end
+
+        it 'can yield the key and value separately on iteration' do
+          catalog.delete_if {|key, value| value > 5}
+          catalog.should eq [[47, 2]]
+        end
+
+        it 'removes the matched items' do
+          catalog.delete_if {|key, value| value > 5}
+          catalog.should eq [[47, 2]]
+        end
+
+        it 'does nothing on no matches' do
+          result = catalog.delete_if {|item| false }
+          result.should eq catalog
+        end
+
+        it 'returns self' do
+          result = catalog.delete_if {|key, value| value > 5}
+          result.object_id.should eq catalog.object_id
+        end
+
+        it 'raises an exception if a block is not given' do
+          lambda {
+            catalog.delete_if
+          }.should raise_error(ArgumentError)
+        end
+      end
 
     end
   end

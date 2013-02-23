@@ -320,6 +320,41 @@ module Ratistics
 
     alias :to_catalogue :to_catalog
 
+    def delete(key, value=nil, &block)
+      item = nil
+
+      if key && value
+        item = @data.delete([key, value])
+      elsif key.is_a? Array
+        item = @data.delete(key)
+      elsif key.is_a? Hash
+        item = @data.delete([key.keys.first, key.values.first])
+      end
+
+      item = yield if item.nil? && block_given?
+      return item
+    end
+
+    def delete_at(index)
+      item = @data.delete_at(index)
+      item = yield if item.nil? && block_given?
+      return item
+    end
+
+    def delete_if(&block)
+      raise ArgumentError.new('no block supplied') unless block_given?
+      if block.arity <= 1
+        items = @data.delete_if(&block)
+      else
+        items = []
+        @data.each do |key, value|
+          items << [key, value] if yield(key, value)
+        end
+        items.each {|item| @data.delete(item)}
+      end
+      return self
+    end
+
   end
 
   class Catalogue < Catalog; end
