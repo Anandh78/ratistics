@@ -163,6 +163,37 @@ module Ratistics
 
     alias :union :|
 
+    def push(item)
+      if item.is_a?(Hash) && item.size == 1
+        @data << [item.keys.first, item.values.first]
+        return self
+      elsif item.is_a?(Array) && item.size == 2
+        @data << item
+        return self
+      else
+        raise TypeError.new("can't convert #{other.class} into Catalog")
+      end
+    end
+
+    alias :<< :push
+    alias :append :push
+
+    def pop
+      if self.empty?
+        return nil
+      else
+        return @data.pop
+      end
+    end
+
+    def peek
+      if self.empty?
+        return nil
+      else
+        return @data.last.dup
+      end
+    end
+
   end
 
   class Catalogue < Catalog; end

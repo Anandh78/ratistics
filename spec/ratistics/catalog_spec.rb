@@ -292,6 +292,10 @@ module Ratistics
       end
     end
 
+    context '<==>' do
+      pending
+    end
+
     context '#[]' do
 
       it 'returns nil when empty' do
@@ -516,8 +520,73 @@ module Ratistics
       end   
     end
 
-    context '#<<' do
-      pending
+    #context '#<<' do
+      #pending
+    #end
+
+    context '#push' do
+
+      it 'returns the Catalog' do
+        catalog_1 = Catalog.new
+        catalog_2 = catalog_1.push([1, 2])
+        catalog_1.object_id.should eq catalog_2.object_id
+      end
+
+      it 'appends a two-element array onto the catalog' do
+        catalog = Catalog.new([[1, 1], [2, 2]])
+        catalog = catalog.push([3, 3])
+        catalog.should eq [[1, 1], [2, 2], [3, 3]]
+      end
+
+      it 'appends a one-element hash onto the catalog' do
+        catalog = Catalog.new([[1, 1], [2, 2]])
+        catalog = catalog.push({3 => 3})
+        catalog.should eq [[1, 1], [2, 2], [3, 3]]
+      end
+
+      it 'raises an error for an invalid datatype' do
+        lambda {
+          Catalog.new([1, 1], [2, 2]).push(:foo)
+        }.should raise_error(TypeError)
+      end
+    end
+
+    context '#pop' do
+
+      it 'returns nil when empty' do
+        Catalog.new.pop.should be_nil
+      end
+
+      it 'returns the last element' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        pop = catalog.pop
+        pop.should eq [3, 3]
+      end
+
+      it 'removes the last element' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog.pop
+        catalog.should eq [[1, 1], [2, 2]]
+      end
+    end
+
+    context '#peek' do
+
+      it 'returns nil when empty' do
+        Catalog.new.peek.should be_nil
+      end
+
+      it 'returns the last element' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        peek = catalog.pop
+        peek.should eq [3, 3]
+      end
+
+      it 'does not remove the last element' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog.peek
+        catalog.should eq [[1, 1], [2, 2], [3, 3]]
+      end
     end
 
     context '#keys' do
