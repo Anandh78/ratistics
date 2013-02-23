@@ -92,6 +92,13 @@ module Ratistics
           catalog.first.should eq catalog_sample.first
           catalog.last.should eq catalog_sample.last
         end
+        
+        it 'assumes the arguments are a catalog when no :from is given' do
+          catalog = Catalog.new(catalog_sample)
+          catalog.size.should eq 9
+          catalog.first.should eq catalog_sample.first
+          catalog.last.should eq catalog_sample.last
+        end
 
         it 'creates an empty Catalog when :from is unrecognized' do
           catalog = Catalog.new(hash_sample, :from => :bogus)
@@ -167,26 +174,56 @@ module Ratistics
 
       context '#from_catalog' do
 
-        it 'creates a Catalog from a catalog' do
-          catalog = Catalog.from_catalog(catalog_sample)
-          catalog.size.should eq 9
-          catalog.first.should eq catalog_sample.first
-          catalog.last.should eq catalog_sample.last
+        context 'creates a Catalog from a catalog' do
 
-          catalog = Catalog.from_catalog([:one, 1], [:two, 2], [:three, 3])
-          catalog.size.should eq 3
-          catalog.first.should eq [:one, 1]
-          catalog.last.should eq [:three, 3]
+          specify do
+            catalog = Catalog.from_catalog(catalog_sample)
+            catalog.size.should eq 9
+            catalog.first.should eq catalog_sample.first
+            catalog.last.should eq catalog_sample.last
+          end
 
-          catalog = Catalog.from_catalog([:one, 1], [:two, 2])
-          catalog.size.should eq 2
-          catalog.first.should eq [:one, 1]
-          catalog.last.should eq [:two, 2]
+          specify do
+            catalog = Catalog.from_catalog([:one, 1], [:two, 2], [:three, 3])
+            catalog.size.should eq 3
+            catalog.first.should eq [:one, 1]
+            catalog.last.should eq [:three, 3]
+          end
 
-          catalog = Catalog.from_catalog([:one, 1])
-          catalog.size.should eq 1
-          catalog.first.should eq [:one, 1]
-          catalog.last.should eq [:one, 1]
+          specify do
+            catalog = Catalog.from_catalog([[:one, 1], [:two, 2], [:three, 3]])
+            catalog.size.should eq 3
+            catalog.first.should eq [:one, 1]
+            catalog.last.should eq [:three, 3]
+          end
+
+          specify do
+            catalog = Catalog.from_catalog([:one, 1], [:two, 2])
+            catalog.size.should eq 2
+            catalog.first.should eq [:one, 1]
+            catalog.last.should eq [:two, 2]
+          end
+
+          specify do
+            catalog = Catalog.from_catalog([[:one, 1], [:two, 2]])
+            catalog.size.should eq 2
+            catalog.first.should eq [:one, 1]
+            catalog.last.should eq [:two, 2]
+          end
+
+          specify do
+            catalog = Catalog.from_catalog([:one, 1])
+            catalog.size.should eq 1
+            catalog.first.should eq [:one, 1]
+            catalog.last.should eq [:one, 1]
+          end
+
+          specify do
+            catalog = Catalog.from_catalog([[:one, 1]])
+            catalog.size.should eq 1
+            catalog.first.should eq [:one, 1]
+            catalog.last.should eq [:one, 1]
+          end
         end
 
         it 'creates an empty Catalog from an empty catalog' do
@@ -224,6 +261,34 @@ module Ratistics
         catalog_1 = Catalog.new
         catalog_2 = Catalog.from_hash(hash_sample)
         catalog_1.should_not eq catalog_2
+      end
+
+      it 'compares with an equal Catalog object' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_1.should == catalog_2
+      end
+
+      it 'compares with an equal catalog array' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = [[1, 1], [2, 2], [3, 3]]
+        catalog_1.should == catalog_2
+      end
+
+      it 'compares with a non-equal Catalog objects' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[1, 1], [2, 2], [3, 3], [4, 4]])
+        catalog_1.should_not == catalog_2
+      end
+
+      it 'compares with a non-equal catalog array' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = [[1, 1], [2, 2], [3, 3], [4, 4]]
+        catalog_1.should_not == catalog_2
+      end
+
+      it 'returns false when compared with any other object' do
+        Catalog.new.should_not == :foo
       end
     end
 
@@ -300,22 +365,158 @@ module Ratistics
     end
 
     context '#&' do
-      pending
+
+      it 'returns a new Catalog object' do
+        catalog_1 = Catalog.new
+        catalog_2 = Catalog.new
+        intersection = catalog_1 & catalog_2
+        intersection.object_id.should_not eq catalog_1.object_id
+        intersection.object_id.should_not eq catalog_2.object_id
+      end
+
+      it 'intersects two empty Catalogs' do
+        catalog_1 = Catalog.new
+        catalog_2 = Catalog.new
+        intersection = catalog_1 & catalog_2
+        intersection.should be_empty
+      end
+
+      it 'intersects an empty Catalog with a non-empty Catalog' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new
+        intersection = catalog_1 & catalog_2
+        intersection.should be_empty
+      end
+
+      it 'intersects two non-empty Catalogs' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[2, 2], [3, 3], [4, 4], [5, 5]])
+        intersection = catalog_1 & catalog_2
+        intersection.should eq [[2, 2], [3, 3]]
+      end
+
+      it 'intersects a Catalog object with a catalog' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = [[2, 2], [3, 3], [4, 4], [5, 5]]
+        intersection = catalog_1 & catalog_2
+        intersection.should eq [[2, 2], [3, 3]]
+      end
+
+      it 'removes duplicates when intersecting two non-empty Catalogs' do
+        catalog_1 = Catalog.new([[1, 1], [1, 1], [1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[1, 1], [3, 3], [4, 4], [5, 5]])
+        intersection = catalog_1 & catalog_2
+        intersection.should eq [[1, 1], [3, 3]]
+      end
+
+      it 'raises an error when given a non-Catalog object' do
+        lambda {
+          catalog_1 = Catalog.new([[1, 1], [1, 1], [1, 1], [2, 2], [3, 3]])
+          intersection = catalog_1 & :foo
+        }.should raise_error(TypeError)
+      end
     end
 
     context '#+' do
-      pending
+
+      it 'returns a new Catalog object' do
+        catalog_1 = Catalog.new
+        catalog_2 = Catalog.new
+        sum = catalog_1 + catalog_2
+        sum.object_id.should_not eq catalog_1.object_id
+        sum.object_id.should_not eq catalog_2.object_id
+      end
+
+      it 'adds two empty Catalogs' do
+        catalog_1 = Catalog.new
+        catalog_2 = Catalog.new
+        sum = catalog_1 + catalog_2
+        sum.should be_empty
+      end
+
+      it 'adds an empty Catalog with a non-empty Catalog' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new
+        sum = catalog_1 + catalog_2
+        sum.should eq [[1, 1], [2, 2], [3, 3]]
+      end
+
+      it 'adds two non-empty Catalogs' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[2, 2], [3, 3], [4, 4], [5, 5]])
+        sum = catalog_1 + catalog_2
+        sum.should eq [[1, 1], [2, 2], [3, 3], [2, 2], [3, 3], [4, 4], [5, 5]]
+      end
+
+      it 'adds a Catalog object with a catalog' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = [[2, 2], [3, 3], [4, 4], [5, 5]]
+        sum = catalog_1 + catalog_2
+        sum.should eq [[1, 1], [2, 2], [3, 3],[2, 2], [3, 3], [4, 4], [5, 5] ]
+      end
+
+      it 'raises an error when given a non-Catalog object' do
+        lambda {
+          catalog_1 = Catalog.new([[1, 1], [1, 1], [1, 1], [2, 2], [3, 3]])
+          sum = catalog_1 + :foo
+        }.should raise_error(TypeError)
+      end
     end
 
     context '#|' do
-      pending
+ 
+      it 'returns a new Catalog object' do
+        catalog_1 = Catalog.new
+        catalog_2 = Catalog.new
+        union = catalog_1 | catalog_2
+        union.object_id.should_not eq catalog_1.object_id
+        union.object_id.should_not eq catalog_2.object_id
+      end
+
+      it 'unions two empty Catalogs' do
+        catalog_1 = Catalog.new
+        catalog_2 = Catalog.new
+        union = catalog_1 | catalog_2
+        union.should be_empty
+      end
+
+      it 'unions an empty Catalog with a non-empty Catalog' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new
+        union = catalog_1 | catalog_2
+        union.should eq [[1, 1], [2, 2], [3, 3]]
+      end
+
+      it 'unions two non-empty Catalogs' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[4, 4], [5, 5]])
+        union = catalog_1 | catalog_2
+        union.should eq [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]
+      end
+
+      it 'unions a Catalog object with a catalog' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = [[4, 4], [5, 5]]
+        union = catalog_1 | catalog_2
+        union.should eq [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]
+      end
+
+      it 'removes duplicates when intersecting two non-empty Catalogs' do
+        catalog_1 = Catalog.new([[1, 1], [1, 1], [1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[1, 1], [3, 3], [4, 4], [5, 5]])
+        union = catalog_1 | catalog_2
+        union.should eq [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]]
+      end
+
+      it 'raises an error when given a non-Catalog object' do
+        lambda {
+          catalog_1 = Catalog.new([[1, 1], [1, 1], [1, 1], [2, 2], [3, 3]])
+          union = catalog_1 | :foo
+        }.should raise_error(TypeError)
+      end   
     end
 
     context '#<<' do
-      pending
-    end
-
-    context '#==' do
       pending
     end
 

@@ -3,9 +3,13 @@ module Ratistics
   class Catalog
 
     def initialize(data=nil, opts={})
+
       from = "from_#{opts[:from]}".to_sym
       if Catalog.respond_to?(from)
         @data = Catalog.send(from, data)
+        @data = @data.instance_variable_get(:@data)
+      elsif opts[:from].nil? && !data.nil?
+        @data = Catalog.from_catalog(data)
         @data = @data.instance_variable_get(:@data)
       else
         @data = []
@@ -39,15 +43,15 @@ module Ratistics
       return catalog
     end
 
-    def self.from_catalog(*args, &block)
+    def self.from_catalog(data, *args, &block)
       collected = []
 
-      if args.size > 1
-        data = args
-      elsif args.size == 1 && args.first.size == 2
-        data = args
-      else
-        data = args.first
+      if args.empty? && data.size == 2 && !data.first.is_a?(Array)
+        # Catalog.from_catalog([:one, 1])
+        data = [data]
+      elsif !args.empty?
+        #Catalog.from_catalog([:one, 1], [:two, 2], [:three, 3])
+        data = [data] + args
       end
 
       data.each do |item|
@@ -90,7 +94,13 @@ module Ratistics
     end
 
     def ==(other)
-      return (@data == other.instance_variable_get(:@data))
+      if other.is_a? Catalog
+        return (@data == other.instance_variable_get(:@data))
+      elsif other.is_a? Array
+        return (@data == other)
+      else
+        return false
+      end
     end
 
     def [](index)
@@ -112,6 +122,33 @@ module Ratistics
 
     def to_s
       return @data.to_s
+    end
+
+    def &(other)
+      other = other.instance_variable_get(:@data) if other.is_a?(Catalog)
+      if other.is_a? Array
+        return Catalog.from_catalog(@data & other)
+      else
+        raise TypeError.new("can't convert #{other.class} into Catalog")
+      end
+    end
+
+    def +(other)
+      other = other.instance_variable_get(:@data) if other.is_a?(Catalog)
+      if other.is_a? Array
+        return Catalog.from_catalog(@data + other)
+      else
+        raise TypeError.new("can't convert #{other.class} into Catalog")
+      end
+    end
+
+    def |(other)
+      other = other.instance_variable_get(:@data) if other.is_a?(Catalog)
+      if other.is_a? Array
+        return Catalog.from_catalog(@data | other)
+      else
+        raise TypeError.new("can't convert #{other.class} into Catalog")
+      end
     end
 
   end
