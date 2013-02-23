@@ -520,10 +520,6 @@ module Ratistics
       pending
     end
 
-    context '#at' do
-      pending
-    end
-
     context '#keys' do
       pending
     end

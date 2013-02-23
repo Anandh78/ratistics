@@ -103,12 +103,15 @@ module Ratistics
       end
     end
 
-    alias :eq '=='.to_sym
+    alias :eq :==
+    alias :equals :==
 
     def [](index)
       datum = @data[index]
       return (datum.nil? ? nil : datum.dup)
     end
+
+    alias :at :[]
 
     def []=(index, value)
       if (index >= 0 && index >= @data.size) || (index < 0 && index.abs > @data.size)
@@ -135,6 +138,8 @@ module Ratistics
       end
     end
 
+    alias :intersection :&
+
     def +(other)
       other = other.instance_variable_get(:@data) if other.is_a?(Catalog)
       if other.is_a? Array
@@ -144,6 +149,9 @@ module Ratistics
       end
     end
 
+    alias :add :+
+    alias :sum :+
+
     def |(other)
       other = other.instance_variable_get(:@data) if other.is_a?(Catalog)
       if other.is_a? Array
@@ -152,6 +160,8 @@ module Ratistics
         raise TypeError.new("can't convert #{other.class} into Catalog")
       end
     end
+
+    alias :union :|
 
   end
 
