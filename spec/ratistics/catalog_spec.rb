@@ -292,8 +292,49 @@ module Ratistics
       end
     end
 
-    context '<==>' do
-      pending
+    context '<=>' do
+
+      let(:low) { [[1, 1], [2, 2]] }
+      let(:high) { [[3, 3], [4, 4]] }
+
+      it 'returns a negative number when less than another Catalog' do
+        small = Catalog.new(low)
+        big = Catalog.new(high)
+        (small <=> big).should < 0
+      end
+
+      it 'returns a negative number when less than a catalog' do
+        small = Catalog.new(low)
+        (small <=> high).should < 0
+      end
+
+      it 'returns zero when equal to another Catalog' do
+        small = Catalog.new(low)
+        big = Catalog.new(low)
+        (small <=> big).should eq 0
+      end
+
+      it 'returns zero when equal to a catalog' do
+        small = Catalog.new(low)
+        (small <=> low).should eq 0
+      end
+
+      it 'returns a positive number when greater than another Catalog' do
+        small = Catalog.new(low)
+        big = Catalog.new(high)
+        (big <=> small).should > 0
+      end
+
+      it 'returns a positive number when greater than a catalog' do
+        big = Catalog.new(high)
+        (big <=> low).should > 0
+      end
+
+      it 'raises an error when compated to an invalid object' do
+        lambda {
+          Catalog.new <=> :foo
+        }.should raise_error(TypeError)
+      end
     end
 
     context '#[]' do
@@ -590,11 +631,29 @@ module Ratistics
     end
 
     context '#keys' do
-      pending
+
+      it 'returns an empty array when empty' do
+        Catalog.new.keys.should be_empty
+      end
+
+      it 'returns an array with all first elements in the catalog' do
+        catalog = Catalog.new([[0, 0], [0, 1], [1, 0], [1, 1], [2, 2], [3, 3]])
+        keys = catalog.keys
+        keys.should eq [0, 0, 1, 1, 2, 3]
+      end
     end
 
     context '#values' do
-      pending
+
+      it 'returns an empty array when empty' do
+        Catalog.new.values.should be_empty
+      end
+
+      it 'returns an array with all last elements in the catalog' do
+        catalog = Catalog.new([[0, 0], [0, 1], [1, 0], [1, 1], [2, 2], [3, 3]])
+        values = catalog.values
+        values.should eq [0, 1, 0, 1, 2, 3]
+      end
     end
 
     context '#first' do

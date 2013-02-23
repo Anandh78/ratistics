@@ -106,6 +106,18 @@ module Ratistics
     alias :eq :==
     alias :equals :==
 
+    def <=>(other)
+      other = other.instance_variable_get(:@data) if other.is_a?(Catalog)
+      if other.is_a? Array
+        return @data <=> other
+      else
+        raise TypeError.new("can't convert #{other.class} into Catalog")
+      end
+    end
+
+    alias :compare :<=>
+    alias :compare_to :<=>
+
     def [](index)
       datum = @data[index]
       return (datum.nil? ? nil : datum.dup)
@@ -192,6 +204,14 @@ module Ratistics
       else
         return @data.last.dup
       end
+    end
+
+    def keys
+      return @data.collect{|item| item.first}
+    end
+
+    def values
+      return @data.collect{|item| item.last}
     end
 
   end
