@@ -2,6 +2,8 @@ module Ratistics
 
   class Catalog
 
+    attr_reader :data
+
     def initialize
       @data = []
     end
@@ -33,8 +35,16 @@ module Ratistics
       return catalog
     end
 
-    def self.from_catalog(data, &block)
+    def self.from_catalog(*args, &block)
       collected = []
+
+      if args.size > 1
+        data = args
+      elsif args.size == 1 && args.first.size == 2
+        data = args
+      else
+        data = args.first
+      end
 
       data.each do |item|
         if block_given?

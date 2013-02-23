@@ -141,11 +141,20 @@ module Ratistics
           catalog.first.should eq catalog_sample.first
           catalog.last.should eq catalog_sample.last
 
-          #catalog = Catalog.from_hash([:one, 1], [:two, 2], [:three, 3])
-          #catalog.size.should eq 3
+          catalog = Catalog.from_catalog([:one, 1], [:two, 2], [:three, 3])
+          catalog.size.should eq 3
+          catalog.first.should eq [:one, 1]
+          catalog.last.should eq [:three, 3]
 
-          #catalog = Catalog.from_hash([:one, 1])
-          #catalog.size.should eq 1
+          catalog = Catalog.from_catalog([:one, 1], [:two, 2])
+          catalog.size.should eq 2
+          catalog.first.should eq [:one, 1]
+          catalog.last.should eq [:two, 2]
+
+          catalog = Catalog.from_catalog([:one, 1])
+          catalog.size.should eq 1
+          catalog.first.should eq [:one, 1]
+          catalog.last.should eq [:one, 1]
         end
 
         it 'creates an empty Catalog from an empty catalog' do
