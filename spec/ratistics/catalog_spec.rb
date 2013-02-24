@@ -350,6 +350,50 @@ module Ratistics
       end
     end
 
+    context '#!=' do
+      
+      it 'returns false for equal catalogs' do
+        catalog_1 = Catalog.from_hash(hash_sample)
+        catalog_2 = Catalog.from_hash(hash_sample)
+        (catalog_1 != catalog_2).should be_false
+      end
+
+      
+      it 'returns true for unequal catalogs' do
+        catalog_1 = Catalog.from_hash(hash_sample)
+        catalog_2 = Catalog.new
+        (catalog_1 != catalog_2).should be_true
+      end
+
+      it 'compares with an equal Catalog object' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        (catalog_1 != catalog_2).should be_false
+      end
+
+      it 'compares with an equal catalog array' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = [[1, 1], [2, 2], [3, 3]]
+        (catalog_1 != catalog_2).should be_false
+      end
+
+      it 'compares with a non-equal Catalog objects' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[1, 1], [2, 2], [3, 3], [4, 4]])
+        (catalog_1 != catalog_2).should be_true
+      end
+
+      it 'compares with a non-equal catalog array' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = [[1, 1], [2, 2], [3, 3], [4, 4]]
+        (catalog_1 != catalog_2).should be_true
+      end
+
+      it 'returns true when compared with any other object' do
+        (Catalog.new != :foo).should be_true
+      end
+    end
+
     context '<=>' do
 
       let(:low) { [[1, 1], [2, 2]] }
