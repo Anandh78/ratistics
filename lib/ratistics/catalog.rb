@@ -264,7 +264,7 @@ module Ratistics
         @data << item
         return self
       else
-        raise TypeError.new("can't convert #{other.class} into Catalog")
+        raise TypeError.new("can't convert #{item.class} into Catalog")
       end
     end
 

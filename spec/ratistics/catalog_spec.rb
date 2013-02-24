@@ -641,7 +641,7 @@ module Ratistics
 
       it 'raises an error for an invalid datatype' do
         lambda {
-          Catalog.new([1, 1], [2, 2]).push(:foo)
+          Catalog.new.push(:foo)
         }.should raise_error(TypeError)
       end
     end
@@ -832,6 +832,11 @@ module Ratistics
       it 'returns false when not found' do
         catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
         catalog.include?([4, 4]).should be_false
+      end
+
+      it 'returns false when given an invalid lookup item' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog.include?(:foo).should be_false
       end
     end
 
