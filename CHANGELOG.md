@@ -13,6 +13,7 @@ Release Date: TBD
   * Collection.hash_catalog(alias: hash_catalogue)
 * Added Inflect module
 * Added NilSampleError
+* Added Catalog (alias: Catalogue) class
 * Greater consistency of return values and processing options
 * Added more input and output options:
 * :as => :hash/:map/:array/:catalog/:catalogue to probability functions

@@ -1,8 +1,29 @@
 module Ratistics
 
+  # A collection of key/value pairs similar to a hash but ordered.
+  # Access is via index (like an array) rather than by key (like a
+  # hash). Supports duplicate keys. Indexing starts at zero.
   class Catalog
 
-    def initialize(data=nil, opts={})
+    # Create a new Catalog from the given data. When +data+ is nil
+    # or an empty collection the resulting Catalog will be empty.
+    # When +data+ is an array, hash, or catalog array the appropriate
+    # +#from_+ factory method will be called. The +:from+ option is
+    # used to indicate the type of the source data.
+    #
+    # If a block is given each value in the from the source array will
+    # be passed to the block and the result will be stored as the value
+    # in the Catalog.
+    #
+    # @params [Array, Hash, Catalog] data the data to construct the
+    #   Catalog from
+    # @param [Hash] opts processing options
+    # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [Symbol] :from the type of the data source. Valid values
+    #   are :catalog/:catalogue, :hash, :array, (Hamster) :set, :list,
+    #   :stack, :queue, :vector (default :catalog).
+    def initialize(data=nil, opts={}, &block)
 
       if block_given?
 
@@ -28,6 +49,10 @@ module Ratistics
       end
     end
 
+    # Creates a new Catalog object from a hash. Each key/value pair in the
+    # hash will be converted to a key/value array in the new Catalog. If a
+    # block is given each value in the array will be passed to the block
+    # and the result will be stored as the value in the Catalog.
     def self.from_hash(data = {}, &block)
       collected = []
       data.each do |key, value|
@@ -39,6 +64,11 @@ module Ratistics
       return catalog
     end
 
+    # Creates a new catalog object from an array. Each successive pair of
+    # elements will become a key/value pair in the new Catalog. If the source
+    # array has an odd number of elements the last element will be discarded.
+    # If a block is given each element in the source array will be passed to
+    # the block and the result will be stored in the new Catalog.
     def self.from_array(*args, &block)
       collected = []
       data = args.flatten
@@ -55,6 +85,11 @@ module Ratistics
       return catalog
     end
 
+    # Creates a new Catalog object from an array of key/value pairs.
+    # Each key/value pair in the source array will be stored in the new
+    # Catalog. If a block is given each value in the from the source array
+    # will be passed to the block and the result will be stored as the
+    # value in the Catalog.
     def self.from_catalog(data, *args, &block)
       collected = []
 
@@ -106,10 +141,6 @@ module Ratistics
     # the first form returns nil.
     def last
       @data.last
-    end
-
-    def raw
-      return @data.dup
     end
 
     # Equality—Two arrays are equal if they contain the same number of
@@ -176,6 +207,7 @@ module Ratistics
       end
     end
 
+    # Returns a string representation of Catalog.
     def to_s
       return @data.to_s
     end
@@ -239,8 +271,7 @@ module Ratistics
     alias :append :push
 
     # Removes the last element from self and returns it, or nil if the
-    # array is empty. If a number n is given, returns an array of the last
-    # n elements (or less) just like array.slice!(-n, n) does.
+    # Catalog is empty.
     def pop
       if self.empty?
         return nil
@@ -249,6 +280,8 @@ module Ratistics
       end
     end
 
+    # Copies the last element from self and returns it, or nil if the
+    # Catalog is empty.
     def peek
       if self.empty?
         return nil
@@ -331,7 +364,8 @@ module Ratistics
     end
 
     # Deletes the element(s) given by an index (optionally with a length)
-    # or by a range. Returns the deleted object, subarray, or nil if the index is out of range.
+    # or by a range. Returns the deleted object, subarray, or nil if the
+    # index is out of range.
     def slice!(index, length=nil)
       if length.nil?
         catalog = @data.slice!(index)
@@ -341,21 +375,27 @@ module Ratistics
       return Catalog.new(catalog)
     end
 
+    # Return a new Catalog created by sorting self according to the natural
+    # sort order of the keys.
     def sort_by_key
       sorted = @data.sort{|a, b| a.first <=> b.first}
       return Catalog.new(sorted)
     end
 
+    # Sort self according to the natural sort order of the keys. Returns self.
     def sort_by_key!
       sorted = @data.sort!{|a, b| a.first <=> b.first}
       return self
     end
 
+    # Return a new Catalog created by sorting self according to the natural
+    # sort order of the values.
     def sort_by_value
       sorted = @data.sort{|a, b| a.last <=> b.last}
       return Catalog.new(sorted)
     end
 
+    # Sort self according to the natural sort order of the values. Returns self.
     def sort_by_value!
       sorted = @data.sort!{|a, b| a.last <=> b.last}
       return self
@@ -379,14 +419,15 @@ module Ratistics
       return self
     end
 
+    # Returns a new array that is a one-dimensional flattening of self.
     def to_a
-      catalog = []
-      @data.each do |item|
-        catalog << item.first << item.last
-      end
-      return catalog
+      return @data.flatten
     end
 
+    # Returns a new hash by converting each key/value pair in self into
+    # a key/value pair in the hash. When duplicate keys are encountered
+    # the last value associated with that key is kept and the others are
+    # discarded.
     def to_hash
       catalog = {}
       @data.each do |item|
@@ -395,6 +436,8 @@ module Ratistics
       return catalog
     end
 
+    # Returns a new array that is the dat equivalent of self where each
+    # key/value pair is an two-element array within the returned array.
     def to_catalog
       return @data.dup
     end
@@ -441,7 +484,6 @@ module Ratistics
       end
       return self
     end
-
   end
 
   class Catalogue < Catalog; end

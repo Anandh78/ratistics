@@ -445,12 +445,12 @@ module Ratistics
 
       it 'updates the index when given a valid positive index' do
         catalog[1] = [:foo, :bar]
-        catalog.raw.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+        catalog.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
       end
 
       it 'updates the index when given an invalid negative index' do
         catalog[-2] = [:foo, :bar]
-        catalog.raw.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+        catalog.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
       end
 
       it 'raises an exception when given an invalid positive index' do
@@ -832,20 +832,6 @@ module Ratistics
       it 'returns false when not found' do
         catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
         catalog.include?([4, 4]).should be_false
-      end
-
-    end
-
-    context 'raw' do
-
-      it 'returns a new, empty array when empty' do
-        catalog = Catalog.new
-        catalog.raw.object_id.should_not eq catalog.instance_variable_get(:@data).object_id
-      end
-
-      it 'returns a copy of the internal data when not empty' do
-        catalog = Catalog.from_hash(:one => 1, :two => 2, :three => 3)
-        catalog.raw.object_id.should_not eq catalog.instance_variable_get(:@data).object_id
       end
     end
 

@@ -186,6 +186,7 @@ When working with sets of complex data use blocks to process the data without co
 #### Classes
 
 * Aggregates
+* Catalog (alias: Catalogue)
 * Frequencies
 * Percentiles
 
