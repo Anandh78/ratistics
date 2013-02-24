@@ -4,6 +4,7 @@ module Ratistics
   # Access is via index (like an array) rather than by key (like a
   # hash). Supports duplicate keys. Indexing starts at zero.
   class Catalog
+    include Enumerable
 
     # Create a new Catalog from the given data. When +data+ is nil
     # or an empty collection the resulting Catalog will be empty.
