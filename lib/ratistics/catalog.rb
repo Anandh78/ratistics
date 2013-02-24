@@ -180,6 +180,8 @@ module Ratistics
       return @data.to_s
     end
 
+    # Set Intersection—Returns a new array containing elements common to the two
+    # arrays, with no duplicates.
     def &(other)
       other = other.instance_variable_get(:@data) if other.is_a?(Catalog)
       if other.is_a? Array
@@ -191,6 +193,8 @@ module Ratistics
 
     alias :intersection :&
 
+    # Concatenation—Returns a new array built by concatenating the two arrays
+      # together to produce a third array.
     def +(other)
       other = other.instance_variable_get(:@data) if other.is_a?(Catalog)
       if other.is_a? Array
@@ -203,6 +207,8 @@ module Ratistics
     alias :add :+
     alias :sum :+
 
+    # Set Union—Returns a new array by joining this array with other_array,
+    # removing duplicates.
     def |(other)
       other = other.instance_variable_get(:@data) if other.is_a?(Catalog)
       if other.is_a? Array
@@ -214,6 +220,9 @@ module Ratistics
 
     alias :union :|
 
+    # Append—Pushes the given object(s) on to the end of this array.
+    # This expression returns the array itself, so several appends
+    # may be chained together.
     def push(item)
       if item.is_a?(Hash) && item.size == 1
         @data << [item.keys.first, item.values.first]
@@ -229,6 +238,9 @@ module Ratistics
     alias :<< :push
     alias :append :push
 
+    # Removes the last element from self and returns it, or nil if the
+    # array is empty. If a number n is given, returns an array of the last
+    # n elements (or less) just like array.slice!(-n, n) does.
     def pop
       if self.empty?
         return nil
@@ -245,38 +257,53 @@ module Ratistics
       end
     end
 
+    # Returns a new array populated with the keys from this hash.
+    # See also Hash#values.
     def keys
       return @data.collect{|item| item.first}
     end
 
+    # Returns a new array populated with the values from hsh.
+    # See also Hash#keys.
     def values
       return @data.collect{|item| item.last}
     end
 
+    # Calls block once for each key in hsh, passing the key and value
+    # to the block as a two-element array. Because of the assignment
+    # semantics of block parameters, these elements will be split out
+    # if the block has two formal parameters. Also see Hash.each_pair,
+    # which will be marginally more efficient for blocks with two
+    # parameters.
     def each(&block)
       @data.each do |item|
         yield(item)
       end
     end
 
+    # Calls block once for each key in hsh, passing the key and value as parameters.
     def each_pair(&block)
       @data.each do |item|
         yield(item.first, item.last)
       end
     end
 
+    # Calls block once for each key in hsh, passing the key as a parameter.
     def each_key(&block)
       @data.each do |item|
         yield(item.first)
       end
     end
 
+    # Calls block once for each key in hsh, passing the value as a parameter.
     def each_value(&block)
       @data.each do |item|
         yield(item.last)
       end
     end
 
+    # Returns true if the given object is present in self (that is,
+    # if any object == anObject), false otherwise.
     def include?(key=nil, value=nil)
       if key && value
         return @data.include?([key, value])
@@ -289,6 +316,11 @@ module Ratistics
       end
     end
 
+    # Element Reference—Returns the element at index, or returns a
+    # subarray starting at start and continuing for length elements,
+    # or returns a subarray specified by range. Negative indices count
+    # backward from the end of the array (-1 is the last element).
+    # Returns nil if the index (or starting index) are out of range.
     def slice(index, length=nil)
       if length.nil?
         catalog = @data.slice(index)
@@ -298,6 +330,8 @@ module Ratistics
       return Catalog.new(catalog)
     end
 
+    # Deletes the element(s) given by an index (optionally with a length)
+    # or by a range. Returns the deleted object, subarray, or nil if the index is out of range.
     def slice!(index, length=nil)
       if length.nil?
         catalog = @data.slice!(index)
@@ -327,11 +361,19 @@ module Ratistics
       return self
     end
 
+    # Returns a new array created by sorting self. Comparisons for
+    # the sort will be done using the <=> operator or using an
+    # optional code block. The block implements a comparison between
+    # a and b, returning -1, 0, or +1. See also Enumerable#sort_by.
     def sort(&block)
       sorted = @data.sort(&block)
       return Catalog.new(sorted)
     end
 
+    # Sorts self. Comparisons for the sort will be done using the <=>
+    # operator or using an optional code block. The block implements a
+    # comparison between a and b, returning -1, 0, or +1.
+    # See also Enumerable#sort_by.
     def sort!(&block)
       sorted = @data.sort!(&block)
       return self
@@ -359,6 +401,9 @@ module Ratistics
 
     alias :to_catalogue :to_catalog
 
+    # Deletes items from self that are equal to obj. If the item is
+    # not found, returns nil. If the optional code block is given,
+    # returns the result of block if the item is not found.
     def delete(key, value=nil, &block)
       item = nil
 
@@ -374,12 +419,15 @@ module Ratistics
       return item
     end
 
+    # Deletes the element at the specified index, returning that element,
+    # or nil if the index is out of range. See also Array#slice!.
     def delete_at(index)
       item = @data.delete_at(index)
       item = yield if item.nil? && block_given?
       return item
     end
 
+    # Deletes every element of self for which block evaluates to true.
     def delete_if(&block)
       raise ArgumentError.new('no block supplied') unless block_given?
       if block.arity <= 1
