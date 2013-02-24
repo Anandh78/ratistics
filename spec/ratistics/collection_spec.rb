@@ -57,32 +57,32 @@ module Ratistics
       end
     end
 
-    context '#catalog' do
+    context '#index_and_catalog' do
 
       let(:sample) { [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze }
       let(:expected) { [ [0, 13], [1, 18], [2, 13], [3, 14], [4, 13], [5, 16], [6, 14], [7, 21], [8, 13] ].freeze }
 
-      it 'returns an empty array when given a nil sample' do
-        Collection.catalog(nil).should eq []
+      it 'returns an empty catalog when given a nil sample' do
+        Collection.index_and_catalog(nil).should eq []
       end
 
-      it 'returns an empty array when given an empty sample' do
-        Collection.catalog([].freeze).should eq []
+      it 'returns an empty catalog when given an empty sample' do
+        Collection.index_and_catalog([].freeze).should eq []
       end
 
-      it 'returns an array when given a valid sample' do
-        cataloged = Collection.catalog(sample)
+      it 'returns an catalog when given a valid sample' do
+        cataloged = Collection.index_and_catalog(sample)
         cataloged.should eq expected
       end
 
-      it 'returns an array when given a sample with a block' do
+      it 'returns an catalog when given a sample with a block' do
         sample = [
           {:count => 13}, {:count => 18}, {:count => 13},
           {:count => 14}, {:count => 13}, {:count => 16},
           {:count => 14}, {:count => 21}, {:count => 13}
         ].freeze
 
-        cataloged = Collection.catalog(sample){|item| item[:count]}
+        cataloged = Collection.index_and_catalog(sample){|item| item[:count]}
         cataloged.should eq expected
       end
 
@@ -92,7 +92,7 @@ module Ratistics
           Racer.connect
           sample = Racer.all
 
-          cataloged = Collection.catalog(sample){|r| r.age}
+          cataloged = Collection.index_and_catalog(sample){|r| r.age}
           cataloged.size.should eq sample.size
           index = 0
           cataloged.each do |item|
@@ -107,7 +107,7 @@ module Ratistics
 
         specify do
           vector = Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze
-          cataloged = Collection.catalog(vector)
+          cataloged = Collection.index_and_catalog(vector)
           cataloged.should eq expected
         end
       end

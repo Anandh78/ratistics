@@ -50,7 +50,7 @@ module Ratistics
     # @param [Block] block optional block for per-item processing
     #
     # @return [Array] an array of zero or more items
-    def catalog(data, opts={}, &block)
+    def index_and_catalog(data, opts={}, &block)
       return [] if data.nil?
       sample = []
       index = 0
@@ -62,7 +62,7 @@ module Ratistics
       return sample
     end
 
-    alias :catalogue :catalog
+    alias :index_and_catalogue :index_and_catalog
 
     # Convert a hash to catalog.
     # 
