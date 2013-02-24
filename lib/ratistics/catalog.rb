@@ -83,20 +83,27 @@ module Ratistics
       alias :from_catalogue :from_catalog
     end
 
+    # Returns true if self array contains no elements.
     def empty?
       size == 0
     end
 
-    def size
-      @data.size
+    # Returns the number of elements in self. May be zero.
+    def length
+      @data.length
     end
 
-    alias :length :size
+    alias :size :length
 
+    # Returns the first element, or the first n elements, of the array.
+    # If the array is empty, the first form returns nil, and the second
+    # form returns an empty array.
     def first
       @data.first
     end
 
+    # Returns the last element(s) of self. If the array is empty,
+    # the first form returns nil.
     def last
       @data.last
     end
@@ -105,6 +112,9 @@ module Ratistics
       return @data.dup
     end
 
+    # Equality—Two arrays are equal if they contain the same number of
+    # elements and if each element is equal to (according to Object.==)
+    # the corresponding element in the other array.
     def ==(other)
       if other.is_a? Catalog
         return (@data == other.instance_variable_get(:@data))
@@ -116,8 +126,17 @@ module Ratistics
     end
 
     alias :eq :==
+    alias :equal :==
     alias :equals :==
 
+    # Comparison—Returns an integer (-1, 0, or +1) if this array is less
+    # than, equal to, or greater than other_ary. Each object in each
+    # array is compared (using <=>). If any value isn’t equal, then that
+    # inequality is the return value. If all the values found are equal,
+    # then the return is based on a comparison of the array lengths. Thus,
+    # two arrays are “equal” according to Array#<=> if and only if they have
+    # the same length and the value of each element is equal to the value of
+    # the corresponding element in the other array.
     def <=>(other)
       other = other.instance_variable_get(:@data) if other.is_a?(Catalog)
       if other.is_a? Array
@@ -130,6 +149,7 @@ module Ratistics
     alias :compare :<=>
     alias :compare_to :<=>
 
+    # Returns a new array populated with the given objects.
     def [](index)
       datum = @data[index]
       return (datum.nil? ? nil : datum.dup)
@@ -137,6 +157,13 @@ module Ratistics
 
     alias :at :[]
 
+    # Element Assignment—Sets the element at index, or replaces a subarray starting
+    # at start and continuing for length elements, or replaces a subarray specified
+    # by range. If indices are greater than the current capacity of the array, the
+    # array grows automatically. A negative indices will count backward from the end
+    # of the array. Inserts elements if length is zero. An IndexError is raised if a
+    # negative index points past the beginning of the array. See also Array#push,
+    # and Array#unshift.
     def []=(index, value)
       if (index >= 0 && index >= @data.size) || (index < 0 && index.abs > @data.size)
         raise ArgumentError.new('index must reference an existing element')
