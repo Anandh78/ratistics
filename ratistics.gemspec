@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+require 'date'
 
 load File.join(File.dirname(__FILE__), 'lib/ratistics/version.rb')
 

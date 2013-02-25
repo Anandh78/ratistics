@@ -274,9 +274,11 @@ module Ratistics
         let(:queue) { Hamster.queue(1, 18, 2, 14, 3, 16, 4, 21).freeze }
         let(:vector) { Hamster.vector(1, 18, 2, 14, 3, 16, 4, 21).freeze }
 
-        specify 'Hamster::hash' do
-          catalog = Catalog.new(hash, :from => :hash)
-          catalog.should eq [[1, 18], [2, 14], [3, 16], [4, 21]]
+        if RUBY_VERSION >= '1.9'
+          specify 'Hamster::hash' do
+            catalog = Catalog.new(hash, :from => :hash)
+            catalog.should eq [[1, 18], [2, 14], [3, 16], [4, 21]]
+          end
         end
 
         specify 'Hamster::set' do
@@ -489,12 +491,22 @@ module Ratistics
 
       it 'updates the index when given a valid positive index' do
         catalog[1] = [:foo, :bar]
-        catalog.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+        if RUBY_VERSION < '1.9'
+          catalog.size.should eq 3
+          catalog[1].should eq [:foo, :bar]
+        else
+          catalog.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+        end
       end
 
       it 'updates the index when given an invalid negative index' do
         catalog[-2] = [:foo, :bar]
-        catalog.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+        if RUBY_VERSION < '1.9'
+          catalog.size.should eq 3
+          catalog[1].should eq [:foo, :bar]
+        else
+          catalog.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+        end
       end
 
       it 'raises an exception when given an invalid positive index' do
@@ -1148,9 +1160,12 @@ module Ratistics
 
       context '#to_s' do
 
-        specify { Catalog.new.to_s.should eq '[]' }
-
-        specify { Catalog.from_hash(:one => 1, :two => 2).to_s.should eq '[[:one, 1], [:two, 2]]' }
+        if RUBY_VERSION < '1.9'
+          specify { Catalog.new.to_s.should eq '' }
+        else
+          specify { Catalog.new.to_s.should eq '[]' }
+          specify { Catalog.from_hash(:one => 1, :two => 2).to_s.should eq '[[:one, 1], [:two, 2]]' }
+        end
       end
     end
 

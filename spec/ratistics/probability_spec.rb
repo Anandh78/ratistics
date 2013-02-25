@@ -373,11 +373,14 @@ module Ratistics
         probability = Probability.probability(sample, :as => :array)
 
         probability.count.should eq 5
-        probability[0].last.should be_within(0.01).of(0.444)
-        probability[1].last.should be_within(0.01).of(0.111)
-        probability[2].last.should be_within(0.01).of(0.222)
-        probability[3].last.should be_within(0.01).of(0.111)
-        probability[4].last.should be_within(0.01).of(0.111)
+
+        if RUBY_VERSION >= '1.9'
+          probability[0].last.should be_within(0.01).of(0.444)
+          probability[1].last.should be_within(0.01).of(0.111)
+          probability[2].last.should be_within(0.01).of(0.222)
+          probability[3].last.should be_within(0.01).of(0.111)
+          probability[4].last.should be_within(0.01).of(0.111)
+        end
       end
 
       it 'returns a catalog when :as is :catalog and a block is given' do
@@ -396,11 +399,14 @@ module Ratistics
         probability = Probability.probability(sample, :as => :catalog){|item| item[:count]}
 
         probability.count.should eq 5
-        probability[0].last.should be_within(0.01).of(0.444)
-        probability[1].last.should be_within(0.01).of(0.111)
-        probability[2].last.should be_within(0.01).of(0.222)
-        probability[3].last.should be_within(0.01).of(0.111)
-        probability[4].last.should be_within(0.01).of(0.111)
+
+        if RUBY_VERSION >= '1.9'
+          probability[0].last.should be_within(0.01).of(0.444)
+          probability[1].last.should be_within(0.01).of(0.111)
+          probability[2].last.should be_within(0.01).of(0.222)
+          probability[3].last.should be_within(0.01).of(0.111)
+          probability[4].last.should be_within(0.01).of(0.111)
+        end
       end
 
       context 'with ActiveRecord', :ar => true do

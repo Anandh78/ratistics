@@ -15,7 +15,7 @@ gem install bundler &>/dev/null
 bundle install &>/dev/null
 rake spec
 
-rvm use ruby-2.0.0-rc1@ratistics --create
+rvm use ruby-2.0.0-p0@ratistics --create
 gem install bundler &>/dev/null 
 bundle install &>/dev/null
 rake spec
