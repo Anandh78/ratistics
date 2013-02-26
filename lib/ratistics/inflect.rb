@@ -123,6 +123,5 @@ module Ratistics
       fname = fname.gsub(/#{extname}$/, '') if opts[:chomp] == true
       return fname.strip + '.' + ext.to_s.gsub(/^\./, '')
     end
-
   end
 end

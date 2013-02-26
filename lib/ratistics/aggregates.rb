@@ -58,11 +58,11 @@ module Ratistics
 
       if ! item.nil?
         @data.each do |datum|
-          count = count + 1 if datum == item
+          count += 1 if datum == item
         end
       elsif block_given?
         @data.each do |datum|
-          count = count + 1 if yield(datum)
+          count += 1 if yield(datum)
         end
       else
         count = @data.length
@@ -138,6 +138,5 @@ module Ratistics
     def range
       @range ||= Distribution.range(@data)
     end
-
   end
 end

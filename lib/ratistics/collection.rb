@@ -57,7 +57,7 @@ module Ratistics
       data.each do |datum|
         datum = yield(datum) if block_given?
         sample << [index, datum]
-        index = index + 1
+        index += 1
       end
       return sample
     end
@@ -237,6 +237,5 @@ module Ratistics
       end
       return slice
     end
-
   end
 end
