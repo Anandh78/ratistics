@@ -1,7 +1,8 @@
-# -*- encoding: utf-8 -*-
-require 'date'
+$LOAD_PATH << File.expand_path("../lib", __FILE__)
 
-load File.join(File.dirname(__FILE__), 'lib/ratistics/version.rb')
+require 'ratistics/version'
+require 'date'
+require 'rbconfig'
 
 Gem::Specification.new do |s|
   s.name        = 'ratistics'
@@ -46,16 +47,19 @@ Gem::Specification.new do |s|
   # test alternate collection classes
   s.add_development_dependency 'hamster'
 
-  # test active_record collections
-  s.add_development_dependency 'standalone_migrations'
-  s.add_development_dependency 'activerecord', '~> 3.2.0'
-  s.add_development_dependency 'sqlite3'
+  unless RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i
 
-  # create API documentation
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'yard'
-  s.add_development_dependency 'redcarpet'
-  #s.add_development_dependency 'github-markup'
+    # test active_record collections
+    s.add_development_dependency 'standalone_migrations'
+    s.add_development_dependency 'activerecord', '~> 3.2.0'
+    s.add_development_dependency 'sqlite3'
+
+    # create API documentation
+    s.add_development_dependency 'rake'
+    s.add_development_dependency 'yard'
+    s.add_development_dependency 'redcarpet'
+    #s.add_development_dependency 'github-markup'
+  end
 
   # testing
   s.add_development_dependency 'rspec'
