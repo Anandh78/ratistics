@@ -3,6 +3,16 @@ module Ratistics
   module Collection
     extend self
 
+    def random_sample(size, opts={})
+      min = opts[:min].to_i
+      max = opts[:max] || 100
+      sample = []
+      size.times do
+        sample << rand(max-min) + min
+      end
+      return sample
+    end
+
     # Collect sample data from a generic collection, processing each item
     # with a block when given. Returns an array of the items from +data+
     # in order.
