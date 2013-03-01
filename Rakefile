@@ -33,3 +33,7 @@ Dir.glob('tasks/**/*.rake').each do|rakefile|
 end
 
 task :default => [:spec]
+#task :default do
+  #puts `make`
+  #fail if $? != 0
+#end
