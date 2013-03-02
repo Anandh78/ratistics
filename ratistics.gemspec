@@ -47,7 +47,7 @@ Gem::Specification.new do |s|
   # test alternate collection classes
   s.add_development_dependency 'hamster'
 
-  unless RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i
+  #unless RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i
 
     # test active_record collections
     s.add_development_dependency 'standalone_migrations'
@@ -59,7 +59,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency 'yard'
     s.add_development_dependency 'redcarpet'
     #s.add_development_dependency 'github-markup'
-  end
+  #end
 
   # testing
   s.add_development_dependency 'rspec'
