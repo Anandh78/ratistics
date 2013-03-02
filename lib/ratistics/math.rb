@@ -248,9 +248,9 @@ module Ratistics
       sum = 0
       (lower..upper).each do |i|
         if block_given?
-          sum = sum + yield(data[i])
+          sum += yield(data[i])
         else
-          sum = sum + data[i]
+          sum += data[i]
         end
       end
 

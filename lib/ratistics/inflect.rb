@@ -83,7 +83,8 @@ module Ratistics
     #
     # @see https://github.com/rails/rails/blob/master/activesupport/lib/active_support/inflector/methods.rb
     def titleize(word)
-      humanize(underscore(word)).gsub(/\b(?<!['`])[a-z]/) { $&.capitalize }
+      #humanize(underscore(word)).gsub(/\b(?<!['`])[a-z]/) { $&.capitalize }
+      humanize(underscore(word)).gsub(/\b["'`]?[a-z]/) { $&.capitalize }
     end
 
     # Replaces underscores with dashes in the string.
@@ -122,6 +123,5 @@ module Ratistics
       fname = fname.gsub(/#{extname}$/, '') if opts[:chomp] == true
       return fname.strip + '.' + ext.to_s.gsub(/^\./, '')
     end
-
   end
 end

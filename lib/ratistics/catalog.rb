@@ -157,9 +157,7 @@ module Ratistics
       end
     end
 
-    alias :eq :==
-    alias :equal :==
-    alias :equals :==
+    alias :eql? :==
 
     # Comparison—Returns an integer (-1, 0, or +1) if this array is less
     # than, equal to, or greater than other_ary. Each object in each
@@ -264,7 +262,7 @@ module Ratistics
         @data << item
         return self
       else
-        raise TypeError.new("can't convert #{other.class} into Catalog")
+        raise TypeError.new("can't convert #{item.class} into Catalog")
       end
     end
 

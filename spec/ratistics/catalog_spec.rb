@@ -274,9 +274,11 @@ module Ratistics
         let(:queue) { Hamster.queue(1, 18, 2, 14, 3, 16, 4, 21).freeze }
         let(:vector) { Hamster.vector(1, 18, 2, 14, 3, 16, 4, 21).freeze }
 
-        specify 'Hamster::hash' do
-          catalog = Catalog.new(hash, :from => :hash)
-          catalog.should eq [[1, 18], [2, 14], [3, 16], [4, 21]]
+        if RUBY_VERSION >= '1.9'
+          specify 'Hamster::hash' do
+            catalog = Catalog.new(hash, :from => :hash)
+            catalog.should eq [[1, 18], [2, 14], [3, 16], [4, 21]]
+          end
         end
 
         specify 'Hamster::set' do
@@ -347,6 +349,50 @@ module Ratistics
 
       it 'returns false when compared with any other object' do
         Catalog.new.should_not == :foo
+      end
+    end
+
+    context '#!=' do
+      
+      it 'returns false for equal catalogs' do
+        catalog_1 = Catalog.from_hash(hash_sample)
+        catalog_2 = Catalog.from_hash(hash_sample)
+        (catalog_1 != catalog_2).should be_false
+      end
+
+      
+      it 'returns true for unequal catalogs' do
+        catalog_1 = Catalog.from_hash(hash_sample)
+        catalog_2 = Catalog.new
+        (catalog_1 != catalog_2).should be_true
+      end
+
+      it 'compares with an equal Catalog object' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        (catalog_1 != catalog_2).should be_false
+      end
+
+      it 'compares with an equal catalog array' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = [[1, 1], [2, 2], [3, 3]]
+        (catalog_1 != catalog_2).should be_false
+      end
+
+      it 'compares with a non-equal Catalog objects' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = Catalog.new([[1, 1], [2, 2], [3, 3], [4, 4]])
+        (catalog_1 != catalog_2).should be_true
+      end
+
+      it 'compares with a non-equal catalog array' do
+        catalog_1 = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog_2 = [[1, 1], [2, 2], [3, 3], [4, 4]]
+        (catalog_1 != catalog_2).should be_true
+      end
+
+      it 'returns true when compared with any other object' do
+        (Catalog.new != :foo).should be_true
       end
     end
 
@@ -445,12 +491,22 @@ module Ratistics
 
       it 'updates the index when given a valid positive index' do
         catalog[1] = [:foo, :bar]
-        catalog.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+        if RUBY_VERSION < '1.9'
+          catalog.size.should eq 3
+          catalog[1].should eq [:foo, :bar]
+        else
+          catalog.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+        end
       end
 
       it 'updates the index when given an invalid negative index' do
         catalog[-2] = [:foo, :bar]
-        catalog.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+        if RUBY_VERSION < '1.9'
+          catalog.size.should eq 3
+          catalog[1].should eq [:foo, :bar]
+        else
+          catalog.should eq [[:one, 1], [:foo, :bar], [:three, 3]]
+        end
       end
 
       it 'raises an exception when given an invalid positive index' do
@@ -641,7 +697,7 @@ module Ratistics
 
       it 'raises an error for an invalid datatype' do
         lambda {
-          Catalog.new([1, 1], [2, 2]).push(:foo)
+          Catalog.new.push(:foo)
         }.should raise_error(TypeError)
       end
     end
@@ -832,6 +888,11 @@ module Ratistics
       it 'returns false when not found' do
         catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
         catalog.include?([4, 4]).should be_false
+      end
+
+      it 'returns false when given an invalid lookup item' do
+        catalog = Catalog.new([[1, 1], [2, 2], [3, 3]])
+        catalog.include?(:foo).should be_false
       end
     end
 
@@ -1099,9 +1160,12 @@ module Ratistics
 
       context '#to_s' do
 
-        specify { Catalog.new.to_s.should eq '[]' }
-
-        specify { Catalog.from_hash(:one => 1, :two => 2).to_s.should eq '[[:one, 1], [:two, 2]]' }
+        if RUBY_VERSION < '1.9'
+          specify { Catalog.new.to_s.should eq '' }
+        else
+          specify { Catalog.new.to_s.should eq '[]' }
+          specify { Catalog.from_hash(:one => 1, :two => 2).to_s.should eq '[[:one, 1], [:two, 2]]' }
+        end
       end
     end
 

@@ -162,6 +162,5 @@ module Ratistics
         yield(prob)
       end
     end
-
   end
 end

@@ -172,6 +172,5 @@ module Ratistics
         yield(rank, percentile(rank))
       end
     end
-
   end
 end

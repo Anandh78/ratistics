@@ -15,25 +15,25 @@ gem install bundler &>/dev/null
 bundle install &>/dev/null
 rake spec
 
-rvm use ruby-2.0.0-rc1@ratistics --create
+rvm use ruby-2.0.0-p0@ratistics --create
 gem install bundler &>/dev/null 
 bundle install &>/dev/null
 rake spec
 
 rvm use jruby-1.6.7@ratistics --create
-gem install bundler &>/dev/null 
-bundle install &>/dev/null
-rake jruby_spec
+JRUBY_OPTS="-Xcext.enabled=true" gem install bundler &>/dev/null 
+JRUBY_OPTS="-Xcext.enabled=true" bundle install &>/dev/null
+JRUBY_OPTS="-Xcext.enabled=true" rake jruby_spec
 
 rvm use jruby-1.6.7.2@ratistics --create
-gem install bundler &>/dev/null 
-bundle install &>/dev/null
-rake jruby_spec
+JRUBY_OPTS="-Xcext.enabled=true" gem install bundler &>/dev/null 
+JRUBY_OPTS="-Xcext.enabled=true" bundle install &>/dev/null
+JRUBY_OPTS="-Xcext.enabled=true" rake jruby_spec
 
 rvm use jruby-1.6.8@ratistics --create
-gem install bundler &>/dev/null 
-bundle install &>/dev/null
-rake jruby_spec
+JRUBY_OPTS="-Xcext.enabled=true" gem install bundler &>/dev/null 
+JRUBY_OPTS="-Xcext.enabled=true" bundle install &>/dev/null
+JRUBY_OPTS="-Xcext.enabled=true" rake jruby_spec
 
 rvm use jruby-1.7.0@ratistics --create
 JRUBY_OPTS="-Xcext.enabled=true" gem install bundler &>/dev/null 

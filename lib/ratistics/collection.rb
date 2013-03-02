@@ -3,6 +3,16 @@ module Ratistics
   module Collection
     extend self
 
+    def random_sample(size, opts={})
+      min = opts[:min].to_i
+      max = opts[:max] || 100
+      sample = []
+      size.times do
+        sample << rand(max-min) + min
+      end
+      return sample
+    end
+
     # Collect sample data from a generic collection, processing each item
     # with a block when given. Returns an array of the items from +data+
     # in order.
@@ -50,19 +60,19 @@ module Ratistics
     # @param [Block] block optional block for per-item processing
     #
     # @return [Array] an array of zero or more items
-    def catalog(data, opts={}, &block)
+    def index_and_catalog(data, opts={}, &block)
       return [] if data.nil?
       sample = []
       index = 0
       data.each do |datum|
         datum = yield(datum) if block_given?
         sample << [index, datum]
-        index = index + 1
+        index += 1
       end
       return sample
     end
 
-    alias :catalogue :catalog
+    alias :index_and_catalogue :index_and_catalog
 
     # Convert a hash to catalog.
     # 
@@ -237,6 +247,5 @@ module Ratistics
       end
       return slice
     end
-
   end
 end

@@ -28,7 +28,7 @@ module Ratistics
 
       data.each do |item|
         item = yield(item) if block_given?
-        total = total + item.to_f
+        total += item.to_f
       end
 
       return total / data.size.to_f
@@ -84,7 +84,7 @@ module Ratistics
           mean = 0
         end
       else
-        truncation = truncation * 100.0 if truncation < 1.0
+        truncation *= 100.0 if truncation < 1.0
         raise ArgumentError if truncation >= 50.0
 
         interval = 100.0 / data.size

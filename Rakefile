@@ -6,7 +6,6 @@ require 'bundler/gem_tasks'
 require 'rspec'
 require 'rspec/core/rake_task'
 require 'yard'
-require 'standalone_migrations'
 
 require 'ratistics'
 
@@ -23,7 +22,10 @@ end
 YARD::Rake::YardocTask.new do |t|
 end
 
-StandaloneMigrations::Tasks.load_tasks
+unless RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i
+  require 'standalone_migrations'
+  StandaloneMigrations::Tasks.load_tasks
+end
 
 $:.unshift 'tasks'
 Dir.glob('tasks/**/*.rake').each do|rakefile|
@@ -31,3 +33,7 @@ Dir.glob('tasks/**/*.rake').each do|rakefile|
 end
 
 task :default => [:spec]
+#task :default do
+  #puts `make`
+  #fail if $? != 0
+#end
