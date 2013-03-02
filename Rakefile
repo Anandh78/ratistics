@@ -11,12 +11,14 @@ require 'ratistics'
 
 Bundler::GemHelper.install_tasks
 
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.rspec_opts = '--color'
-end
-
-RSpec::Core::RakeTask.new(:jruby_spec) do |t|
-  t.rspec_opts = '--color --tag ~@ar'
+if RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i
+  RSpec::Core::RakeTask.new(:spec) do |t|
+    t.rspec_opts = '--color --tag ~@ar'
+  end
+else
+  RSpec::Core::RakeTask.new(:spec) do |t|
+    t.rspec_opts = '--color'
+  end
 end
 
 YARD::Rake::YardocTask.new do |t|
@@ -34,6 +36,6 @@ end
 
 task :default => [:spec]
 #task :default do
-  #puts `make`
-  #fail if $? != 0
+#puts `make`
+#fail if $? != 0
 #end

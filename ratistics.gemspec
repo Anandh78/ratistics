@@ -43,17 +43,16 @@ Gem::Specification.new do |s|
   # Development dependencies
 
   s.add_development_dependency 'bundler'
-    s.add_development_dependency 'rake'
 
   # test alternate collection classes
   s.add_development_dependency 'hamster'
+
+  unless RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i
 
     # test active_record collections
     s.add_development_dependency 'standalone_migrations'
     s.add_development_dependency 'activerecord', '~> 3.2.0'
     s.add_development_dependency 'sqlite3'
-
-  unless RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i
 
     # create API documentation
     s.add_development_dependency 'yard'
@@ -62,6 +61,7 @@ Gem::Specification.new do |s|
   end
 
   # testing
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'countloc'
