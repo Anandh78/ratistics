@@ -23,22 +23,22 @@ rake spec
 rvm use jruby-1.6.7@ratistics --create
 JRUBY_OPTS="-Xcext.enabled=true" gem install bundler &>/dev/null 
 JRUBY_OPTS="-Xcext.enabled=true" bundle install &>/dev/null
-JRUBY_OPTS="-Xcext.enabled=true" rake jruby_spec
+JRUBY_OPTS="-Xcext.enabled=true" rake spec
 
 rvm use jruby-1.6.7.2@ratistics --create
 JRUBY_OPTS="-Xcext.enabled=true" gem install bundler &>/dev/null 
 JRUBY_OPTS="-Xcext.enabled=true" bundle install &>/dev/null
-JRUBY_OPTS="-Xcext.enabled=true" rake jruby_spec
+JRUBY_OPTS="-Xcext.enabled=true" rake spec
 
 rvm use jruby-1.6.8@ratistics --create
 JRUBY_OPTS="-Xcext.enabled=true" gem install bundler &>/dev/null 
 JRUBY_OPTS="-Xcext.enabled=true" bundle install &>/dev/null
-JRUBY_OPTS="-Xcext.enabled=true" rake jruby_spec
+JRUBY_OPTS="-Xcext.enabled=true" rake spec
 
 rvm use jruby-1.7.0@ratistics --create
 JRUBY_OPTS="-Xcext.enabled=true" gem install bundler &>/dev/null 
 JRUBY_OPTS="-Xcext.enabled=true" bundle install &>/dev/null
-JRUBY_OPTS="-Xcext.enabled=true" rake jruby_spec
+JRUBY_OPTS="-Xcext.enabled=true" rake spec
 
 rvm use ree-1.8.7-2012.02@ratistics --create
 gem install bundler &>/dev/null 

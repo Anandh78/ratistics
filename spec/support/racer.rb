@@ -1,6 +1,9 @@
-require  'active_record'
+jruby = (0 == (RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i))
 
-class Racer < ActiveRecord::Base
+require 'active_record' unless jruby
+parent = jruby ? Class.new : ActiveRecord::Base
+
+class Racer < parent
 
   CSV_PATH = File.join(File.dirname(__FILE__), '../data/race.csv')
   DAT_PATH = File.join(File.dirname(__FILE__), '../data/race.dat')
@@ -41,12 +44,14 @@ class Racer < ActiveRecord::Base
     Ratistics::Load.dat_file(DAT_PATH, DAT_DEFINITION)
   end
 
-  def self.connect(path=nil)
-    ActiveRecord::Base.establish_connection(
-      :adapter => 'sqlite3',
-      :database => path || "#{File.dirname(__FILE__)}/../data/race.sqlite3",
-      :pool => 5,
-      :timeout => 5000
-    )
+  if defined? ActiveRecord::Base
+    def self.connect(path=nil)
+      ActiveRecord::Base.establish_connection(
+        :adapter => 'sqlite3',
+        :database => path || "#{File.dirname(__FILE__)}/../data/race.sqlite3",
+        :pool => 5,
+        :timeout => 5000
+      )
+    end
   end
 end
