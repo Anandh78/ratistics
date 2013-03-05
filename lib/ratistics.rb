@@ -16,6 +16,9 @@ require 'ratistics/catalog'
 require 'ratistics/frequencies'
 require 'ratistics/percentiles'
 
+Infinity = 1/0.0 unless defined?(Infinity)
+NaN = 0/0.0 unless defined?(NaN)
+
 module Ratistics
 
   class NilSampleError < StandardError
