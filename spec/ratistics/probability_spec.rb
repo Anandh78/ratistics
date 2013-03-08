@@ -979,5 +979,60 @@ module Ratistics
       end
     end
 
+    context '#cumulative_distribution_function_value' do
+
+      let(:sorted_sample) { [1, 2, 2, 3, 5].freeze }
+
+      it 'returns zero for a nil sample' do
+        pending
+        Probability.cdf_value(nil, 0.5).should eq 0
+      end
+
+      it 'returns zero for an empty sample' do
+        pending
+        Probability.cdf_value([], 0.5).should eq 0
+      end
+
+      it 'returns the value for the given probability' do
+        pending
+        Probability.cdf_value(sorted_sample, 0.1).should eq 1
+        Probability.cdf_value(sorted_sample, 0.2).should eq 1
+        Probability.cdf_value(sorted_sample, 0.3).should eq 1
+        Probability.cdf_value(sorted_sample, 0.4).should eq 1
+        Probability.cdf_value(sorted_sample, 0.5).should eq 1
+        Probability.cdf_value(sorted_sample, 0.6).should eq 1
+        Probability.cdf_value(sorted_sample, 0.7).should eq 1
+        Probability.cdf_value(sorted_sample, 0.8).should eq 1
+        Probability.cdf_value(sorted_sample, 0.9).should eq 1
+      end
+
+      it 'returns the sample minimum when the probability is zero' do
+        pending
+        Probability.cdf_value(sorted_sample, 0).should eq 1
+      end
+
+      it 'returns the sample maximum when the probability is one' do
+        pending
+        Probability.cdf_value(sorted_sample, 1).should eq 5
+      end
+
+      it 'returns the value when given a block'
+
+      it 'returns the value on an unsorted sample'
+
+      it 'returns the value on a relatively flat sample'
+
+      it 'recognizes the option :from => :sample'
+
+      it 'returns the value when given a frequency'
+
+      it 'returns the value when given a frequency with a block'
+
+      it 'does not attempt to sort when a using a block'
+
+      it 'does not re-sort a sorted sample'
+
+    end
+
   end
 end

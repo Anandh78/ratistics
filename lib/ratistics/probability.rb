@@ -299,5 +299,11 @@ module Ratistics
 
     alias :cdf :cumulative_distribution_function
     alias :cumulative_distribution :cumulative_distribution_function
+
+    def cumulative_distribution_function_value(data, value, opts={}, &block)
+    end
+
+    alias :cdf_value :cumulative_distribution_function_value
+    alias :cumulative_distribution_value :cumulative_distribution_function_value
   end
 end
