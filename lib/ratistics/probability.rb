@@ -1,5 +1,6 @@
 require 'ratistics/collection'
 require 'ratistics/math'
+require 'ratistics/sort'
 
 module Ratistics
 
@@ -316,7 +317,10 @@ module Ratistics
       return data[0] if prob == 0
       return data[-1] if prob == 1
 
-      ps = probability(data, :as => :array, :inc => true).sort_by!{|item| item.first}
+      # Array#sort_by! is does not exist in 1.8.7
+      #ps = probability(data, :as => :array, :inc => true).sort_by!{|item| item.first}
+      ps = probability(data, :as => :array, :inc => true)
+      ps = Sort.insertion_sort!(ps){|item| item.first}
       index = Collection.bisect_left(ps, prob){|item| item.last}
 
       index = index-1 if prob == ps[index-1].first
