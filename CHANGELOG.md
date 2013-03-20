@@ -20,13 +20,15 @@ Release Date: TBD
 * Added Catalog (alias: Catalogue) class
 * Greater consistency of return values and processing options
 * Added more input and output options:
-* :as => :hash/:map/:array/:catalog/:catalogue to probability functions
-* :as => :hash/:map/:array/:catalog/:catalogue to percentile functions
-* :from => :sample/frequency/probability to frequency and probabilty functions
-* Changed reurns values for Rank.ranks
+  * :as => :hash/:map/:array/:catalog/:catalogue to probability functions
+  * :as => :hash/:map/:array/:catalog/:catalogue to percentile functions
+  * :from => :sample/frequency/probability to frequency and probabilty functions
+  * :inc/:increment/:incremental => true/false to #probability function
+* Changed return values for Rank.ranks
   * returns nil when the sample is nil or empty
   * returns :hash by default
   * only returns an array when :as => :array
+* Added Infinity and NaN constants
 
 ### 0.2.2
 

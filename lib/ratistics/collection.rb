@@ -31,12 +31,11 @@ module Ratistics
 
       lo = (opts[:lo] || opts[:low]).to_i
       hi = opts[:hi] || opts[:high] || a.length
-      v1 = (block_given? ? yield(x) : x)
 
       while lo < hi
         mid = (lo + hi) / 2
-        v2 = (block_given? ? yield(a[mid]) : a[mid])
-        if v2 < v1
+        v = (block_given? ? yield(a[mid]) : a[mid])
+        if v < x
           lo = mid + 1
         else
           hi = mid
@@ -63,12 +62,11 @@ module Ratistics
 
       lo = (opts[:lo] || opts[:low]).to_i
       hi = opts[:hi] || opts[:high] || a.length
-      v1 = (block_given? ? yield(x) : x)
 
       while lo < hi
         mid = (lo + hi) / 2
-        v2 = (block_given? ? yield(a[mid]) : a[mid])
-        if v1 < v2
+        v = (block_given? ? yield(a[mid]) : a[mid])
+        if x < v
           hi = mid
         else
           lo = mid + 1
@@ -114,7 +112,8 @@ module Ratistics
       return [x] if a.nil?
       return a << x if a.empty?
 
-      index = bisect_left(a, x, opts, &block)
+      v = (block_given? ? yield(x) : x)
+      index = bisect_left(a, v, opts, &block)
       return a.insert(index, x)
     end
 
@@ -155,7 +154,8 @@ module Ratistics
       return [x] if a.nil?
       return a << x if a.empty?
 
-      index = bisect_right(a, x, opts, &block)
+      v = (block_given? ? yield(x) : x)
+      index = bisect_right(a, v, opts, &block)
       return a.insert(index, x)
     end
 

@@ -39,8 +39,8 @@ module Ratistics
             {:count => 20},
             {:count => 30}
           ]
-          Collection.bisect_left(sample, {:count => 15}){|x| x[:count]}.should eq 1
-          Collection.bisect_left(sample, {:count => 25}){|x| x[:count]}.should eq 2
+          Collection.bisect_left(sample, 15){|x| x[:count]}.should eq 1
+          Collection.bisect_left(sample, 25){|x| x[:count]}.should eq 2
         end
 
         it 'returns the index when the item is in the sample with a block' do
@@ -49,9 +49,9 @@ module Ratistics
             {:count => 20},
             {:count => 30}
           ]
-          Collection.bisect_left(sample, {:count => 10}){|x| x[:count]}.should eq 0
-          Collection.bisect_left(sample, {:count => 20}){|x| x[:count]}.should eq 1
-          Collection.bisect_left(sample, {:count => 30}){|x| x[:count]}.should eq 2
+          Collection.bisect_left(sample, 10){|x| x[:count]}.should eq 0
+          Collection.bisect_left(sample, 20){|x| x[:count]}.should eq 1
+          Collection.bisect_left(sample, 30){|x| x[:count]}.should eq 2
         end
       end
 
@@ -84,8 +84,8 @@ module Ratistics
             {:count => 20},
             {:count => 30}
           ]
-          Collection.bisect_right(sample, {:count => 15}){|x| x[:count]}.should eq 1
-          Collection.bisect_right(sample, {:count => 25}){|x| x[:count]}.should eq 2
+          Collection.bisect_right(sample, 15){|x| x[:count]}.should eq 1
+          Collection.bisect_right(sample, 25){|x| x[:count]}.should eq 2
         end
 
         it 'returns the index when the item is in the sample with a block' do
@@ -94,9 +94,9 @@ module Ratistics
             {:count => 20},
             {:count => 30}
           ]
-          Collection.bisect_right(sample, {:count => 10}){|x| x[:count]}.should eq 1
-          Collection.bisect_right(sample, {:count => 20}){|x| x[:count]}.should eq 2
-          Collection.bisect_right(sample, {:count => 30}){|x| x[:count]}.should eq 3
+          Collection.bisect_right(sample, 10){|x| x[:count]}.should eq 1
+          Collection.bisect_right(sample, 20){|x| x[:count]}.should eq 2
+          Collection.bisect_right(sample, 30){|x| x[:count]}.should eq 3
         end
       end
 

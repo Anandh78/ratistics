@@ -58,6 +58,12 @@ module Ratistics
     # in the data set. Using a block in this way allows computation against
     # a specific field in a data set of hashes or objects.
     #
+    # @example
+    #   sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
+    #   Ratistics.frequency(sample) #=> {13=>0.4444444444444444, 18=>0.1111111111111111, 14=>0.2222222222222222, 16=>0.1111111111111111, 21=>0.1111111111111111}
+    #   Ratistics.frequency(sample, :as => :array) #=> [[13, 0.4444444444444444], [18, 0.1111111111111111], [14, 0.2222222222222222], [16, 0.1111111111111111], [21, 0.1111111111111111]]
+    #   Ratistics.frequency(sample, :as => :catalog) #=> [[13, 0.4444444444444444], [18, 0.1111111111111111], [14, 0.2222222222222222], [16, 0.1111111111111111], [21, 0.1111111111111111]]
+    #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
     #
@@ -97,6 +103,13 @@ module Ratistics
         key = yield(key) if from_frequency && block_given?
         memo[key] = value.to_f / count.to_f
         memo
+      end
+
+      if opts[:inc] || opts[:increment] || opts[:incremental]
+        base = 0
+        prob.keys.sort.each do |key|
+          prob[key] = base = prob[key] + base
+        end
       end
 
       if (opts[:as] == :array || opts[:as] == :catalog || opts[:as] == :catalogue)
@@ -298,7 +311,16 @@ module Ratistics
     alias :cdf :cumulative_distribution_function
     alias :cumulative_distribution :cumulative_distribution_function
 
-    def cumulative_distribution_function_value(data, value, opts={})
+    def cumulative_distribution_function_value(data, prob, opts={})
+      return nil if data.nil? || data.empty? || prob < 0 || prob > 1
+      return data[0] if prob == 0
+      return data[-1] if prob == 1
+
+      ps = probability(data, :as => :array, :inc => true).sort_by!{|item| item.first}
+      index = Collection.bisect_left(ps, prob){|item| item.last}
+
+      index = index-1 if prob == ps[index-1].first
+      return ps[index].first
     end
 
     alias :cdf_value :cumulative_distribution_function_value

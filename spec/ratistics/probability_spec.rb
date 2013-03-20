@@ -409,6 +409,8 @@ module Ratistics
         end
       end
 
+      it 'returns :incremental probabilities when the option is set'
+
       context 'with ActiveRecord', :ar => true do
 
         before(:all) { Racer.connect }
@@ -982,38 +984,44 @@ module Ratistics
     context '#cumulative_distribution_function_value' do
 
       let(:sorted_sample) { [1, 2, 2, 3, 5].freeze }
+      let(:unsorted_sample) { [2, 1, 3, 2, 5].freeze }
 
-      it 'returns zero for a nil sample' do
-        pending
-        Probability.cdf_value(nil, 0.5).should eq 0
+      it 'returns nil for a nil sample' do
+        Probability.cdf_value(nil, 0.5).should be_nil
       end
 
-      it 'returns zero for an empty sample' do
-        pending
-        Probability.cdf_value([], 0.5).should eq 0
+      it 'returns nil for an empty sample' do
+        Probability.cdf_value([], 0.5).should be_nil
       end
 
       it 'returns the value for the given probability' do
-        pending
+        Probability.cdf_value(sorted_sample, 0.0).should eq 1
         Probability.cdf_value(sorted_sample, 0.1).should eq 1
         Probability.cdf_value(sorted_sample, 0.2).should eq 1
-        Probability.cdf_value(sorted_sample, 0.3).should eq 1
-        Probability.cdf_value(sorted_sample, 0.4).should eq 1
-        Probability.cdf_value(sorted_sample, 0.5).should eq 1
-        Probability.cdf_value(sorted_sample, 0.6).should eq 1
-        Probability.cdf_value(sorted_sample, 0.7).should eq 1
-        Probability.cdf_value(sorted_sample, 0.8).should eq 1
-        Probability.cdf_value(sorted_sample, 0.9).should eq 1
+        Probability.cdf_value(sorted_sample, 0.3).should eq 2
+        Probability.cdf_value(sorted_sample, 0.4).should eq 2
+        Probability.cdf_value(sorted_sample, 0.5).should eq 2
+        Probability.cdf_value(sorted_sample, 0.6).should eq 2
+        Probability.cdf_value(sorted_sample, 0.7).should eq 3
+        Probability.cdf_value(sorted_sample, 0.8).should eq 3
+        Probability.cdf_value(sorted_sample, 0.9).should eq 5
+        Probability.cdf_value(sorted_sample, 1.0).should eq 5
+      end
+
+      it 'returns nil when the probability is less than zero' do
+        Probability.cdf_value(sorted_sample, -0.1).should be_nil
       end
 
       it 'returns the sample minimum when the probability is zero' do
-        pending
         Probability.cdf_value(sorted_sample, 0).should eq 1
       end
 
       it 'returns the sample maximum when the probability is one' do
-        pending
         Probability.cdf_value(sorted_sample, 1).should eq 5
+      end
+
+      it 'returns nil when the probability is greater than one' do
+        Probability.cdf_value(sorted_sample, 1.1).should be_nil
       end
 
       it 'returns the value when given a block'
