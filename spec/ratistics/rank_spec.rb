@@ -202,7 +202,7 @@ module Ratistics
         end
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(1, 3, 5, 7, 9, 9, 14).freeze }
         let(:vector) { Hamster.vector(1, 3, 5, 7, 9, 9, 14).freeze }
@@ -285,7 +285,7 @@ module Ratistics
         end
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(40, 15, 35, 20, 40, 50).freeze }
         let(:vector) { Hamster.vector(15, 20, 35, 40, 50).freeze }
@@ -381,7 +381,7 @@ module Ratistics
         end
       end
 
-      context 'for Hamster' do
+      context 'for Hamster', :hamster => true do
 
         let(:list) { Hamster.list(40, 15, 35, 20, 40, 50).freeze }
         let(:vector) { Hamster.vector(15, 20, 35, 40, 40, 50).freeze }
@@ -508,7 +508,7 @@ module Ratistics
         end
       end
 
-      context 'for Hamster' do
+      context 'for Hamster', :hamster => true do
 
         let(:list) { Hamster.list(40, 15, 35, 20, 40, 50).freeze }
         let(:vector) { Hamster.vector(15, 20, 35, 40, 50).freeze }
@@ -611,7 +611,7 @@ module Ratistics
         end
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(35, 20, 15, 40, 50).freeze }
         let(:vector) { Hamster.vector(15, 20, 35, 40, 50).freeze }
@@ -690,7 +690,7 @@ module Ratistics
           rank.should be_within(0.001).of(31.0)
         end
 
-        specify 'with Hamster' do
+        specify 'with Hamster', :hamster => true do
 
           sample = Hamster.list(*even_sample).freeze
           Rank.first_quartile(sample).should be_within(0.001).of(2)
@@ -747,7 +747,7 @@ module Ratistics
           rank.should be_within(0.001).of(38.0)
         end
 
-        specify 'with Hamster' do
+        specify 'with Hamster', :hamster => true do
 
           sample = Hamster.list(*even_sample).freeze
           Rank.second_quartile(sample).should be_within(0.001).of(2)
@@ -804,7 +804,7 @@ module Ratistics
           rank.should be_within(0.001).of(47.0)
         end
 
-        specify 'with Hamster' do
+        specify 'with Hamster', :hamster => true do
 
           sample = Hamster.list(*even_sample).freeze
           Rank.third_quartile(sample).should be_within(0.001).of(3)

@@ -61,7 +61,7 @@ module Ratistics
         frequency[27].should eq 50
       end
 
-      it 'works with Hamster' do
+      it 'works with Hamster', :hamster => true do
 
         sample = Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze
 

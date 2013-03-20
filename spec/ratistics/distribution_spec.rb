@@ -59,7 +59,7 @@ module Ratistics
 
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
@@ -130,7 +130,7 @@ module Ratistics
 
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
@@ -207,7 +207,7 @@ module Ratistics
         Distribution.range(sample, :sorted => false) {|item| item[:count] }
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:vector) { Hamster.vector(13, 13, 13, 13, 14, 14, 16, 18, 21).freeze }

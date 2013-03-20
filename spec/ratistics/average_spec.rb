@@ -55,7 +55,7 @@ module Ratistics
 
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
@@ -205,7 +205,7 @@ module Ratistics
         mean = Average.truncated_mean(sample, 10){|item| item[:count]}
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(11, 11, 12, 12, 12, 13, 13, 13, 13, 13, 14, 14, 16, 16, 17, 18, 19, 19, 20, 21).freeze }
         let(:vector) { Hamster.vector(11, 11, 12, 12, 12, 13, 13, 13, 13, 13, 14, 14, 16, 16, 17, 18, 19, 19, 20, 21).freeze }
@@ -275,7 +275,7 @@ module Ratistics
 
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(13, 13, 13, 13, 14, 14, 16, 18, 21).freeze }
         let(:vector) { Hamster.vector(13, 13, 13, 13, 14, 14, 16, 18, 21).freeze }
@@ -378,7 +378,7 @@ module Ratistics
 
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:vector) { Hamster.vector(13, 13, 13, 13, 14, 14, 16, 18, 21).freeze }
@@ -515,7 +515,7 @@ module Ratistics
 
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }

@@ -45,7 +45,7 @@ module Ratistics
         end
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         specify do
           sample = Hamster.vector(1, 2, 3, 4, 5).freeze
@@ -103,7 +103,7 @@ module Ratistics
         end
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         specify do
           vector = Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze
@@ -313,7 +313,7 @@ module Ratistics
 
         end
 
-        context 'Hamster' do
+        context 'Hamster', :hamster => true do
 
           let(:list) { Hamster.list(3, 5, 6, 7, 8, 11, 15, 21, 22, 28, 30, 32, 33, 34, 40).freeze }
           let(:vector) { Hamster.vector(3, 5, 6, 7, 8, 11, 15, 21, 22, 28, 30, 32, 33, 34, 40).freeze }
@@ -368,7 +368,7 @@ module Ratistics
 
         end
 
-        context 'Hamster' do
+        context 'Hamster', :hamster => true do
 
           let(:list) { Hamster.list(40, 34, 33, 32, 30, 28, 22, 21, 15, 11, 8, 7, 6, 5, 3).freeze }
           let(:vector) { Hamster.vector(40, 34, 33, 32, 30, 28, 22, 21, 15, 11, 8, 7, 6, 5, 3).freeze }

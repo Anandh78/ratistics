@@ -117,7 +117,7 @@ module Ratistics
 
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
@@ -238,7 +238,7 @@ module Ratistics
         mean.should be_within(0.01).of(1.6666666666666665)
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         specify do
           sample = Hamster.hash({
@@ -426,7 +426,7 @@ module Ratistics
 
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
         let(:vector) { Hamster.vector(13, 18, 13, 14, 13, 16, 14, 21, 13).freeze }
@@ -631,7 +631,7 @@ module Ratistics
         mean.should be_within(0.01).of(23.599)
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
         let(:vector) { Hamster.vector(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
@@ -774,7 +774,7 @@ module Ratistics
         variance.should be_within(0.01).of(3.25)
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
         let(:vector) { Hamster.vector(1, 2, 3, 4, 5, 6, 6, 6, 6, 6).freeze }
@@ -962,7 +962,7 @@ module Ratistics
         end
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:list) { Hamster.list(1, 2, 2, 3, 5).freeze }
         let(:vector) { Hamster.vector(1, 2, 2, 3, 5).freeze }

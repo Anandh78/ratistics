@@ -265,7 +265,7 @@ module Ratistics
         end
       end
 
-      context 'with Hamster' do
+      context 'with Hamster', :hamster => true do
 
         let(:hash) { {1 => 18, 2 => 14, 3 => 16, 4 => 21 }.freeze }
         let(:set) { Hamster.set(1, 18, 2, 14, 3, 16, 4, 21).freeze }

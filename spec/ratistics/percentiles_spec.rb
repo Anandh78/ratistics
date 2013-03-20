@@ -109,7 +109,7 @@ module Ratistics
         centiles[0][1].should be_within(0.001).of(0.031)
       end
 
-      it 'works with Hamster' do
+      it 'works with Hamster', :hamster => true do
         sample = Hamster.vector(1, 3, 5, 7, 9, 9, 14).freeze
         centiles = Percentiles.new(sample, :sorted => true)
         centiles = centiles.ranks(:as => :array)

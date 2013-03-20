@@ -5,16 +5,22 @@ require 'rubygems'
 require 'bundler/gem_tasks'
 require 'rspec'
 require 'rspec/core/rake_task'
+require 'rbconfig'
 
 require 'ratistics'
 
 jruby = (0 == (RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i))
+windows = (RbConfig::CONFIG['host_os'] =~ /mswin32/i || RbConfig::CONFIG['host_os'] =~ /mingw32/i)
 
 Bundler::GemHelper.install_tasks
 
 if jruby
   RSpec::Core::RakeTask.new(:spec) do |t|
     t.rspec_opts = '--color --tag ~@ar'
+  end
+elsif windows
+  RSpec::Core::RakeTask.new(:spec) do |t|
+    t.rspec_opts = '--color --tag ~@ar --tag ~@hamster'
   end
 else
   RSpec::Core::RakeTask.new(:spec) do |t|

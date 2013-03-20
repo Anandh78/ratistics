@@ -55,7 +55,7 @@ module Ratistics
         }.should_not raise_exception
       end
 
-      it 'can be initialized from a Hamster::Vector' do
+      it 'can be initialized from a Hamster::Vector', :hamster => true do
         sample = Hamster.vector(1, 2, 3, 4, 5, 6).freeze
         lambda {
           Aggregates.new(sample)
@@ -136,7 +136,7 @@ module Ratistics
         ag.count{|item| item > 50}.should == 264
       end
 
-      it 'works with a Hamster::Vector' do
+      it 'works with a Hamster::Vector', :hamster => true do
         sample = Hamster.vector(1, 2, 3, 4, 5, 6).freeze
         ag = Aggregates.new(sample)
         ag.count.should eq sample.size

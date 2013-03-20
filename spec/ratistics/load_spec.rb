@@ -252,7 +252,7 @@ module Ratistics
           record.first.keys.should eq record_hash.keys
         end
 
-        context 'Hamster' do
+        context 'with Hamster', :hamster => true do
 
           let(:contents) { csv_row }
 
@@ -345,7 +345,7 @@ module Ratistics
           record.first.keys.should eq record_hash.keys
         end
 
-        it 'supports the :hamster option' do
+        it 'supports the :hamster option', :hamster => true do
           records = Ratistics::Load.csv_file(csv_file, csv_definition, :hamster => true)
           records.should be_kind_of Hamster::Vector
           records.size.should eq record_count
@@ -388,7 +388,7 @@ module Ratistics
           record.first.keys.should eq record_hash.keys
         end
 
-        it 'supports the :hamster option' do
+        it 'supports the :hamster option', :hamster => true do
           records = Ratistics::Load.csv_gz_file(csv_gz_file, csv_definition, :hamster => true)
           records.should be_kind_of Hamster::Vector
           records.size.should eq record_count
@@ -464,7 +464,7 @@ module Ratistics
           record.first.should eq record_hash
         end
 
-        context 'Hamster' do
+        context 'with Hamster', :hamster => true do
 
           let(:contents) { dat_row }
 
@@ -528,7 +528,7 @@ module Ratistics
           records.should be_kind_of Array
         end
 
-        it 'supports the :hamster option' do
+        it 'supports the :hamster option', :hamster => true do
           records = Ratistics::Load.dat_file(dat_file, dat_definition, :hamster => true)
           records.should be_kind_of Hamster::Vector
           records.size.should eq record_count
@@ -548,7 +548,7 @@ module Ratistics
           records.should be_kind_of Array
         end
 
-        it 'supports the :hamster option' do
+        it 'supports the :hamster option', :hamster => true do
           records = Ratistics::Load.dat_gz_file(dat_gz_file, dat_definition, :hamster => true)
           records.should be_kind_of Hamster::Vector
           records.size.should eq record_count
