@@ -30,14 +30,13 @@ module Ratistics
     #
     # @param [Enumerable] data the data to perform the calculation against
     # @param [Hash] opts processing options
-    # @param [Block] block optional block for per-item processing
     #
     # @option opts [Symbol] :as sets the output to :hash/:map or
     #   :array/:catalog/:catalogue (default :hash)
     #
     # @return [Hash, Array, nil] the statistical frequency of the given
     #   data set or nil if the data set is empty
-    def frequency(data, opts={}, &block)
+    def frequency(data, opts={})
       return nil if data.nil? || data.empty?
 
       freq = data.reduce({}) do |memo, datum|
@@ -122,7 +121,7 @@ module Ratistics
     # @param [Enumerable] pmf the data to perform the calculation against
     # 
     # @return [Hash] a new, normalized probability distribution.
-    def normalize_probability(pmf, opts={}, &block)
+    def normalize_probability(pmf, opts={})
       total = pmf.values.reduce(0.0){|n, value| n + value} 
 
       return { pmf.keys.first => 1 } if pmf.count == 1
@@ -255,7 +254,6 @@ module Ratistics
     #
     # @param [Enumerable] data the data to perform the calculation against
     # @param [Hash] opts processing options
-    # @param [Block] block optional block for per-item processing
     #
     # @option opts [Symbol] :from describes the nature of the data.
     #   :sample indicates *data* is a raw data sample, :frequency
@@ -272,7 +270,7 @@ module Ratistics
     #
     # @see http://www.cumulativedistributionfunction.com/
     # @see http://en.wikipedia.org/wiki/Cumulative_distribution_function
-    def cumulative_distribution_function(data, value, opts={}, &block)
+    def cumulative_distribution_function(data, value, opts={})
       return 0 if data.nil? || data.empty?
 
       count = 0
@@ -300,7 +298,7 @@ module Ratistics
     alias :cdf :cumulative_distribution_function
     alias :cumulative_distribution :cumulative_distribution_function
 
-    def cumulative_distribution_function_value(data, value, opts={}, &block)
+    def cumulative_distribution_function_value(data, value, opts={})
     end
 
     alias :cdf_value :cumulative_distribution_function_value

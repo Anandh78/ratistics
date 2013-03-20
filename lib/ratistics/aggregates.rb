@@ -50,10 +50,9 @@ module Ratistics
     #
     # @param [Object] item the (optional) item that is being counted or nil
     #   when counting the entire sample
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Integer] the count
-    def count(item=nil, &block)
+    def count(item=nil)
       count = 0
 
       if ! item.nil?

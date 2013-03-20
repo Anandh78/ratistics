@@ -86,7 +86,6 @@ module Ratistics
     #
     # @param [Enumerable] data the data to perform the calculation against
     # @param [Hash] opts processing options
-    # @param [Block] block optional block for per-item processing
     #
     # @option opts [true, false] :sorted indicates of the data is already sorted
     # @option opts [String] :flatten remove duplicate data values; :flatten is
@@ -98,7 +97,7 @@ module Ratistics
     # @return [Hash, Array, nil] set of values and percentiles
     #
     # @see http://en.wikipedia.org/wiki/Percentile_rank
-    def ranks(data, opts={}, &block)
+    def ranks(data, opts={})
       return nil if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
 
@@ -246,7 +245,6 @@ module Ratistics
     # @param [Enumerable] data the data set against which percentile is computed
     # @param [Float] percentile the percentile to find the nearest rank of
     # @param [Hash] opts computation options
-    # @param [Block] block optional block for per-item processing
     #
     # @option opts [true, false] :sorted indicates of the data is already sorted
     # @option opts [Symbol] :rank which method to use to calculate the percentile
@@ -258,7 +256,7 @@ module Ratistics
     # @see Math#nist_primary_rank
     # @see Math#nist_alternate_rank
     # @see http://en.wikipedia.org/wiki/Percentile
-    def nearest_rank(data, percentile, opts={}, &block)
+    def nearest_rank(data, percentile, opts={})
       return nil if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
       return data.first if percentile == 0

@@ -134,7 +134,7 @@ module Ratistics
     # @yield iterates over each element in the data sample.
     # @yieldparam rank the rank from the data sample
     # @yieldparam percentile the percentile from the data sample
-    def each_with_linear_rank(range=nil, &block)
+    def each_with_linear_rank(range=nil)
       range = (1..99) if range.nil?
       range = (1..range.max) if range.min < 1
       range = (range.min..99) if range.max > 99
@@ -150,7 +150,7 @@ module Ratistics
     # @yield iterates over each element in the data sample.
     # @yieldparam rank the rank from the data sample
     # @yieldparam percentile the percentile from the data sample
-    def each_with_nearest_rank(range=nil, &block)
+    def each_with_nearest_rank(range=nil)
       range = (1..99) if range.nil?
       range = (1..range.max) if range.min < 1
       range = (range.min..99) if range.max > 99

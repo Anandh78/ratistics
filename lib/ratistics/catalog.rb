@@ -19,12 +19,11 @@ module Ratistics
     # @params [Array, Hash, Catalog] data the data to construct the
     #   Catalog from
     # @param [Hash] opts processing options
-    # @param [Block] block optional block for per-item processing
     #
     # @option opts [Symbol] :from the type of the data source. Valid values
     #   are :catalog/:catalogue, :hash, :array, (Hamster) :set, :list,
     #   :stack, :queue, :vector (default :catalog).
-    def initialize(data=nil, opts={}, &block)
+    def initialize(data=nil, opts={})
 
       if block_given?
 
@@ -54,7 +53,7 @@ module Ratistics
     # hash will be converted to a key/value array in the new Catalog. If a
     # block is given each value in the array will be passed to the block
     # and the result will be stored as the value in the Catalog.
-    def self.from_hash(data = {}, &block)
+    def self.from_hash(data = {})
       collected = []
       data.each do |key, value|
         value = yield(value) if block_given?
@@ -70,7 +69,7 @@ module Ratistics
     # array has an odd number of elements the last element will be discarded.
     # If a block is given each element in the source array will be passed to
     # the block and the result will be stored in the new Catalog.
-    def self.from_array(*args, &block)
+    def self.from_array(*args)
       collected = []
       data = args.flatten
 
@@ -91,7 +90,7 @@ module Ratistics
     # Catalog. If a block is given each value in the from the source array
     # will be passed to the block and the result will be stored as the
     # value in the Catalog.
-    def self.from_catalog(data, *args, &block)
+    def self.from_catalog(data, *args)
       collected = []
 
       if args.empty? && data.size == 2 && !data.first.is_a?(Array)
@@ -446,7 +445,7 @@ module Ratistics
     # Deletes items from self that are equal to obj. If the item is
     # not found, returns nil. If the optional code block is given,
     # returns the result of block if the item is not found.
-    def delete(key, value=nil, &block)
+    def delete(key, value=nil)
       item = nil
 
       if key && value

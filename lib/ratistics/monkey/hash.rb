@@ -4,7 +4,7 @@ module Ratistics
 
   class ::Hash
 
-    def to_catalog(&block)
+    def to_catalog
       catalog = []
       self.each do |key, value|
         value = yield(value) if block_given?

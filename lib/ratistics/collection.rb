@@ -25,10 +25,9 @@ module Ratistics
     # @yieldparam item each element in the data set
     #
     # @param [Enumerable] data the data set to be collected
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Array] an array of zero or more items
-    def collect(data, opts={}, &block)
+    def collect(data, opts={})
       return [] if data.nil?
       sample = []
       data.each do |datum|
@@ -57,10 +56,9 @@ module Ratistics
     # @yieldparam item each element in the data set
     #
     # @param [Enumerable] data the data set to be collected
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Array] an array of zero or more items
-    def index_and_catalog(data, opts={}, &block)
+    def index_and_catalog(data, opts={})
       return [] if data.nil?
       sample = []
       index = 0
@@ -85,10 +83,9 @@ module Ratistics
     #
     # @param [Enumerable] data the data to convert
     # @param [Hash] opts search options
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Array] if the data set is in ascending order
-    def catalog_hash(data, opts={}, &block)
+    def catalog_hash(data, opts={})
       return [] if data.nil? || data.empty?
       catalog = []
       data.each do |key, value|
@@ -112,10 +109,9 @@ module Ratistics
     #
     # @param [Enumerable] data the data to convert
     # @param [Hash] opts search options
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Hash] if the data set is in ascending order
-    def hash_catalog(data, opts={}, &block)
+    def hash_catalog(data, opts={})
       return {} if data.nil? || data.empty?
       hash = {}
       data.each do |item|
@@ -140,10 +136,9 @@ module Ratistics
     #
     # @param [Enumerable] data the data set to search
     # @param [Hash] opts search options
-    # @param [Block] block optional block for per-item processing
     #
     # @return [true, false] if the data set is in ascending order
-    def ascending?(data, opts={}, &block)
+    def ascending?(data, opts={})
       return false if data.nil?
       (data.size-1).times do |i|
         if block_given?
@@ -168,10 +163,9 @@ module Ratistics
     #
     # @param [Enumerable] data the data set to search
     # @param [Hash] opts search options
-    # @param [Block] block optional block for per-item processing
     #
     # @return [true, false] if the data set is in descending order
-    def descending?(data, opts={}, &block)
+    def descending?(data, opts={})
       return false if data.nil?
       (data.size-1).times do |i|
         if block_given?

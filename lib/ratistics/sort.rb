@@ -14,10 +14,9 @@ module Ratistics
     #
     # @param [Enumerable] data the data set to search
     # @param [Hash] opts search options
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Array] the sorted collection
-    def insertion_sort!(data, opts={}, &block)
+    def insertion_sort!(data, opts={})
       return data if data.nil? || data.size <= 1
 
       (1..(data.size-1)).each do |j|

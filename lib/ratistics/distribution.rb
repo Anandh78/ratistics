@@ -79,13 +79,12 @@ module Ratistics
     # @yieldparam item each element in the data set
     #
     # @param [Enumerable] data the data set to compute the range of
-    # @param [Block] block optional block for per-item processing
     #
     # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Float, 0] the statistical range of the given data set
     #   or zero if the data set is empty
-    def range(data, opts={}, &block)
+    def range(data, opts={})
       return 0 if data.nil? || data.count <= 1
       data = data.sort unless block_given? || opts[:sorted] == true
 

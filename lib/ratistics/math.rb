@@ -14,11 +14,10 @@ module Ratistics
     #
     # @param [Object] v1 the first value
     # @param [Object] v2 the second value
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Float] positive value representing the difference
     #   between the two parameters
-    def delta(v1, v2, &block)
+    def delta(v1, v2)
       if block_given?
         v1 = yield(v1)
         v2 = yield(v2)
@@ -37,11 +36,10 @@ module Ratistics
     #
     # @param [Object] v1 the first value
     # @param [Object] v2 the second value
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Float] positive value representing the relative risk
     #   between the two parameters
-    def relative_risk(v1, v2, &block)
+    def relative_risk(v1, v2)
       if block_given?
         v1 = yield(v1)
         v2 = yield(v2)
@@ -234,10 +232,9 @@ module Ratistics
     # @yieldparam item each element in the data set
     #
     # @param [Enumerable] data the data set being searched
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Numeric] the result of the summation operation
-    def summation(data, opts={}, &block)
+    def summation(data, opts={})
       return 0 if data.nil? || data.empty?
 
       lower = opts[:lower] || 0

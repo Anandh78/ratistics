@@ -18,11 +18,10 @@ module Ratistics
     # @yieldparam item each element in the data set
     #
     # @param [Enumerable] data the data set to compute the mean of
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Float, 0] the statistical mean of the given data set
     #   or zero if the data set is empty
-    def mean(data, opts={}, &block)
+    def mean(data, opts={})
       return 0 if data.nil? || data.empty?
       total = 0.0
 
@@ -183,13 +182,12 @@ module Ratistics
     # @yieldparam item each element in the data set
     #
     # @param [Enumerable] data the data set to compute the median of
-    # @param [Block] block optional block for per-item processing
     #
     # @option opts [true, false] :sorted indicates of the data is already sorted
     #
     # @return [Float, 0] the statistical median of the given data set
     #   or zero if the data set is empty
-    def median(data, opts={}, &block)
+    def median(data, opts={})
       return 0 if data.nil? || data.empty?
       data = data.sort unless block_given? || opts[:sorted] == true
 
@@ -225,11 +223,10 @@ module Ratistics
     # @yieldparam item each element in the data set
     #
     # @param [Enumerable] data the data set to compute the median of
-    # @param [Block] block optional block for per-item processing
     #
     # @return [Array] An array of zero or more values (in no particular
     #   order) indicating the modes of the data set
-    def mode(data, opts={}, &block)
+    def mode(data, opts={})
       return [] if data.nil? || data.empty?
 
       modes = {}

@@ -109,7 +109,7 @@ module Ratistics
 
     # :nodoc:
     # @private
-    def check_search_options(data, key, opts={}, &block)
+    def check_search_options(data, key, opts={})
       return [nil, nil] if data.nil? || data.empty?
 
       imin = [opts[:imin].to_i, 0].max
