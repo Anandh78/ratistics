@@ -11,6 +11,7 @@ require 'ratistics'
 
 jruby = (0 == (RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i))
 windows = (RbConfig::CONFIG['host_os'] =~ /mswin32/i || RbConfig::CONFIG['host_os'] =~ /mingw32/i)
+ar = !(jruby || windows)
 
 Bundler::GemHelper.install_tasks
 
@@ -20,7 +21,7 @@ if jruby
   end
 elsif windows
   RSpec::Core::RakeTask.new(:spec) do |t|
-    t.rspec_opts = '--color --tag ~@ar --tag ~@hamster'
+    t.rspec_opts = '-fd --color --tag ~@ar --tag ~@hamster'
   end
 else
   RSpec::Core::RakeTask.new(:spec) do |t|
@@ -28,7 +29,7 @@ else
   end
 end
 
-unless jruby
+if ar
   require 'standalone_migrations'
   StandaloneMigrations::Tasks.load_tasks
 

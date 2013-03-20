@@ -7,12 +7,14 @@ SimpleCov.start do
 end
 
 jruby = (0 == (RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i))
+windows = (RbConfig::CONFIG['host_os'] =~ /mswin32/i || RbConfig::CONFIG['host_os'] =~ /mingw32/i)
+ar = !(jruby || windows)
 
 require 'ratistics'
 
 require 'rspec'
-require 'hamster'
-require 'active_record' unless jruby
+require 'hamster' unless windows
+require 'active_record' if ar
 
 # import all the support files
 Dir[File.join(File.dirname(__FILE__), 'support/**/*.rb')].each { |f| require File.expand_path(f) }

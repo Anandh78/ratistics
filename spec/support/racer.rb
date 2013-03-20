@@ -1,7 +1,9 @@
 jruby = (0 == (RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i))
+windows = (RbConfig::CONFIG['host_os'] =~ /mswin32/i || RbConfig::CONFIG['host_os'] =~ /mingw32/i)
+ar = !(jruby || windows)
 
-require 'active_record' unless jruby
-parent = jruby ? Class.new : ActiveRecord::Base
+require 'active_record' if ar
+parent = ar ? ActiveRecord::Base : Class.new
 
 class Racer < parent
 
