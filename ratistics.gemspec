@@ -38,32 +38,5 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.8.7'
   s.post_install_message  = '"Lies, damned lies, and statistics"'
 
-  # Production dependencies
-
-  # Development dependencies
-
   s.add_development_dependency 'bundler'
-
-  # test alternate collection classes
-  s.add_development_dependency 'hamster'
-
-  unless RbConfig::CONFIG['ruby_install_name']=~ /^jruby$/i
-
-    # test active_record collections
-    s.add_development_dependency 'standalone_migrations'
-    s.add_development_dependency 'activerecord', '~> 3.2.0'
-    s.add_development_dependency 'sqlite3'
-
-    # create API documentation
-    s.add_development_dependency 'yard'
-    s.add_development_dependency 'redcarpet'
-    #s.add_development_dependency 'github-markup'
-  end
-
-  # testing
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec'
-  s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'countloc'
-
 end
