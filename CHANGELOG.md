@@ -11,6 +11,10 @@ Release Date: TBD
   * Collection.catalog (alias: catalogue)
   * Collection.catalog_hash(alias: catalogue_hash)
   * Collection.hash_catalog(alias: hash_catalogue)
+  * Collection bisection
+    * bisect_left, bisect_right (alias: bisect)
+    * insort_left, insort_right (alias: insort)
+    * insort_left!, insort_right! (alias: insort!)
 * Added Inflect module
 * Added NilSampleError
 * Added Catalog (alias: Catalogue) class

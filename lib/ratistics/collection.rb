@@ -13,6 +13,154 @@ module Ratistics
       return sample
     end
 
+    # Return the index where to insert item x in list a, assuming a is sorted.
+    #   
+    # The return value i is such that all e in a[:i] have e < x, and all e in
+    # a[i:] have e >= x.  So if x already appears in the list, a.insert(x) will
+    # insert just before the leftmost x already there.
+    #
+    # Optional args lo (default 0) and hi (default len(a)) bound the
+    # slice of a to be searched.
+    #
+    # @see http://docs.python.org/3/library/bisect.html
+    # @see http://hg.python.org/cpython/file/3.3/Lib/bisect.py
+    # @see http://effbot.org/librarybook/bisect.htm
+    def bisect_left(a, x, opts={})
+      return nil if a.nil?
+      return 0 if a.empty?
+
+      lo = (opts[:lo] || opts[:low]).to_i
+      hi = opts[:hi] || opts[:high] || a.length
+      v1 = (block_given? ? yield(x) : x)
+
+      while lo < hi
+        mid = (lo + hi) / 2
+        v2 = (block_given? ? yield(a[mid]) : a[mid])
+        if v2 < v1
+          lo = mid + 1
+        else
+          hi = mid
+        end
+      end
+      return lo
+    end
+
+    # Return the index where to insert item x in list a, assuming a is sorted.
+    #
+    # The return value i is such that all e in a[:i] have e <= x, and all e in
+    # a[i:] have e > x.  So if x already appears in the list, a.insert(x) will
+    # insert just after the rightmost x already there.
+    #
+    # Optional args lo (default 0) and hi (default len(a)) bound the
+    # slice of a to be searched.
+    #
+    # @see http://docs.python.org/3/library/bisect.html
+    # @see http://hg.python.org/cpython/file/3.3/Lib/bisect.py
+    # @see http://effbot.org/librarybook/bisect.htm
+    def bisect_right(a, x, opts={})
+      return nil if a.nil?
+      return 0 if a.empty?
+
+      lo = (opts[:lo] || opts[:low]).to_i
+      hi = opts[:hi] || opts[:high] || a.length
+      v1 = (block_given? ? yield(x) : x)
+
+      while lo < hi
+        mid = (lo + hi) / 2
+        v2 = (block_given? ? yield(a[mid]) : a[mid])
+        if v1 < v2
+          hi = mid
+        else
+          lo = mid + 1
+        end
+      end
+      return lo
+    end
+
+    alias :bisect :bisect_right
+
+    # Insert item x in list a, and keep it sorted assuming a is sorted.
+    # 
+    # If x is already in a, insert it to the left of the leftmost x.
+    #
+    # Optional args lo (default 0) and hi (default len(a)) bound the
+    # slice of a to be searched. 
+    #
+    # @see http://docs.python.org/3/library/bisect.html
+    # @see http://hg.python.org/cpython/file/3.3/Lib/bisect.py
+    # @see http://effbot.org/librarybook/bisect.htm
+    def insort_left(a, x, opts={}, &block)
+      return [x] if a.nil?
+      if a.respond_to?(:dup)
+        a = a.dup
+      else
+        a = collect(x)
+      end
+      return insort_left!(a, x, opts, &block)
+    end
+
+    # Insert item x in list a, and keep it sorted assuming a is sorted.
+    # Returns a duplicate of the original list, leaving it intact.
+    # 
+    # If x is already in a, insert it to the left of the leftmost x.
+    #
+    # Optional args lo (default 0) and hi (default len(a)) bound the
+    # slice of a to be searched. 
+    #
+    # @see http://docs.python.org/3/library/bisect.html
+    # @see http://hg.python.org/cpython/file/3.3/Lib/bisect.py
+    # @see http://effbot.org/librarybook/bisect.htm
+    def insort_left!(a, x, opts={}, &block)
+      return [x] if a.nil?
+      return a << x if a.empty?
+
+      index = bisect_left(a, x, opts, &block)
+      return a.insert(index, x)
+    end
+
+    # Insert item x in list a, and keep it sorted assuming a is sorted.
+    # Returns a duplicate of the original list, leaving it intact.
+    #
+    # If x is already in a, insert it to the right of the rightmost x.
+    #
+    # Optional args lo (default 0) and hi (default len(a)) bound the
+    # slice of a to be searched. 
+    #
+    # @see http://docs.python.org/3/library/bisect.html
+    # @see http://hg.python.org/cpython/file/3.3/Lib/bisect.py
+    # @see http://effbot.org/librarybook/bisect.htm
+    def insort_right(a, x, opts={}, &block)
+      return [x] if a.nil?
+      if a.respond_to?(:dup)
+        a = a.dup
+      else
+        a = collect(x)
+      end
+      return insort_right!(a, x, opts, &block)
+    end
+
+    alias :insort :insort_right
+
+    # Insert item x in list a, and keep it sorted assuming a is sorted.
+    #
+    # If x is already in a, insert it to the right of the rightmost x.
+    #
+    # Optional args lo (default 0) and hi (default len(a)) bound the
+    # slice of a to be searched. 
+    #
+    # @see http://docs.python.org/3/library/bisect.html
+    # @see http://hg.python.org/cpython/file/3.3/Lib/bisect.py
+    # @see http://effbot.org/librarybook/bisect.htm
+    def insort_right!(a, x, opts={}, &block)
+      return [x] if a.nil?
+      return a << x if a.empty?
+
+      index = bisect_right(a, x, opts, &block)
+      return a.insert(index, x)
+    end
+
+    alias :insort! :insort_right!
+
     # Collect sample data from a generic collection, processing each item
     # with a block when given. Returns an array of the items from +data+
     # in order.

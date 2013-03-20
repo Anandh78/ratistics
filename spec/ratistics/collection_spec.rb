@@ -4,6 +4,359 @@ module Ratistics
 
   describe Collection do
 
+    context '#random_sample' do
+      pending
+    end
+
+    context 'bisection' do
+
+      context '#bisect_left' do
+
+        it 'returns nil when the sample is nil' do
+          Collection.bisect_left(nil, 10).should be_nil
+        end
+
+        it 'returns zero when the sample is empty' do
+          Collection.bisect_left([], 10).should eq 0
+        end
+
+        it 'returns the index when the item is not in the sample' do
+          sample = [10, 20, 30]
+          Collection.bisect_left(sample, 15).should eq 1
+          Collection.bisect_left(sample, 25).should eq 2
+        end
+
+        it 'returns the index when the item is in the sample' do
+          sample = [10, 20, 30]
+          Collection.bisect_left(sample, 10).should eq 0
+          Collection.bisect_left(sample, 20).should eq 1
+          Collection.bisect_left(sample, 30).should eq 2
+        end
+
+        it 'returns the index when the item is not in the sample with a block' do
+          sample = [
+            {:count => 10},
+            {:count => 20},
+            {:count => 30}
+          ]
+          Collection.bisect_left(sample, {:count => 15}){|x| x[:count]}.should eq 1
+          Collection.bisect_left(sample, {:count => 25}){|x| x[:count]}.should eq 2
+        end
+
+        it 'returns the index when the item is in the sample with a block' do
+          sample = [
+            {:count => 10},
+            {:count => 20},
+            {:count => 30}
+          ]
+          Collection.bisect_left(sample, {:count => 10}){|x| x[:count]}.should eq 0
+          Collection.bisect_left(sample, {:count => 20}){|x| x[:count]}.should eq 1
+          Collection.bisect_left(sample, {:count => 30}){|x| x[:count]}.should eq 2
+        end
+      end
+
+      context '#bisect_right' do
+
+        it 'returns nil when the sample is nil' do
+          Collection.bisect_right(nil, 10).should be_nil
+        end
+
+        it 'returns zero when the sample is empty' do
+          Collection.bisect_right([], 10).should eq 0
+        end
+
+        it 'returns the index when the item is not in the sample' do
+          sample = [10, 20, 30]
+          Collection.bisect_right(sample, 15).should eq 1
+          Collection.bisect_right(sample, 25).should eq 2
+        end
+
+        it 'returns the index when the item is in the sample' do
+          sample = [10, 20, 30]
+          Collection.bisect_right(sample, 10).should eq 1
+          Collection.bisect_right(sample, 20).should eq 2
+          Collection.bisect_right(sample, 30).should eq 3
+        end
+
+        it 'returns the index when the item is not in the sample with a block' do
+          sample = [
+            {:count => 10},
+            {:count => 20},
+            {:count => 30}
+          ]
+          Collection.bisect_right(sample, {:count => 15}){|x| x[:count]}.should eq 1
+          Collection.bisect_right(sample, {:count => 25}){|x| x[:count]}.should eq 2
+        end
+
+        it 'returns the index when the item is in the sample with a block' do
+          sample = [
+            {:count => 10},
+            {:count => 20},
+            {:count => 30}
+          ]
+          Collection.bisect_right(sample, {:count => 10}){|x| x[:count]}.should eq 1
+          Collection.bisect_right(sample, {:count => 20}){|x| x[:count]}.should eq 2
+          Collection.bisect_right(sample, {:count => 30}){|x| x[:count]}.should eq 3
+        end
+      end
+
+      context '#insort_left!' do
+
+        it 'returns the item in a one-element array when the sample is nil' do
+          Collection.insort_left!(nil, 10).should eq [10]
+        end
+
+        it 'returns the item in a one-element array when the sample is empty' do
+          sample = []
+          insort = Collection.insort_left!(sample, 10)
+          insort.should eq [10]
+          sample.object_id.should eq insort.object_id
+        end
+
+        it 'inserts an element that is not in the sample' do
+          sample = [10, 20, 30]
+          insort = Collection.insort_left!(sample, 15)
+          insort.should eq [10, 15, 20, 30]
+          sample.object_id.should eq insort.object_id
+        end
+
+        it 'inserts an element that is in the sample' do
+          item = 'b'
+          sample = ['a', 'b', 'c']
+          insort = Collection.insort_left!(sample, item)
+          insort.should eq ['a', 'b', 'b', 'c']
+          sample.object_id.should eq insort.object_id
+          sample[1].object_id.should eq item.object_id
+        end
+
+        it 'inserts an element that is not in the sample using a block' do
+          sample = [
+            {:count => 10},
+            {:count => 20},
+            {:count => 30}
+          ]
+          insort = Collection.insort_left!(sample, {:count => 15}){|x| x[:count]}
+          insort.should eq [
+            {:count => 10},
+            {:count => 15},
+            {:count => 20},
+            {:count => 30}
+          ]
+          sample.object_id.should eq insort.object_id
+        end
+
+        it 'inserts an element that is in the sample using a block' do
+          item = {:letter => 'b'}
+          sample = [
+            {:letter => 'a'},
+            {:letter => 'b'},
+            {:letter => 'c'}
+          ]
+          insort = Collection.insort_left!(sample, item){|x| x[:letter]}
+          insort.should eq [
+            {:letter => 'a'},
+            {:letter => 'b'},
+            {:letter => 'b'},
+            {:letter => 'c'}
+          ]
+          sample.object_id.should eq insort.object_id
+          sample[1].object_id.should eq item.object_id
+        end
+      end
+
+      context '#insort_left' do
+
+        it 'returns the item in a one-element array when the sample is nil' do
+          Collection.insort_left(nil, 10).should eq [10]
+        end
+
+        it 'returns the item in a one-element array when the sample is empty' do
+          sample = []
+          insort = Collection.insort_left(sample, 10)
+          insort.should eq [10]
+          sample.object_id.should_not eq insort.object_id
+        end
+
+        it 'inserts an element that is not in the sample' do
+          sample = [10, 20, 30]
+          insort = Collection.insort_left(sample, 15)
+          insort.should eq [10, 15, 20, 30]
+          sample.object_id.should_not eq insort.object_id
+        end
+
+        it 'inserts an element that is in the sample' do
+          item = 'b'
+          sample = ['a', 'b', 'c']
+          insort = Collection.insort_left(sample, item)
+          insort.should eq ['a', 'b', 'b', 'c']
+          sample.object_id.should_not eq insort.object_id
+          insort[1].object_id.should eq item.object_id
+        end
+
+        it 'inserts an element that is not in the sample using a block' do
+          sample = [
+            {:count => 10},
+            {:count => 20},
+            {:count => 30}
+          ]
+          insort = Collection.insort_left(sample, {:count => 15}){|x| x[:count]}
+          insort.should eq [
+            {:count => 10},
+            {:count => 15},
+            {:count => 20},
+            {:count => 30}
+          ]
+          sample.object_id.should_not eq insort.object_id
+        end
+
+        it 'inserts an element that is in the sample using a block' do
+          item = {:letter => 'b'}
+          sample = [
+            {:letter => 'a'},
+            {:letter => 'b'},
+            {:letter => 'c'}
+          ]
+          insort = Collection.insort_left(sample, item){|x| x[:letter]}
+          insort.should eq [
+            {:letter => 'a'},
+            {:letter => 'b'},
+            {:letter => 'b'},
+            {:letter => 'c'}
+          ]
+          sample.object_id.should_not eq insort.object_id
+          insort[1].object_id.should eq item.object_id
+        end
+      end
+
+      context '#insort_right!' do
+
+        it 'returns the item in a one-element array when the sample is nil' do
+          Collection.insort_right!(nil, 10).should eq [10]
+        end
+
+        it 'returns the item in a one-element array when the sample is empty' do
+          sample = []
+          insort = Collection.insort_right!(sample, 10)
+          insort.should eq [10]
+          sample.object_id.should eq insort.object_id
+        end
+
+        it 'inserts an element that is not in the sample' do
+          sample = [10, 20, 30]
+          insort = Collection.insort_right!(sample, 15)
+          insort.should eq [10, 15, 20, 30]
+          sample.object_id.should eq insort.object_id
+        end
+
+        it 'inserts an element that is in the sample' do
+          item = 'b'
+          sample = ['a', 'b', 'c']
+          insort = Collection.insort_right!(sample, item)
+          insort.should eq ['a', 'b', 'b', 'c']
+          sample.object_id.should eq insort.object_id
+          insort[2].object_id.should eq item.object_id
+        end
+
+        it 'inserts an element that is not in the sample using a block' do
+          sample = [
+            {:count => 10},
+            {:count => 20},
+            {:count => 30}
+          ]
+          insort = Collection.insort_right!(sample, {:count => 15}){|x| x[:count]}
+          insort.should eq [
+            {:count => 10},
+            {:count => 15},
+            {:count => 20},
+            {:count => 30}
+          ]
+          sample.object_id.should eq insort.object_id
+        end
+
+        it 'inserts an element that is in the sample using a block' do
+          item = {:letter => 'b'}
+          sample = [
+            {:letter => 'a'},
+            {:letter => 'b'},
+            {:letter => 'c'}
+          ]
+          insort = Collection.insort_right!(sample, item){|x| x[:letter]}
+          insort.should eq [
+            {:letter => 'a'},
+            {:letter => 'b'},
+            {:letter => 'b'},
+            {:letter => 'c'}
+          ]
+          sample.object_id.should eq insort.object_id
+          insort[2].object_id.should eq item.object_id
+        end
+      end
+
+      context '#insort_right' do
+
+        it 'returns the item in a one-element array when the sample is nil' do
+          Collection.insort_right(nil, 10).should eq [10]
+        end
+
+        it 'returns the item in a one-element array when the sample is empty' do
+          sample = []
+          insort = Collection.insort_right(sample, 10)
+          insort.should eq [10]
+          sample.object_id.should_not eq insort.object_id
+        end
+
+        it 'inserts an element that is not in the sample' do
+          sample = [10, 20, 30]
+          insort = Collection.insort_right(sample, 15)
+          insort.should eq [10, 15, 20, 30]
+          sample.object_id.should_not eq insort.object_id
+        end
+
+        it 'inserts an element that is in the sample' do
+          item = 'b'
+          sample = ['a', 'b', 'c']
+          insort = Collection.insort_right(sample, item)
+          insort.should eq ['a', 'b', 'b', 'c']
+          sample.object_id.should_not eq insort.object_id
+          insort[2].object_id.should eq item.object_id
+        end
+
+        it 'inserts an element that is not in the sample using a block' do
+          sample = [
+            {:count => 10},
+            {:count => 20},
+            {:count => 30}
+          ]
+          insort = Collection.insort_right(sample, {:count => 15}){|x| x[:count]}
+          insort.should eq [
+            {:count => 10},
+            {:count => 15},
+            {:count => 20},
+            {:count => 30}
+          ]
+          sample.object_id.should_not eq insort.object_id
+        end
+
+        it 'inserts an element that is in the sample using a block' do
+          item = {:letter => 'b'}
+          sample = [
+            {:letter => 'a'},
+            {:letter => 'b'},
+            {:letter => 'c'}
+          ]
+          insort = Collection.insort_right(sample, item){|x| x[:letter]}
+          insort.should eq [
+            {:letter => 'a'},
+            {:letter => 'b'},
+            {:letter => 'b'},
+            {:letter => 'c'}
+          ]
+          sample.object_id.should_not eq insort.object_id
+          insort[2].object_id.should eq item.object_id
+        end
+      end
+    end
+
     context '#collect' do
 
       it 'returns an empty array when given a nil sample' do
