@@ -351,5 +351,41 @@ module Ratistics
       end
     end
 
+    context '#cumulative_distribution_function_value' do
+
+      let(:sample) { [1, 2, 2, 3, 5].freeze }
+      let(:frequencies) { Frequencies.new(sample) }
+
+      it 'returns the value for the given probability' do
+        frequencies.cdf_value(0.0).should eq 1
+        frequencies.cdf_value(0.1).should eq 1
+        frequencies.cdf_value(0.2).should eq 1
+        frequencies.cdf_value(0.3).should eq 2
+        frequencies.cdf_value(0.4).should eq 2
+        frequencies.cdf_value(0.5).should eq 2
+        frequencies.cdf_value(0.6).should eq 2
+        frequencies.cdf_value(0.7).should eq 3
+        frequencies.cdf_value(0.8).should eq 3
+        frequencies.cdf_value(0.9).should eq 5
+        frequencies.cdf_value(1.0).should eq 5
+      end
+
+      it 'returns nil when the probability is less than zero' do
+        frequencies.cdf_value(-0.1).should be_nil
+      end
+
+      it 'returns the sample minimum when the probability is zero' do
+        frequencies.cdf_value(0).should eq 1
+      end
+
+      it 'returns the sample maximum when the probability is one' do
+        frequencies.cdf_value(1).should eq 5
+      end
+
+      it 'returns nil when the probability is greater than one' do
+        frequencies.cdf_value(1.1).should be_nil
+      end
+    end
+
   end
 end
