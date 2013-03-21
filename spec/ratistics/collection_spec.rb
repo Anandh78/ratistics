@@ -5,7 +5,11 @@ module Ratistics
   describe Collection do
 
     context '#random_sample' do
-      pending
+
+      specify { Collection.random_sample(100).length == 100 }
+      specify { Collection.random_sample(100, :min => 10).min >= 10 }
+      specify { Collection.random_sample(100, :max => 10).max >= 10 }
+
     end
 
     context 'bisection' do

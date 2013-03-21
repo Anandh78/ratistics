@@ -3,6 +3,16 @@ module Ratistics
   module Collection
     extend self
 
+    # Returns a random sample of #size integers between 0 and 100 or
+    # the provided :min and/or :max options.
+    #
+    # @param [Integer] size the size of the sample to create
+    # @param [Hash] opts processing options
+    #
+    # @option opts [Integer] :min the minimum value in the sample
+    # @option opts [Integer] :max the maximun value in the sample
+    #
+    # @return [Array] an array of integers
     def random_sample(size, opts={})
       min = opts[:min].to_i
       max = opts[:max] || 100
