@@ -409,7 +409,18 @@ module Ratistics
         end
       end
 
-      it 'returns :incremental probabilities when the option is set'
+      it 'returns :incremental probabilities when the option is set' do
+        sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
+
+        probability = Probability.probability(sample, :incremental => true)
+
+        probability.count.should eq 5
+        probability[13].should be_within(0.01).of(0.444)
+        probability[14].should be_within(0.01).of(0.666)
+        probability[16].should be_within(0.01).of(0.777)
+        probability[18].should be_within(0.01).of(0.888)
+        probability[21].should be_within(0.01).of(1.0)
+      end
 
       context 'with ActiveRecord', :ar => true do
 
