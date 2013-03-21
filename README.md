@@ -51,7 +51,7 @@ As much as possible I plan to follow these guidelines as I develop this gem
 * Support as many common collection classes as possible, especially ActiveRecord
 * Keep runtime dependencies to a minimum, hopefully zero
 * Remain backward compatable to Ruby version 1.8.7
-* Support common Ruby interpreters (MRI, REE, and JRuby)
+* Support common Ruby interpreters (MRI, REE, RBX, and JRuby)
 * Be simple, consistent, and easy to use
 
 ### Purely Functional
@@ -161,6 +161,7 @@ When working with sets of complex data use blocks to process the data without co
 ### Statistics Functions
 
 * cumulative_distribution_function (alias: cdf, cumulative_distribution)
+* cumulative_distribution_function_value (alias: cdf_value, cumulative_distribution_value)
 * first_quartile (alias: lower_quartile)
 * frequency
 * linear_rank (alias: linear_interpolation_rank)

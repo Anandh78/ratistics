@@ -7,6 +7,7 @@ Release Date: TBD
 * Added functions
   * Rank.cumulative_distribution_function (alias: cdf, cumulative_distribution)
   * Frequencies.cumulative_distribution_function (alias: cdf, cumulative_distribution)
+  * Frequencies.cumulative_distribution_function_value (alias: cdf_value, cumulative_distribution_value)
   * Collection.collect
   * Collection.catalog (alias: catalogue)
   * Collection.catalog_hash(alias: catalogue_hash)
