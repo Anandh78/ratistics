@@ -197,6 +197,14 @@ module Ratistics
           insort[1].object_id.should eq item.object_id
         end
 
+        it 'inserts an element when the sample class does not support the #dup method' do
+          sample = [10, 20, 30]
+          sample.should_receive(:respond_to?).with(:dup).and_return(false)
+          insort = Collection.insort_left(sample, 15)
+          insort.should eq [10, 15, 20, 30]
+          sample.object_id.should_not eq insort.object_id
+        end
+
         it 'inserts an element that is not in the sample using a block' do
           sample = [
             {:count => 10},
@@ -323,6 +331,14 @@ module Ratistics
           insort.should eq ['a', 'b', 'b', 'c']
           sample.object_id.should_not eq insort.object_id
           insort[2].object_id.should eq item.object_id
+        end
+
+        it 'inserts an element when the sample class does not support the #dup method' do
+          sample = [10, 20, 30]
+          sample.should_receive(:respond_to?).with(:dup).and_return(false)
+          insort = Collection.insort_right(sample, 15)
+          insort.should eq [10, 15, 20, 30]
+          sample.object_id.should_not eq insort.object_id
         end
 
         it 'inserts an element that is not in the sample using a block' do

@@ -102,7 +102,7 @@ module Ratistics
       if a.respond_to?(:dup)
         a = a.dup
       else
-        a = collect(x)
+        a = collect(a)
       end
       return insort_left!(a, x, opts, &block)
     end
@@ -143,7 +143,7 @@ module Ratistics
       if a.respond_to?(:dup)
         a = a.dup
       else
-        a = collect(x)
+        a = collect(a)
       end
       return insort_right!(a, x, opts, &block)
     end
