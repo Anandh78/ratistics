@@ -946,16 +946,6 @@ module Ratistics
 
         before(:all) { Racer.connect }
 
-        let(:age_cdf) do
-          {
-            22 => 0.038196618659987476,
-            32 => 0.28115216030056356,
-            38 => 0.5003130870381967,
-            42 => 0.6249217282404509,
-            52 => 0.8597370068879149
-          }
-        end
-
         specify do
           sample = Racer.where('age > 0').order('age ASC')
 
@@ -985,6 +975,17 @@ module Ratistics
 
       let(:sorted_sample) { [1, 2, 2, 3, 5].freeze }
       let(:unsorted_sample) { [2, 1, 3, 2, 5].freeze }
+      let(:flat_sample) { [1, 2, 2, 2, 2, 2, 2, 2, 2, 3] }
+
+      let(:sorted_sample_with_block) do
+        [
+          {:count => 1},
+          {:count => 2},
+          {:count => 2},
+          {:count => 3},
+          {:count => 5}
+        ].freeze
+      end
 
       it 'returns nil for a nil sample' do
         Probability.cdf_value(nil, 0.5).should be_nil
@@ -995,12 +996,12 @@ module Ratistics
       end
 
       it 'returns the value for the given probability' do
-        Probability.cdf_value(sorted_sample, 0.0).should eq 1
-        Probability.cdf_value(sorted_sample, 0.1).should eq 1
-        Probability.cdf_value(sorted_sample, 0.2).should eq 1
-        Probability.cdf_value(sorted_sample, 0.3).should eq 2
-        Probability.cdf_value(sorted_sample, 0.4).should eq 2
-        Probability.cdf_value(sorted_sample, 0.5).should eq 2
+        Probability.cdf_value(sorted_sample, 0.0, :sorted => true).should eq 1
+        Probability.cdf_value(sorted_sample, 0.1, :sorted => true).should eq 1
+        Probability.cdf_value(sorted_sample, 0.2, :sorted => true).should eq 1
+        Probability.cdf_value(sorted_sample, 0.3, :sorted => true).should eq 2
+        Probability.cdf_value(sorted_sample, 0.4, :sorted => true).should eq 2
+        Probability.cdf_value(sorted_sample, 0.5, :sorted => true).should eq 2
         Probability.cdf_value(sorted_sample, 0.6).should eq 2
         Probability.cdf_value(sorted_sample, 0.7).should eq 3
         Probability.cdf_value(sorted_sample, 0.8).should eq 3
@@ -1009,37 +1010,150 @@ module Ratistics
       end
 
       it 'returns nil when the probability is less than zero' do
-        Probability.cdf_value(sorted_sample, -0.1).should be_nil
+        Probability.cdf_value(sorted_sample, -0.1, :sorted => true).should be_nil
       end
 
       it 'returns the sample minimum when the probability is zero' do
-        Probability.cdf_value(sorted_sample, 0).should eq 1
+        Probability.cdf_value(sorted_sample, 0, :sorted => true).should eq 1
       end
 
       it 'returns the sample maximum when the probability is one' do
-        Probability.cdf_value(sorted_sample, 1).should eq 5
+        Probability.cdf_value(sorted_sample, 1, :sorted => true).should eq 5
       end
 
       it 'returns nil when the probability is greater than one' do
-        Probability.cdf_value(sorted_sample, 1.1).should be_nil
+        Probability.cdf_value(sorted_sample, 1.1, :sorted => true).should be_nil
       end
 
-      it 'returns the value when given a block'
+      it 'returns the value when given a block' do
+        Probability.cdf_value(sorted_sample_with_block, 0.0){|x| x[:count] }.should eq 1
+        Probability.cdf_value(sorted_sample_with_block, 0.1){|x| x[:count] }.should eq 1
+        Probability.cdf_value(sorted_sample_with_block, 0.2){|x| x[:count] }.should eq 1
+        Probability.cdf_value(sorted_sample_with_block, 0.3){|x| x[:count] }.should eq 2
+        Probability.cdf_value(sorted_sample_with_block, 0.4){|x| x[:count] }.should eq 2
+        Probability.cdf_value(sorted_sample_with_block, 0.5){|x| x[:count] }.should eq 2
+        Probability.cdf_value(sorted_sample_with_block, 0.6){|x| x[:count] }.should eq 2
+        Probability.cdf_value(sorted_sample_with_block, 0.7){|x| x[:count] }.should eq 3
+        Probability.cdf_value(sorted_sample_with_block, 0.8){|x| x[:count] }.should eq 3
+        Probability.cdf_value(sorted_sample_with_block, 0.9){|x| x[:count] }.should eq 5
+        Probability.cdf_value(sorted_sample_with_block, 1.0){|x| x[:count] }.should eq 5
+      end
 
-      it 'returns the value on an unsorted sample'
+      it 'returns the value on an unsorted sample' do
+        Probability.cdf_value(unsorted_sample, 0.0).should eq 1
+        Probability.cdf_value(unsorted_sample, 0.1).should eq 1
+        Probability.cdf_value(unsorted_sample, 0.2).should eq 1
+        Probability.cdf_value(unsorted_sample, 0.3).should eq 2
+        Probability.cdf_value(unsorted_sample, 0.4).should eq 2
+        Probability.cdf_value(unsorted_sample, 0.5, :sorted => false).should eq 2
+        Probability.cdf_value(unsorted_sample, 0.6, :sorted => false).should eq 2
+        Probability.cdf_value(unsorted_sample, 0.7, :sorted => false).should eq 3
+        Probability.cdf_value(unsorted_sample, 0.8, :sorted => false).should eq 3
+        Probability.cdf_value(unsorted_sample, 0.9, :sorted => false).should eq 5
+        Probability.cdf_value(unsorted_sample, 1.0, :sorted => false).should eq 5
+      end
 
-      it 'returns the value on a relatively flat sample'
+      it 'returns the value on a relatively flat sample' do
+        Probability.cdf_value(flat_sample, 0.0).should eq 1
+        Probability.cdf_value(flat_sample, 0.1).should eq 1
+        Probability.cdf_value(flat_sample, 0.2).should eq 2
+        Probability.cdf_value(flat_sample, 0.3).should eq 2
+        Probability.cdf_value(flat_sample, 0.4).should eq 2
+        Probability.cdf_value(flat_sample, 0.5).should eq 2
+        Probability.cdf_value(flat_sample, 0.6).should eq 2
+        Probability.cdf_value(flat_sample, 0.7).should eq 2
+        Probability.cdf_value(flat_sample, 0.8).should eq 2
+        Probability.cdf_value(flat_sample, 0.9).should eq 2
+        Probability.cdf_value(flat_sample, 1.0).should eq 3
+      end
 
-      it 'recognizes the option :from => :sample'
+      it 'recognizes the option :from => :sample' do
+        Probability.cdf_value(sorted_sample, 0.0, :from => :sample).should eq 1
+        Probability.cdf_value(sorted_sample, 0.1, :from => :sample).should eq 1
+        Probability.cdf_value(sorted_sample, 0.9, :from => :sample).should eq 5
+        Probability.cdf_value(sorted_sample, 1.0, :from => :sample).should eq 5
+      end
 
-      it 'returns the value when given a frequency'
+      it 'returns the value when given a frequency' do
+        freq = {1 => 1, 2 => 2, 3 => 1, 5 => 1}
+        Probability.cdf_value(freq, 0.0, :from => :freq).should eq 1
+        Probability.cdf_value(freq, 0.1, :from => :freq).should eq 1
+        Probability.cdf_value(freq, 0.2, :from => :freq).should eq 1
+        Probability.cdf_value(freq, 0.3, :from => :freq).should eq 2
+        Probability.cdf_value(freq, 0.4, :from => :freq).should eq 2
+        Probability.cdf_value(freq, 0.5, :from => :freq).should eq 2
+        Probability.cdf_value(freq, 0.6, :from => :freq).should eq 2
+        Probability.cdf_value(freq, 0.7, :from => :freq).should eq 3
+        Probability.cdf_value(freq, 0.8, :from => :freq).should eq 3
+        Probability.cdf_value(freq, 0.9, :from => :freq).should eq 5
+        Probability.cdf_value(freq, 1.0, :from => :freq).should eq 5
+      end
 
-      it 'returns the value when given a frequency with a block'
+      it 'returns the value when given a frequency with a block' do
+        freq = {
+          {:count => 1} => 1,
+          {:count => 2} => 2,
+          {:count => 3} => 1,
+          {:count => 5} => 1
+        }
+        Probability.cdf_value(freq, 0.0, :from => :freq){|x| x[:count] }.should eq 1
+        Probability.cdf_value(freq, 0.1, :from => :freq){|x| x[:count] }.should eq 1
+        Probability.cdf_value(freq, 0.2, :from => :freq){|x| x[:count] }.should eq 1
+        Probability.cdf_value(freq, 0.3, :from => :freq){|x| x[:count] }.should eq 2
+        Probability.cdf_value(freq, 0.4, :from => :freq){|x| x[:count] }.should eq 2
+        Probability.cdf_value(freq, 0.5, :from => :freq){|x| x[:count] }.should eq 2
+        Probability.cdf_value(freq, 0.6, :from => :freq){|x| x[:count] }.should eq 2
+        Probability.cdf_value(freq, 0.7, :from => :freq){|x| x[:count] }.should eq 3
+        Probability.cdf_value(freq, 0.8, :from => :freq){|x| x[:count] }.should eq 3
+        Probability.cdf_value(freq, 0.9, :from => :freq){|x| x[:count] }.should eq 5
+        Probability.cdf_value(freq, 1.0, :from => :freq){|x| x[:count] }.should eq 5
+      end
 
-      it 'does not attempt to sort when a using a block'
+      it 'does not attempt to sort when a using a block' do
+        sample = [
+          {:count => 2},
+        ]
 
-      it 'does not re-sort a sorted sample'
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
 
+        Probability.cdf_value(sample, 0.2, :sorted => false) {|item| item[:count] }
+      end
+
+      it 'does not re-sort a sorted sample' do
+        sample = sorted_sample.dup
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        Probability.cdf_value(sample, 0.2, :sorted => true)
+      end
+
+      context 'with ActiveRecord', :ar => true do
+
+        before(:all) { Racer.connect }
+
+        specify do
+          sample = Racer.where('age > 0').order('age ASC')
+
+          value = Probability.cdf_value(sample, 0.5){|r| r.age}
+          value.should eq 38
+        end
+      end
+
+      context 'with Hamster', :hamster => true do
+
+        let(:list) { Hamster.list(1, 2, 2, 3, 5).freeze }
+        let(:vector) { Hamster.vector(1, 2, 2, 3, 5).freeze }
+
+        specify do
+          value = Probability.cdf_value(list, 0.6, :sorted => true)
+          value.should eq 2
+        end
+
+        specify do
+          value = Probability.cdf_value(vector, 0.6, :sorted => true)
+          value.should eq 2
+        end
+      end
     end
 
   end

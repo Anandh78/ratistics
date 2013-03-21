@@ -16,7 +16,7 @@ module Ratistics
     # be passed to the block and the result will be stored as the value
     # in the Catalog.
     #
-    # @params [Array, Hash, Catalog] data the data to construct the
+    # @param [Array, Hash, Catalog] data the data to construct the
     #   Catalog from
     # @param [Hash] opts processing options
     #

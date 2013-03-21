@@ -61,9 +61,9 @@ module Ratistics
     #
     # @example
     #   sample = [13, 18, 13, 14, 13, 16, 14, 21, 13]
-    #   Ratistics.frequency(sample) #=> {13=>0.4444444444444444, 18=>0.1111111111111111, 14=>0.2222222222222222, 16=>0.1111111111111111, 21=>0.1111111111111111}
-    #   Ratistics.frequency(sample, :as => :array) #=> [[13, 0.4444444444444444], [18, 0.1111111111111111], [14, 0.2222222222222222], [16, 0.1111111111111111], [21, 0.1111111111111111]]
-    #   Ratistics.frequency(sample, :as => :catalog) #=> [[13, 0.4444444444444444], [18, 0.1111111111111111], [14, 0.2222222222222222], [16, 0.1111111111111111], [21, 0.1111111111111111]]
+    #   Ratistics.probability(sample) #=> {13=>0.4444444444444444, 18=>0.1111111111111111, 14=>0.2222222222222222, 16=>0.1111111111111111, 21=>0.1111111111111111}
+    #   Ratistics.probability(sample, :as => :array) #=> [[13, 0.4444444444444444], [18, 0.1111111111111111], [14, 0.2222222222222222], [16, 0.1111111111111111], [21, 0.1111111111111111]]
+    #   Ratistics.probability(sample, :as => :catalog) #=> [[13, 0.4444444444444444], [18, 0.1111111111111111], [14, 0.2222222222222222], [16, 0.1111111111111111], [21, 0.1111111111111111]]
     #
     # @yield iterates over each element in the data set
     # @yieldparam item each element in the data set
@@ -270,8 +270,8 @@ module Ratistics
     # @param [Hash] opts processing options
     #
     # @option opts [Symbol] :from describes the nature of the data.
-    #   :sample indicates *data* is a raw data sample, :frequency
-    #   (or :freq) indicates *data* is a frequency distribution
+    #   :sample (the default) indicates *data* is a raw data sample,
+    #   :frequency (or :freq) indicates *data* is a frequency distribution
     #   created from the #frequency function.
     #
     # @return [0, Float, 1] the probability of a random variable being at
@@ -281,6 +281,7 @@ module Ratistics
     #   sample.
     #
     # @see #frequency
+    # @see #cumulative_distribution_function_value
     #
     # @see http://www.cumulativedistributionfunction.com/
     # @see http://en.wikipedia.org/wiki/Cumulative_distribution_function
@@ -312,14 +313,59 @@ module Ratistics
     alias :cdf :cumulative_distribution_function
     alias :cumulative_distribution :cumulative_distribution_function
 
-    def cumulative_distribution_function_value(data, prob, opts={})
+    # Inverse of the #cumulative_distribution_function function. For the
+    # given data sample, return the highest value for a given probability.
+    #
+    # Accepts a block for processing individual items in a raw data
+    # sample (:from => :sample).
+    #
+    # When a block is given the block will be applied to every element in
+    # the data set. Using a block in this way allows probability to be
+    # computed against a specific field in a data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data to perform the calculation against
+    # @param [Hash] opts processing options
+    #
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true or a block is given.
+    #
+    # @option opts [true, false] :sorted indicates of the data is already sorted
+    #
+    # @option opts [Symbol] :from describes the nature of the data.
+    #   :sample (the default) indicates *data* is a raw data sample,
+    #   :frequency (or :freq) indicates *data* is a frequency distribution
+    #   created from the #frequency function.
+    #
+    # @return [Object] the highest value in the sample for the given probability
+    #
+    # @see #frequency
+    # @see #cumulative_distribution_function
+    #
+    # @see http://www.cumulativedistributionfunction.com/
+    # @see http://en.wikipedia.org/wiki/Cumulative_distribution_function
+    def cumulative_distribution_function_value(data, prob, opts={}, &block)
       return nil if data.nil? || data.empty? || prob < 0 || prob > 1
-      return data[0] if prob == 0
-      return data[-1] if prob == 1
 
-      # Array#sort_by! is does not exist in 1.8.7
-      #ps = probability(data, :as => :array, :inc => true).sort_by!{|item| item.first}
-      ps = probability(data, :as => :array, :inc => true)
+      if (opts[:from].nil? || opts[:from] == :sample) && !(block_given? || opts[:sorted] == true)
+        data = data.sort
+      end
+
+      if opts[:from].nil? || opts[:from] == :sample
+        return (block_given? ? yield(data[0]) : data[0]) if prob == 0
+        return (block_given? ? yield(data[-1]) : data[-1]) if prob == 1
+      else
+        return Math.min(data.keys, &block) if prob == 0
+        return Math.max(data.keys, &block) if prob == 1
+      end
+
+      if opts[:from] == :freq || opts[:from] == :frequency
+        ps = probability(data, :as => :array, :inc => true, :from => :freq, &block)
+      else
+        ps = probability(data, :as => :array, :inc => true, &block)
+      end
       ps = Sort.insertion_sort!(ps){|item| item.first}
       index = Collection.bisect_left(ps, prob){|item| item.last}
 
