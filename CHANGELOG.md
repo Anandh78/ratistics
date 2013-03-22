@@ -8,6 +8,7 @@ Release Date: TBD
   * Probability.cumulative_distribution_function (alias: cdf, cumulative_distribution)
   * Probability.cumulative_distribution_function_value (alias: cdf_value, cumulative_distribution_value)
   * Probability.sample_with_replacement (alias: resample_with_replacement, bootstrap)
+  * Probability.sample_without_replacement (alias: resample_without_replacement, jackknife)
   * Frequencies.cumulative_distribution_function (alias: cdf, cumulative_distribution)
   * Frequencies.cumulative_distribution_function_value (alias: cdf_value, cumulative_distribution_value)
   * Collection.collect

@@ -179,6 +179,7 @@ When working with sets of complex data use blocks to process the data without co
 * range
 * ranks
 * sample_with_replacement (alias: resample_with_replacement, bootstrap)
+* sample_without_replacement (alias: resample_without_replacement, jackknife)
 * second_quartile
 * standard_deviation (alias: std_dev, stddev)
 * third_quartile (alias: upper_quartile)

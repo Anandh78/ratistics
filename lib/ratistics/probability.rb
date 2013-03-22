@@ -435,9 +435,47 @@ module Ratistics
     alias :resample_with_replacement :sample_with_replacement
     alias :bootstrap :sample_with_replacement
 
+    # Resamples the given sample without replacement (aka jackknife).
+    # The resample will have one half the number of elements as the original
+    # sample unless the :size (or :length, :count) option is given.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data to perform the calculation against
+    # @param [Hash] opts processing options
+    #
+    # @option opts [Integer] :size the size of the resample
+    #
+    # @option opts [Symbol] :from describes the nature of the data.
+    #   :sample (the default) indicates *data* is a raw data sample,
+    #   :frequency (or :freq) indicates *data* is a frequency distribution
+    #   created from the #frequency function.
+    #
+    # @return [Object] the highest value in the sample for the given probability
+    #
+    # @see #frequency
+    # @see #cumulative_distribution_function
+    #
+    # @see http://en.wikipedia.org/wiki/Resampling_(statistics)
     def sample_without_replacement(data, opts={}, &block)
+      return [] if data.nil? || data.empty?
+
+      if opts[:from] == :freq || opts[:from] == :frequency
+        data = data.inject([]) do |memo, item|
+          item.last.times{ memo << item.first }
+          memo
+        end
+      else
+        data = Collection.collect(data, &block).shuffle!
+      end
+
+      length = opts[:length] || opts[:size] || opts[:count] || (data.length / 2)
+
+      return data.slice!(0, length)
     end
 
+    alias :resample_without_replacement :sample_without_replacement
     alias :jackknife :sample_without_replacement
 
   end

@@ -3,6 +3,12 @@ require 'spec_helper'
 module Ratistics
   describe Probability do
 
+    def check_min_max(resample, sample)
+      min, max = Math.minmax(sample)
+      resample.min.should >= min
+      resample.max.should <= max
+    end
+
     context '#frequency' do
 
       it 'returns nil for a nil sample' do
@@ -1185,12 +1191,6 @@ module Ratistics
         ].freeze
       end
 
-      def check_min_max(resample, sample)
-        min, max = Math.minmax(sample)
-        resample.min.should >= min
-        resample.max.should <= max
-      end
-
       it 'returns an empty array when the sample is nil' do
         Probability.sample_with_replacement(nil).should be_empty
       end
@@ -1213,7 +1213,7 @@ module Ratistics
 
       it 'returns a resample when given a block' do
         resample = Probability.sample_with_replacement(sorted_sample_with_block){|x| x[:count]}
-        resample.length.should eq unsorted_sample.length
+        resample.length.should eq sorted_sample_with_block.length
         resample.each do |item|
           item.should be_a Integer
         end
@@ -1286,6 +1286,77 @@ module Ratistics
           resample.length.should eq vector.length
           check_min_max(resample, vector)
         end
+      end
+    end
+
+    context '#sample_without_replacement' do
+
+      let(:sorted_sample) { [1, 2, 2, 3, 5, 5].freeze }
+      let(:unsorted_sample) { [2, 1, 3, 2, 5, 5].freeze }
+      let(:flat_sample) { [1, 2, 2, 2, 2, 2, 2, 2, 2, 3].freeze }
+
+      let(:sorted_sample_with_block) do
+        [
+          {:count => 1},
+          {:count => 2},
+          {:count => 2},
+          {:count => 3},
+          {:count => 5}
+        ].freeze
+      end
+
+      it 'returns an empty array when the sample is nil' do
+        Probability.sample_without_replacement(nil).should be_empty
+      end
+
+      it 'returns an empty array when the sample is empty' do
+        Probability.sample_without_replacement([]).should be_empty
+      end
+
+      it 'returns a resample of one-half count when :size is is not provided' do
+        resample = Probability.sample_without_replacement(sorted_sample)
+        resample.length.should eq 3
+        check_min_max(resample, sorted_sample)
+      end
+
+      it 'returns a resample of count :size' do
+        resample = Probability.sample_without_replacement(sorted_sample, :size => 2)
+        resample.length.should eq 2
+        check_min_max(resample, sorted_sample)
+      end
+
+      it 'returns a resample of count when :size is greater than the sample size' do
+        resample = Probability.sample_without_replacement(sorted_sample, :size => 100)
+        resample.length.should eq sorted_sample.length
+        check_min_max(resample, sorted_sample)
+      end
+
+      it 'returns a resample when given a block' do
+        resample = Probability.sample_without_replacement(sorted_sample_with_block){|x| x[:count]}
+        resample.length.should eq 2
+        resample.each do |item|
+          item.should be_a Integer
+        end
+        check_min_max(resample, unsorted_sample)
+      end
+
+      it 'works with an unsorted sample' do
+        resample = Probability.sample_without_replacement(unsorted_sample)
+        resample.length.should eq 3
+        check_min_max(resample, unsorted_sample)
+      end
+
+      it 'recognizes the option :from => :sample' do
+        resample = Probability.sample_without_replacement(sorted_sample, :from => :sample)
+        resample.length.should eq 3
+        check_min_max(resample, sorted_sample)
+      end
+
+      it 'creates a random sample when given a :frequency' do
+        freq = Probability.frequency(sorted_sample)
+        resample = Probability.sample_without_replacement(freq, :from => :frequency)
+        resample.length.should eq 3
+        check_min_max(resample, sorted_sample)
       end
     end
 
