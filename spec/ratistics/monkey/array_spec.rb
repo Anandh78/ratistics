@@ -635,6 +635,52 @@ module Ratistics
         end
       end
 
+      context '#sample_with_replacement' do
+
+        it 'returns a resample of equal count when :size is is not provided' do
+          sample = [1, 2, 2, 3, 5]
+          resample = sample.sample_with_replacement
+          resample.length.should eq sample.length
+
+          min, max = Math.minmax(sample)
+          resample.min.should >= min
+          resample.max.should <= max
+        end
+
+        it 'returns a resample of count :size' do
+          sample = [1, 2, 2, 3, 5]
+          resample = sample.sample_with_replacement(:size => 100)
+          resample.length.should eq 100
+
+          min, max = Math.minmax(sample)
+          resample.min.should >= min
+          resample.max.should <= max
+        end
+      end
+
+      context '#sample_without_replacement' do
+
+        it 'returns a resample of one-half count when :size is is not provided' do
+          sample = [1, 2, 2, 3, 5]
+          resample = sample.sample_without_replacement
+          resample.length.should eq 2
+
+          min, max = Math.minmax(sample)
+          resample.min.should >= min
+          resample.max.should <= max
+        end
+
+          it 'returns a resample of count when :size is greater than the sample size' do
+          sample = [1, 2, 2, 3, 5]
+          resample = sample.sample_without_replacement(:size => 100)
+          resample.length.should eq sample.length
+
+          min, max = Math.minmax(sample)
+          resample.min.should >= min
+          resample.max.should <= max
+        end
+      end
+
     end
   end
 end

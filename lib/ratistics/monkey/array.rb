@@ -133,5 +133,21 @@ module Ratistics
       return Ratistics.insertion_sort!(self, *args, &block)
     end
 
+    # @see Probability::sample_with_replacement
+    def sample_with_replacement(*args, &block)
+      return Ratistics.sample_with_replacement(self, *args, &block)
+    end
+
+    alias :resample_with_replacement :sample_with_replacement
+    alias :bootstrap :sample_with_replacement
+
+    # @see Probability::sample_without_replacement
+    def sample_without_replacement(*args, &block)
+      return Ratistics.sample_without_replacement(self, *args, &block)
+    end
+
+    alias :resample_without_replacement :sample_without_replacement
+    alias :jackknife :sample_without_replacement
+
   end
 end
