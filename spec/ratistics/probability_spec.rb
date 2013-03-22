@@ -1358,6 +1358,37 @@ module Ratistics
         resample.length.should eq 3
         check_min_max(resample, sorted_sample)
       end
+
+      context 'with ActiveRecord', :ar => true do
+
+        before(:all) { Racer.connect }
+
+        specify do
+          sample = Racer.where('age > 0').order('age ASC')
+          resample = Probability.sample_without_replacement(sample){|r| r.age}
+          min, max = Math.minmax(sample){|r| r.age}
+          resample.min.should >= min
+          resample.max.should <= max
+        end
+      end
+
+      context 'with Hamster', :hamster => true do
+
+        let(:list) { Hamster.list(1, 2, 2, 3, 5).freeze }
+        let(:vector) { Hamster.vector(1, 2, 2, 3, 5).freeze }
+
+        specify do
+          resample = Probability.sample_without_replacement(list, :sorted => true)
+          resample.length.should eq 2
+          check_min_max(resample, list)
+        end
+
+        specify do
+          resample = Probability.sample_without_replacement(vector, :sorted => true)
+          resample.length.should eq 2
+          check_min_max(resample, vector)
+        end
+      end
     end
 
   end
