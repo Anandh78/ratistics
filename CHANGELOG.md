@@ -4,6 +4,10 @@
 
 Release Date: TBD
 
+### 0.2.3
+
+Release Date: March 22, 2013
+
 * Added functions
   * Probability.cumulative_distribution_function (alias: cdf, cumulative_distribution)
   * Probability.cumulative_distribution_function_value (alias: cdf_value, cumulative_distribution_value)
