@@ -829,7 +829,7 @@ module Ratistics
 
       let(:sorted_sample) { [1, 2, 2, 3, 5].freeze }
       let(:unsorted_sample) { [5, 2, 1, 3, 2].freeze }
-      let(:flat_sample) { [1, 2, 2, 2, 2, 2, 2, 2, 2, 3] }
+      let(:flat_sample) { [1, 2, 2, 2, 2, 2, 2, 2, 2, 3].freeze }
 
       let(:sample_for_block) do
         [
@@ -838,7 +838,7 @@ module Ratistics
           {:count => 2},
           {:count => 3},
           {:count => 5}
-        ]
+        ].freeze
       end
 
       let(:frequency) do
@@ -847,7 +847,7 @@ module Ratistics
           2 => 2,
           3 => 1,
           5 => 1
-        }
+        }.freeze
       end
 
       let(:frequency_with_block) do
@@ -856,7 +856,7 @@ module Ratistics
           {:count => 2} => 2,
           {:count => 3} => 1,
           {:count => 5} => 1
-        }
+        }.freeze
       end
 
       let(:cdf_values) do
@@ -867,7 +867,7 @@ module Ratistics
           3 => 0.8,
           4 => 0.8,
           5 => 1
-        }
+        }.freeze
       end
 
       it 'returns zero for a nil sample' do
@@ -942,6 +942,7 @@ module Ratistics
 
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
+        Sort.should_not_receive(:insertion_sort!)
 
         Probability.cdf(sample, 2, :sorted => false) {|item| item[:count] }
       end
@@ -950,6 +951,7 @@ module Ratistics
         sample = sorted_sample.dup
         sample.should_not_receive(:sort)
         sample.should_not_receive(:sort_by)
+        Sort.should_not_receive(:insertion_sort!)
         Probability.cdf(sample, 2, :sorted => true)
       end
 
@@ -986,7 +988,7 @@ module Ratistics
 
       let(:sorted_sample) { [1, 2, 2, 3, 5].freeze }
       let(:unsorted_sample) { [2, 1, 3, 2, 5].freeze }
-      let(:flat_sample) { [1, 2, 2, 2, 2, 2, 2, 2, 2, 3] }
+      let(:flat_sample) { [1, 2, 2, 2, 2, 2, 2, 2, 2, 3].freeze }
 
       let(:sorted_sample_with_block) do
         [
@@ -1086,7 +1088,7 @@ module Ratistics
       end
 
       it 'returns the value when given a frequency' do
-        freq = {1 => 1, 2 => 2, 3 => 1, 5 => 1}
+        freq = {1 => 1, 2 => 2, 3 => 1, 5 => 1}.freeze
         Probability.cdf_value(freq, 0.0, :from => :freq).should eq 1
         Probability.cdf_value(freq, 0.1, :from => :freq).should eq 1
         Probability.cdf_value(freq, 0.2, :from => :freq).should eq 1
@@ -1106,7 +1108,7 @@ module Ratistics
           {:count => 2} => 2,
           {:count => 3} => 1,
           {:count => 5} => 1
-        }
+        }.freeze
         Probability.cdf_value(freq, 0.0, :from => :freq){|x| x[:count] }.should eq 1
         Probability.cdf_value(freq, 0.1, :from => :freq){|x| x[:count] }.should eq 1
         Probability.cdf_value(freq, 0.2, :from => :freq){|x| x[:count] }.should eq 1
@@ -1163,6 +1165,126 @@ module Ratistics
         specify do
           value = Probability.cdf_value(vector, 0.6, :sorted => true)
           value.should eq 2
+        end
+      end
+    end
+
+    context '#sample_with_replacement' do
+
+      let(:sorted_sample) { [1, 2, 2, 3, 5].freeze }
+      let(:unsorted_sample) { [2, 1, 3, 2, 5].freeze }
+      let(:flat_sample) { [1, 2, 2, 2, 2, 2, 2, 2, 2, 3].freeze }
+
+      let(:sorted_sample_with_block) do
+        [
+          {:count => 1},
+          {:count => 2},
+          {:count => 2},
+          {:count => 3},
+          {:count => 5}
+        ].freeze
+      end
+
+      def check_min_max(resample, sample)
+        min, max = Math.minmax(sample)
+        resample.min.should >= min
+        resample.max.should <= max
+      end
+
+      it 'returns an empty array when the sample is nil' do
+        Probability.sample_with_replacement(nil).should be_empty
+      end
+
+      it 'returns an empty array when the sample is empty' do
+        Probability.sample_with_replacement(nil).should be_empty
+      end
+
+      it 'returns a resample of equal count when :size is is not provided' do
+        resample = Probability.sample_with_replacement(sorted_sample)
+        resample.length.should eq sorted_sample.length
+        check_min_max(resample, sorted_sample)
+      end
+
+      it 'returns a resample of count :size' do
+        resample = Probability.sample_with_replacement(sorted_sample, :size => 100)
+        resample.length.should eq 100
+        check_min_max(resample, sorted_sample)
+      end
+
+      it 'returns a resample when given a block' do
+        resample = Probability.sample_with_replacement(sorted_sample_with_block){|x| x[:count]}
+        resample.length.should eq unsorted_sample.length
+        resample.each do |item|
+          item.should be_a Integer
+        end
+        check_min_max(resample, unsorted_sample)
+      end
+
+      it 'does not sort a sorted sample' do
+        sample = sorted_sample.dup
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+        Probability.sample_with_replacement(sample, :sorted => true)
+      end
+
+      it 'does not sort a sample with a block' do
+        sample = [
+          {:count => 2},
+        ]
+
+        sample.should_not_receive(:sort)
+        sample.should_not_receive(:sort_by)
+
+        Probability.sample_with_replacement(sample){|x| x[:count]}
+      end
+
+      it 'works with an unsorted sample' do
+        resample = Probability.sample_with_replacement(unsorted_sample)
+        resample.length.should eq unsorted_sample.length
+        check_min_max(resample, unsorted_sample)
+      end
+
+      it 'recognizes the option :from => :sample' do
+        resample = Probability.sample_with_replacement(unsorted_sample, :from => :sample)
+        resample.length.should eq unsorted_sample.length
+        check_min_max(resample, unsorted_sample)
+      end
+
+      it 'creates a random sample when given a :frequency' do
+        freq = Probability.frequency(sorted_sample)
+        resample = Probability.sample_with_replacement(freq, :from => :freq)
+        resample.length.should eq sorted_sample.length
+        check_min_max(resample, sorted_sample)
+      end
+
+      context 'with ActiveRecord', :ar => true do
+
+        before(:all) { Racer.connect }
+
+        specify do
+          sample = Racer.where('age > 0').order('age ASC')
+          resample = Probability.sample_with_replacement(sample){|r| r.age}
+          min, max = Math.minmax(sample){|r| r.age}
+          resample.min.should >= min
+          resample.max.should <= max
+        end
+      end
+
+      context 'with Hamster', :hamster => true do
+
+        let(:list) { Hamster.list(1, 2, 2, 3, 5).freeze }
+        let(:vector) { Hamster.vector(1, 2, 2, 3, 5).freeze }
+
+        specify do
+          resample = Probability.sample_with_replacement(list, :sorted => true)
+          resample.length.should eq list.length
+          check_min_max(resample, list)
+        end
+
+        specify do
+          resample = Probability.sample_with_replacement(vector, :sorted => true)
+          resample.length.should eq vector.length
+          check_min_max(resample, vector)
         end
       end
     end

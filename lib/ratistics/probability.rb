@@ -375,5 +375,70 @@ module Ratistics
 
     alias :cdf_value :cumulative_distribution_function_value
     alias :cumulative_distribution_value :cumulative_distribution_function_value
+
+    # Resamples the given sample with replacement (aka bootstrap).
+    # The resample will have the same number of elements as the original
+    # sample unless the :size (or :length, :count) option is given.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data to perform the calculation against
+    # @param [Hash] opts processing options
+    #
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true or a block is given.
+    #
+    # @option opts [Integer] :size the size of the resample
+    #
+    # @option opts [true, false] :sorted indicates of the data is already sorted
+    #
+    # @option opts [Symbol] :from describes the nature of the data.
+    #   :sample (the default) indicates *data* is a raw data sample,
+    #   :frequency (or :freq) indicates *data* is a frequency distribution
+    #   created from the #frequency function.
+    #
+    # @return [Object] the highest value in the sample for the given probability
+    #
+    # @see #frequency
+    # @see #cumulative_distribution_function
+    #
+    # @see http://en.wikipedia.org/wiki/Resampling_(statistics)
+    # @see http://en.wikipedia.org/wiki/Bootstrapping_(statistics)
+    def sample_with_replacement(data, opts={}, &block)
+      return [] if data.nil? || data.empty?
+
+      if (opts[:from].nil? || opts[:from] == :sample) && !(block_given? || opts[:sorted] == true)
+        data = data.sort
+      end
+
+      if opts[:from] == :freq || opts[:from] == :frequency
+        ps = probability(data, :as => :array, :inc => true, :from => :freq, &block)
+        length = data.reduce(0){|length, item| length += item.last }
+      else
+        ps = probability(data, :as => :array, :inc => true, &block)
+        length = opts[:length] || opts[:size] || opts[:count] || data.length
+      end
+      ps = Sort.insertion_sort!(ps){|item| item.first}
+
+      resample = []
+      length.times do
+        prob = rand()
+        index = Collection.bisect_left(ps, prob){|item| item.last}
+        index = index-1 if prob == ps[index-1].first
+        resample << ps[index].first
+      end
+
+      return resample
+    end
+
+    alias :resample_with_replacement :sample_with_replacement
+    alias :bootstrap :sample_with_replacement
+
+    def sample_without_replacement(data, opts={}, &block)
+    end
+
+    alias :jackknife :sample_without_replacement
+
   end
 end
