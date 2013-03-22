@@ -355,12 +355,6 @@ The test data shipped with this gem is freely available from the Centers for Dis
 and Prevention [National Survey of Family Growth](http://www.cdc.gov/nchs/nsfg.htm) and from
 the [27th Anniversary Edition James Joyce Ramble 10K](27th Anniversary Edition James Joyce Ramble 10K).
 
-## Todo
-
-* Review opts in Probability module w/ resppect to sample vs. frequency
-* Support both hashes and arrays of arrays for distribution data
-* Submit a patch adding a #slice function to Hamster::Vector
-
 ## Copyright
 
 *Ratistics* is Copyright &copy; 2013 [Jerry D'Antonio](https://twitter.com/jerrydantonio).
