@@ -103,9 +103,9 @@ module Ratistics
         definition.each_index do |index|
           name, cast = definition[index]
           next if name.nil?
-          if cast.is_a? Symbol
+          if cast.is_a?(Symbol) && ! (data[index].nil? || data[index].empty?)
             field[name] = data[index].send(cast)
-          elsif cast.is_a? Proc
+          elsif cast.is_a?(Proc) && ! (data[index].nil? || data[index].empty?)
             field[name] = cast.call(data[index])
           else
             field[name] = data[index]
@@ -308,10 +308,12 @@ module Ratistics
       definition.each do |field|
         name = field[:field]
         record[name] = data.slice(field[:start]-1, field[:end]-field[:start]+1).strip
-        if field[:cast].is_a? Symbol
-          record[name] = record[name].send(field[:cast])
-        elsif field[:cast].is_a? Proc
-          record[name] = field[:cast].call(record[name])
+        unless record[name].nil? || record[name].empty?
+          if field[:cast].is_a? Symbol
+            record[name] = record[name].send(field[:cast])
+          elsif field[:cast].is_a? Proc
+            record[name] = field[:cast].call(record[name])
+          end
         end
       end
 
