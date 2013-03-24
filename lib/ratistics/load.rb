@@ -196,7 +196,7 @@ module Ratistics
       headers = (opts[:headers] == true)
 
       File.open(path, 'r').each_line(opts[:row_sep] || $/) do |row|
-        row = row.force_encoding('ISO-8859-1').encode('utf-8', replace: nil)
+        row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
         if headers
           headers = false
           definition = definition_from_header(row, definition, opts)
@@ -226,7 +226,7 @@ module Ratistics
 
       Zlib::GzipReader.open(path) do |gz|
         gz.each_line do |row|
-          row = row.force_encoding('ISO-8859-1').encode('utf-8', replace: nil)
+          row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
           if headers
             headers = false
             definition = definition_from_header(row, definition, opts)
@@ -384,7 +384,7 @@ module Ratistics
       records = new_collection(opts[:hamster])
 
       File.open(path, 'r').each do |line|
-        line = line.force_encoding('ISO-8859-1').encode('utf-8', replace: nil)
+        line = line.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
         records = add_to_collection(records, dat_record(line, definition))
       end
 
@@ -409,7 +409,7 @@ module Ratistics
 
       Zlib::GzipReader.open(path) do |gz|
         gz.each_line do |line|
-          line = line.force_encoding('ISO-8859-1').encode('utf-8', replace: nil)
+          line = line.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
           records = add_to_collection(records, dat_record(line, definition))
         end
       end
