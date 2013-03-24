@@ -1,8 +1,10 @@
 # Ratistics Changelog
 
-### 0.x.x *(in progress)*
+### 0.3.0 *(in progress)*
 
 Release Date: TBD
+
+* Dropped support for Ruby < 1.9.2
 
 ### 0.2.3
 

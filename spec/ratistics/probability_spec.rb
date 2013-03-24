@@ -380,13 +380,11 @@ module Ratistics
 
         probability.count.should eq 5
 
-        if RUBY_VERSION >= '1.9'
-          probability[0].last.should be_within(0.01).of(0.444)
-          probability[1].last.should be_within(0.01).of(0.111)
-          probability[2].last.should be_within(0.01).of(0.222)
-          probability[3].last.should be_within(0.01).of(0.111)
-          probability[4].last.should be_within(0.01).of(0.111)
-        end
+        probability[0].last.should be_within(0.01).of(0.444)
+        probability[1].last.should be_within(0.01).of(0.111)
+        probability[2].last.should be_within(0.01).of(0.222)
+        probability[3].last.should be_within(0.01).of(0.111)
+        probability[4].last.should be_within(0.01).of(0.111)
       end
 
       it 'returns a catalog when :as is :catalog and a block is given' do
@@ -406,13 +404,11 @@ module Ratistics
 
         probability.count.should eq 5
 
-        if RUBY_VERSION >= '1.9'
-          probability[0].last.should be_within(0.01).of(0.444)
-          probability[1].last.should be_within(0.01).of(0.111)
-          probability[2].last.should be_within(0.01).of(0.222)
-          probability[3].last.should be_within(0.01).of(0.111)
-          probability[4].last.should be_within(0.01).of(0.111)
-        end
+        probability[0].last.should be_within(0.01).of(0.444)
+        probability[1].last.should be_within(0.01).of(0.111)
+        probability[2].last.should be_within(0.01).of(0.222)
+        probability[3].last.should be_within(0.01).of(0.111)
+        probability[4].last.should be_within(0.01).of(0.111)
       end
 
       it 'returns :incremental probabilities when the option is set' do

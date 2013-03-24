@@ -512,17 +512,15 @@ module Ratistics
         catalog = Collection.catalog_hash(sample)
         catalog.size.should eq sample.size
 
-        if RUBY_VERSION >= '1.9'
-          catalog[0].should eq [7, 8]
-          catalog[1].should eq [12, 8]
-          catalog[2].should eq [17, 14]
-          catalog[3].should eq [22, 4]
-          catalog[4].should eq [27, 6]
-          catalog[5].should eq [32, 12]
-          catalog[6].should eq [37, 8]
-          catalog[7].should eq [42, 3]
-          catalog[8].should eq [47, 2]
-        end
+        catalog[0].should eq [7, 8]
+        catalog[1].should eq [12, 8]
+        catalog[2].should eq [17, 14]
+        catalog[3].should eq [22, 4]
+        catalog[4].should eq [27, 6]
+        catalog[5].should eq [32, 12]
+        catalog[6].should eq [37, 8]
+        catalog[7].should eq [42, 3]
+        catalog[8].should eq [47, 2]
       end
 
       it 'applies the supplied block to every value in the hash' do
@@ -541,17 +539,15 @@ module Ratistics
         catalog = Collection.catalog_hash(sample){|item| item[:count]}
         catalog.size.should eq sample.size
 
-        if RUBY_VERSION >= '1.9'
-          catalog[0].should eq [7, 8]
-          catalog[1].should eq [12, 8]
-          catalog[2].should eq [17, 14]
-          catalog[3].should eq [22, 4]
-          catalog[4].should eq [27, 6]
-          catalog[5].should eq [32, 12]
-          catalog[6].should eq [37, 8]
-          catalog[7].should eq [42, 3]
-          catalog[8].should eq [47, 2]
-        end
+        catalog[0].should eq [7, 8]
+        catalog[1].should eq [12, 8]
+        catalog[2].should eq [17, 14]
+        catalog[3].should eq [22, 4]
+        catalog[4].should eq [27, 6]
+        catalog[5].should eq [32, 12]
+        catalog[6].should eq [37, 8]
+        catalog[7].should eq [42, 3]
+        catalog[8].should eq [47, 2]
       end
     end
 

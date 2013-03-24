@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = Dir['README*', 'LICENSE*', 'CHANGELOG*']
   s.require_paths    = ['lib']
 
-  s.required_ruby_version = '>= 1.8.7'
+  s.required_ruby_version = '>= 1.9.2'
   s.post_install_message  = '"Lies, damned lies, and statistics"'
 
   s.add_development_dependency 'bundler'

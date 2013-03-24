@@ -51,7 +51,7 @@ As much as possible I plan to follow these guidelines as I develop this gem
 * Support as many common collection classes as possible, especially ActiveRecord
 * Keep runtime dependencies to a minimum, hopefully zero
 * Remain backward compatable to Ruby version 1.8.7
-* Support common Ruby interpreters (MRI, REE, RBX, and JRuby)
+* Support common Ruby interpreters (MRI, RBX, and JRuby)
 * Be simple, consistent, and easy to use
 
 ### Purely Functional
@@ -86,16 +86,11 @@ newer, but only MRI 1.9.x is officially supported.The test suite is
 regularly run against several versions of Ruby so you should have
 good results with any of the following:
 
-* ruby-1.8.7
-* ruby-1.9.2
-* ruby-1.9.3
 * ruby-2.0.0
-* jruby-1.6.7
-* jruby-1.6.7.2
-* jruby-1.6.8
+* ruby-1.9.3
+* ruby-1.9.2
 * jruby-1.7.0
-* ree-1.8.7
-* rbx (1.8 mode)
+* jruby-1.6.8
 * rbx (1.9 mode)
 
 #### ActiveRecord
