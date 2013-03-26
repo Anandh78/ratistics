@@ -88,9 +88,10 @@ module Ratistics
       col_sep = opts[:col_sep] || ','
       col_sep_r = Regexp.escape(col_sep)
       quote_char_r = Regexp.escape(opts[:quote_char] || '"')
-      regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
-        data = data.scan(regex).collect do |match|
-        match.select{|m| ! m.nil? }.first.chomp(col_sep).gsub(/#{quote_char_r}/, '')
+      line_regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
+      quote_regex = /#{quote_char_r}/
+      data = data.scan(line_regex).collect do |match|
+        match.select{|m| ! m.nil? }.first.chomp(col_sep).gsub(quote_regex, '')
       end
 
       as = opts[:as]
@@ -178,15 +179,66 @@ module Ratistics
         add_to_collection(records, definition.collect{|item| [item].flatten.first})
       end
 
+#col_sep = opts[:col_sep] || ','
+#col_sep_r = Regexp.escape(col_sep)
+#quote_char_r = Regexp.escape(opts[:quote_char] || '"')
+#line_regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
+#quote_regex = /#{quote_char_r}/
       start = headers ? 1 : 0
       (start..data.length-1).each do |i|
         row = data[i].strip
         unless row.empty?
+#row = row.scan(line_regex).collect do |match|
+  #match.select{|m| ! m.nil? }.first.chomp(col_sep).gsub(quote_regex, '')
+#end
+#add_to_collection(records, row)
           add_to_collection(records, csv_record(row, opts))
         end
       end
 
       return records
+    end
+
+    def csv_file_to_frame(path, opts={})
+      definition = opts[:definition] || opts[:def]
+      headers = opts[:headers] == true
+
+      row_sep_r = Regexp.escape(opts[:row_sep] || $/)
+      col_sep_r = Regexp.escape(opts[:col_sep] || ',')
+      quote_char_r = Regexp.escape(opts[:quote_char] || '"')
+      line_regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
+      quote_regex = /#{quote_char_r}/
+
+      file = File.open(path, 'rb')
+      contents = file.read
+      file.close
+
+      data = []
+      contents = contents.split(row_sep_r)
+
+      if definition.nil?
+        definition = contents.first.strip.scan(line_regex).collect do |match|
+          match.select{|m| ! m.nil? }.first.chomp(col_sep_r).gsub(quote_char_r, '')
+        end
+        if headers
+          # use the first row for headers
+          data << definition
+        else
+          # create bogus headers
+          data << definition.length.times {|i| "column_#{i+1}"}
+        end
+      else
+        # get the column names from the definition
+      end
+
+      start = headers ? 1 : 0
+      (start..contents.length-1).each do |i|
+        data << contents[i].strip.scan(line_regex).collect do |match|
+          match.select{|m| ! m.nil? }.first.chomp(col_sep_r).gsub(quote_char_r, '')
+        end
+      end
+
+      return data
     end
 
     # Convert a CSV file into an array of Ruby data structures
