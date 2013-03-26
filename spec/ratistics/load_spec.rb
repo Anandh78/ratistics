@@ -28,6 +28,18 @@ module Ratistics
       ]
     end
 
+    let(:headers) do
+      ['place', 'div tot', 'div', 'guntime', 'nettime', 'pace', 'name', 'age', 'gender', 'race num', 'city state']
+    end
+
+    let(:csv_headers) do
+      'place,"div tot",div,guntime,nettime,pace,name,age,gender,"race num","city state"'
+    end
+
+    let(:psv_headers) do
+      'place|"div tot"|div|guntime|nettime|pace|name|age|gender|"race num"|"city state"'
+    end
+
     let(:csv_row) do
       '1,1/362,M2039,30:43,30:42,4:57,Brian Harvey,22,M,1422,Allston MA'
     end
@@ -234,22 +246,49 @@ module Ratistics
 
       context '#csv_data' do
 
-        context 'with headers but without a definition' do
+        let(:contents) { csv_headers + $/ + csv_row + $/ + csv_row + $/ + csv_row }
+        let(:data_rows) { 3 }
+
+        it 'sets the row keys to the header values when returning a hash' do
+          data = Load::csv_data(contents, headers: true, as: :hash)
+          data.length == data_rows
+          data.first.keys.should eq headers
+        end
+
+        it 'sets the row keys to the header values when returning a catalog' do
+          data = Load::csv_data(contents, headers: true, as: :array)
+          data.length == data_rows
+          keys = data.first.collect{|item| item.first}
+          keys.should eq headers
+        end
+
+        it 'sets the first row to the header values when returning a frame' do
+          data = Load::csv_data(contents, headers: true, as: :frame)
+          data.length == data_rows + 1
+          data.first.should eq headers
+        end
+
+        it 'works with headers but without a definition' do
           pending
         end
 
-        context 'with headers and with a definition' do
+        it 'works with headers and with a definition' do
           pending
         end
 
-        context 'without headers and without a definition' do
+        it 'works without headers and without a definition' do
           pending
         end
 
-        context 'without headers but with a definition' do
+        it 'works without headers but with a definition' do
           pending
         end
 
+        it 'supports :row_sep option' do
+          contents = csv_row + '|' + csv_row + '|' + csv_row 
+          data = Ratistics::Load.csv_data(contents, :row_sep => '|')
+          data.length == data_rows
+        end
       end
 
     end

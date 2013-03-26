@@ -158,23 +158,23 @@ module Ratistics
     # 
     # @see #csv_record
     def csv_data(data, opts = {})
-      definition = opts[:definition] || opts[:def]
-      records = new_collection(opts[:hamster])
-      headers = (opts[:headers] == true)
+      #definition = opts[:definition] || opts[:def]
+      #records = new_collection(opts[:hamster])
+      #headers = (opts[:headers] == true)
 
-      data.split(opts[:row_sep] || $/).each do |row|
-        if headers
-          headers = false
-          opts = opts.merge(:definition => definition_from_header(row, opts))
-        else
-          row = row.strip
-          unless row.empty?
-            records = add_to_collection(records, csv_record(row.strip, opts))
-          end
-        end
-      end
+      #data.split(opts[:row_sep] || $/).each do |row|
+        #if headers
+          #headers = false
+          #opts = opts.merge(:definition => definition_from_header(row, opts))
+        #else
+          #row = row.strip
+          #unless row.empty?
+            #records = add_to_collection(records, csv_record(row.strip, opts))
+          #end
+        #end
+      #end
 
-      return records
+      #return records
     end
 
     # Convert a CSV file into an array of Ruby data structures
@@ -191,21 +191,21 @@ module Ratistics
     # 
     # @see #csv_record
     def csv_file(path, opts = {})
-      definition = opts[:definition] || opts[:def]
-      records = new_collection(opts[:hamster])
-      headers = (opts[:headers] == true)
+      #definition = opts[:definition] || opts[:def]
+      #records = new_collection(opts[:hamster])
+      #headers = (opts[:headers] == true)
 
-      File.open(path, 'r').each_line(opts[:row_sep] || $/) do |row|
-        row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
-        if headers
-          headers = false
-          opts = opts.merge(:definition => definition_from_header(row, opts))
-        else
-          records = add_to_collection(records, csv_record(row.strip, opts))
-        end
-      end
+      #File.open(path, 'r').each_line(opts[:row_sep] || $/) do |row|
+        #row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
+        #if headers
+          #headers = false
+          #opts = opts.merge(:definition => definition_from_header(row, opts))
+        #else
+          #records = add_to_collection(records, csv_record(row.strip, opts))
+        #end
+      #end
 
-      return records
+      #return records
     end
 
     # Convert a gzipped CSV file into an array of Ruby data structures
@@ -221,23 +221,23 @@ module Ratistics
     # 
     # @see #csv_record
     def csv_gz_file(path, opts = {})
-      definition = opts[:definition] || opts[:def]
-      records = new_collection(opts[:hamster])
-      headers = (opts[:headers] == true)
+      #definition = opts[:definition] || opts[:def]
+      #records = new_collection(opts[:hamster])
+      #headers = (opts[:headers] == true)
 
-      Zlib::GzipReader.open(path) do |gz|
-        gz.each_line do |row|
-          row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
-          if headers
-            headers = false
-            opts = opts.merge(:definition => definition_from_header(row, opts))
-          else
-            records = add_to_collection(records, csv_record(row.strip, opts))
-          end
-        end
-      end
+      #Zlib::GzipReader.open(path) do |gz|
+        #gz.each_line do |row|
+          #row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
+          #if headers
+            #headers = false
+            #opts = opts.merge(:definition => definition_from_header(row, opts))
+          #else
+            #records = add_to_collection(records, csv_record(row.strip, opts))
+          #end
+        #end
+      #end
 
-      return records
+      #return records
     end
 
     # Convert an individual fixed-length field record into a Ruby
