@@ -85,17 +85,12 @@ module Ratistics
     #   is given or a hash with keys matching the record definition
     def csv_record(data, opts = {})
 
-      if data.is_a?(String)
-        col_sep = opts[:col_sep] || ','
-        col_sep_r = Regexp.escape(col_sep)
-
-        quote_char_r = Regexp.escape(opts[:quote_char] || '"')
-
-        regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
-
+      col_sep = opts[:col_sep] || ','
+      col_sep_r = Regexp.escape(col_sep)
+      quote_char_r = Regexp.escape(opts[:quote_char] || '"')
+      regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
         data = data.scan(regex).collect do |match|
-          match.select{|m| ! m.nil? }.first.chomp(col_sep).gsub(/#{quote_char_r}/, '')
-        end
+        match.select{|m| ! m.nil? }.first.chomp(col_sep).gsub(/#{quote_char_r}/, '')
       end
 
       as = opts[:as]
