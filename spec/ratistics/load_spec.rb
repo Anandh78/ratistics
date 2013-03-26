@@ -98,7 +98,7 @@ module Ratistics
         end
 
         it 'loads a record with a definition' do
-          record = Ratistics::Load.csv_record(csv_row, csv_definition)
+          record = Ratistics::Load.csv_record(csv_row, def: csv_definition)
           record.should eq record_hash
         end
 
@@ -108,19 +108,19 @@ module Ratistics
         end
 
         it 'loads an array record with a definition' do
-          record = Ratistics::Load.csv_record(record_array, csv_definition)
+          record = Ratistics::Load.csv_record(record_array, def: csv_definition)
           record.should eq record_hash
         end
 
         it 'ignores extra fields not in the definition' do
           definition = [:place]
-          record = Ratistics::Load.csv_record(csv_row, definition)
+          record = Ratistics::Load.csv_record(csv_row, def: definition)
           record.should == {:place => '1'}
         end
 
         it 'accepts any data type for the field name' do
           definition = ['place']
-          record = Ratistics::Load.csv_record(csv_row, definition)
+          record = Ratistics::Load.csv_record(csv_row, def: definition)
           record.should == {'place' => '1'}
         end
 
@@ -130,7 +130,7 @@ module Ratistics
             nil,
             :div,
           ]
-          record = Ratistics::Load.csv_record(csv_row, definition)
+          record = Ratistics::Load.csv_record(csv_row, def: definition)
           record.should == {
             :place => '1',
             :div => 'M2039',
@@ -141,7 +141,7 @@ module Ratistics
           definition = [
             [:place],
           ]
-          record = Ratistics::Load.csv_record(csv_row, definition)
+          record = Ratistics::Load.csv_record(csv_row, def: definition)
           record.should == {:place => '1'}
         end
 
@@ -149,7 +149,7 @@ module Ratistics
           definition = [
             [:place, :to_i],
           ]
-          record = Ratistics::Load.csv_record(csv_row, definition)
+          record = Ratistics::Load.csv_record(csv_row, def: definition)
           record.should == {:place => 1}
         end
 
@@ -157,25 +157,25 @@ module Ratistics
           definition = [
             [:place, lambda {|i| i.to_i}]
           ]
-          record = Ratistics::Load.csv_record(record_array, definition)
+          record = Ratistics::Load.csv_record(record_array, def: definition)
           record.should == {:place => 1}
         end
 
         it 'supports :col_sep option' do
-          record = Ratistics::Load.csv_record(psv_row, nil, :col_sep => '|')
+          record = Ratistics::Load.csv_record(psv_row, :col_sep => '|')
           record.should eq record_array
         end
 
         it 'recognizes quoted fields' do
           data = '1,"1/362",M2039,"30:43",30:42,"4:57","Harvey, Brian",22,M,1422,"Allston, MA"'
           result = ["1", "1/362", "M2039", "30:43", "30:42", "4:57", "Harvey, Brian", "22", "M", "1422", "Allston, MA"]
-          record = Ratistics::Load.csv_record(data, nil)
+          record = Ratistics::Load.csv_record(data)
           record.should eq result
         end
 
         it 'supports empty fields' do
           data = '1,,1/362,M2039,"",30:43,30:42,"4:57","Harvey, Brian",22,,M,1422,Allston MA'
-          record = Ratistics::Load.csv_record(data, nil)
+          record = Ratistics::Load.csv_record(data)
           record.count.should eq 14
           record.should eq ["1", "", "1/362", "M2039", "", "30:43", "30:42", "4:57", "Harvey, Brian", "22", "", "M", "1422", "Allston MA"]
         end
@@ -192,7 +192,7 @@ module Ratistics
         end
 
         it 'loads a single record with a definition' do
-          record = Ratistics::Load.csv_data(csv_row, csv_definition)
+          record = Ratistics::Load.csv_data(csv_row, def: csv_definition)
           record.count.should eq 1
           record.first.should eq record_hash
         end
@@ -204,20 +204,20 @@ module Ratistics
         end
 
         it 'loads multiple records with a definition' do
-          record = Ratistics::Load.csv_data(contents, csv_definition)
+          record = Ratistics::Load.csv_data(contents, def: csv_definition)
           record.count.should eq record_count
           record.first.should eq record_hash
         end
 
         it 'supports :col_sep option' do
-          record = Ratistics::Load.csv_data(psv_row, nil, :col_sep => '|')
+          record = Ratistics::Load.csv_data(psv_row, :col_sep => '|')
           record.count.should eq 1
           record.first.should eq record_array
         end
 
         it 'supports :row_sep option' do
           data = csv_row + '|' + csv_row + '|' + csv_row 
-          record = Ratistics::Load.csv_data(data, nil, :row_sep => '|')
+          record = Ratistics::Load.csv_data(data, :row_sep => '|')
           record.count.should eq 3
           record.first.should eq record_array
         end
@@ -225,19 +225,19 @@ module Ratistics
         it 'recognizes quoted fields' do
           data = '1,"1/362",M2039,"30:43",30:42,"4:57","Harvey, Brian",22,M,1422,"Allston, MA"'
           result = ["1", "1/362", "M2039", "30:43", "30:42", "4:57", "Harvey, Brian", "22", "M", "1422", "Allston, MA"]
-          record = Ratistics::Load.csv_data(data, nil)
+          record = Ratistics::Load.csv_data(data)
           record.count.should eq 1
           record.first.should eq result
         end
 
         it 'skips the first line when :headers option is true' do
-          record = Ratistics::Load.csv_data(contents, csv_definition, :headers => true)
+          record = Ratistics::Load.csv_data(contents, def: csv_definition, :headers => true)
           record.count.should eq record_count-1
           record.first.should_not eq record_hash
         end
 
         it 'uses the header line for the definition when :headers option is true without a definition' do
-          record = Ratistics::Load.csv_data(contents, nil, :headers => true)
+          record = Ratistics::Load.csv_data(contents, :headers => true)
           record.count.should eq record_count-1
           record_array.size.should eq record.first.keys.size
           record.first.keys.each do |key|
@@ -246,7 +246,7 @@ module Ratistics
         end
 
         it 'uses the provided definition instead of the header line when :headers option is true' do
-          record = Ratistics::Load.csv_data(contents, csv_definition, :headers => true)
+          record = Ratistics::Load.csv_data(contents, def: csv_definition, :headers => true)
           record.count.should eq record_count-1
           record.first.should_not eq record_hash
           record.first.keys.should eq record_hash.keys
@@ -257,47 +257,47 @@ module Ratistics
           let(:contents) { csv_row }
 
           it 'returns a Ruby Array when no :hamster option is given' do
-            records = Ratistics::Load.csv_data(contents, csv_definition)
+            records = Ratistics::Load.csv_data(contents, def: csv_definition)
             records.should be_kind_of Array
           end
 
           it 'returns a Ruby Array when the :hamster option is set to false' do
-            records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => false)
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => false)
             records.should be_kind_of Array
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to true' do
-            records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => true)
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => true)
             records.should be_kind_of Hamster::Vector
           end
 
           it 'returns a Hamster::List when the :hamster option is set to :list' do
-            records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :list)
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :list)
             records.should be_kind_of Hamster::List
           end
 
           it 'returns a Hamster::Stack when the :hamster option is set to :stack' do
-            records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :stack)
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :stack)
             records.should be_kind_of Hamster::Stack
           end
 
           it 'returns a Hamster::Queue when the :hamster option is set to :queue' do
-            records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :queue)
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :queue)
             records.should be_kind_of Hamster::Queue
           end
 
           it 'returns a Hamster::Set when the :hamster option is set to :set' do
-            records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :set)
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :set)
             records.should be_kind_of Hamster::Set
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to :vector' do
-            records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :vector)
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :vector)
             records.should be_kind_of Hamster::Vector
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to an unknown type' do
-            records = Ratistics::Load.csv_data(contents, csv_definition, :hamster => :bogus)
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :bogus)
             records.should be_kind_of Hamster::Vector
           end
         end
@@ -312,25 +312,25 @@ module Ratistics
         end
 
         it 'loads records with a definition' do
-          record = Ratistics::Load.csv_file(csv_file, csv_definition)
+          record = Ratistics::Load.csv_file(csv_file, def: csv_definition)
           record.count.should eq record_count
           record.first.should eq record_hash
         end
 
         it 'supports :col_sep option' do
-          record = Ratistics::Load.csv_file(psv_file, nil, :col_sep => '|')
+          record = Ratistics::Load.csv_file(psv_file, :col_sep => '|')
           record.count.should eq record_count
           record.first.should eq record_array
         end
 
         it 'skips the first line when :headers option is true' do
-          record = Ratistics::Load.csv_file(csv_file, csv_definition, :headers => true)
+          record = Ratistics::Load.csv_file(csv_file, def: csv_definition, :headers => true)
           record.count.should eq record_count-1
           record.first.should_not eq record_hash
         end
 
         it 'uses the header line for the definition when :headers option is true without a definition' do
-          record = Ratistics::Load.csv_file(csv_file, nil, :headers => true)
+          record = Ratistics::Load.csv_file(csv_file, :headers => true)
           record.count.should eq record_count-1
           record_array.size.should eq record.first.keys.size
           record.first.keys.each do |key|
@@ -339,14 +339,14 @@ module Ratistics
         end
 
         it 'uses the provided definition instead of the header line when :headers option is true' do
-          record = Ratistics::Load.csv_file(csv_file, csv_definition, :headers => true)
+          record = Ratistics::Load.csv_file(csv_file, def: csv_definition, :headers => true)
           record.count.should eq record_count-1
           record.first.should_not eq record_hash
           record.first.keys.should eq record_hash.keys
         end
 
         it 'supports the :hamster option', :hamster => true do
-          records = Ratistics::Load.csv_file(csv_file, csv_definition, :hamster => true)
+          records = Ratistics::Load.csv_file(csv_file, def: csv_definition, :hamster => true)
           records.should be_kind_of Hamster::Vector
           records.size.should eq record_count
         end
@@ -361,19 +361,19 @@ module Ratistics
         end
 
         it 'loads records with a definition' do
-          record = Ratistics::Load.csv_gz_file(csv_gz_file, csv_definition)
+          record = Ratistics::Load.csv_gz_file(csv_gz_file, def: csv_definition)
           record.count.should eq record_count
           record.first.should eq record_hash
         end
 
         it 'skips the first line when :headers option is true' do
-          record = Ratistics::Load.csv_gz_file(csv_gz_file, csv_definition, :headers => true)
+          record = Ratistics::Load.csv_gz_file(csv_gz_file, def: csv_definition, :headers => true)
           record.count.should eq record_count-1
           record.first.should_not eq record_hash
         end
 
         it 'uses the header line for the definition when :headers option is true without a definition' do
-          record = Ratistics::Load.csv_gz_file(csv_gz_file, nil, :headers => true)
+          record = Ratistics::Load.csv_gz_file(csv_gz_file, :headers => true)
           record.count.should eq record_count-1
           record_array.size.should eq record.first.keys.size
           record.first.keys.each do |key|
@@ -382,14 +382,14 @@ module Ratistics
         end
 
         it 'uses the provided definition instead of the header line when :headers option is true' do
-          record = Ratistics::Load.csv_gz_file(csv_gz_file, csv_definition, :headers => true)
+          record = Ratistics::Load.csv_gz_file(csv_gz_file, def: csv_definition, :headers => true)
           record.count.should eq record_count-1
           record.first.should_not eq record_hash
           record.first.keys.should eq record_hash.keys
         end
 
         it 'supports the :hamster option', :hamster => true do
-          records = Ratistics::Load.csv_gz_file(csv_gz_file, csv_definition, :hamster => true)
+          records = Ratistics::Load.csv_gz_file(csv_gz_file, def: csv_definition, :hamster => true)
           records.should be_kind_of Hamster::Vector
           records.size.should eq record_count
         end
@@ -401,7 +401,7 @@ module Ratistics
       context '#dat_record' do
 
         it 'loads a record with the definition' do
-          record = Ratistics::Load.dat_record(dat_row, dat_definition)
+          record = Ratistics::Load.dat_record(dat_row, def: dat_definition)
           record.should eq record_hash
         end
 
@@ -411,7 +411,7 @@ module Ratistics
             :start => 1,
             :end => 6,
           }]
-          record = Ratistics::Load.dat_record(dat_row, definition)
+          record = Ratistics::Load.dat_record(dat_row, def: definition)
           record.should == {:place => '1'}
         end
 
@@ -421,7 +421,7 @@ module Ratistics
             :start => 1,
             :end => 6,
           }]
-          record = Ratistics::Load.dat_record(dat_row, definition)
+          record = Ratistics::Load.dat_record(dat_row, def: definition)
           record.should == {'place' => '1'}
         end
 
@@ -432,7 +432,7 @@ module Ratistics
             :end => 6,
             :cast => :to_i
           }]
-          record = Ratistics::Load.dat_record(dat_row, definition)
+          record = Ratistics::Load.dat_record(dat_row, def: definition)
           record.should == {:place => 1}
         end
 
@@ -443,7 +443,7 @@ module Ratistics
             :end => 6,
             :cast => lambda {|i| i.to_i}
           }]
-          record = Ratistics::Load.dat_record(dat_row, definition)
+          record = Ratistics::Load.dat_record(dat_row, def: definition)
           record.should == {:place => 1}
         end
       end
@@ -453,13 +453,13 @@ module Ratistics
         let(:contents) { File.open(dat_file, 'rb').read }
 
         it 'loads a single record with the definition' do
-          record = Ratistics::Load.dat_data(dat_row, dat_definition)
+          record = Ratistics::Load.dat_data(dat_row, def: dat_definition)
           record.count.should eq 1
           record.first.should eq record_hash
         end
 
         it 'loads multiple records with the definition' do
-          record = Ratistics::Load.dat_data(contents, dat_definition)
+          record = Ratistics::Load.dat_data(contents, def: dat_definition)
           record.count.should eq record_count
           record.first.should eq record_hash
         end
@@ -469,47 +469,47 @@ module Ratistics
           let(:contents) { dat_row }
 
           it 'returns a Ruby Array when no :hamster option is given' do
-            records = Ratistics::Load.dat_data(contents, dat_definition)
+            records = Ratistics::Load.dat_data(contents, def: dat_definition)
             records.should be_kind_of Array
           end
 
           it 'returns a Ruby Array when the :hamster option is set to false' do
-            records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => false)
+            records = Ratistics::Load.dat_data(contents, def: dat_definition, :hamster => false)
             records.should be_kind_of Array
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to true' do
-            records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => true)
+            records = Ratistics::Load.dat_data(contents, def: dat_definition, :hamster => true)
             records.should be_kind_of Hamster::Vector
           end
 
           it 'returns a Hamster::List when the :hamster option is set to :list' do
-            records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :list)
+            records = Ratistics::Load.dat_data(contents, def: dat_definition, :hamster => :list)
             records.should be_kind_of Hamster::List
           end
 
           it 'returns a Hamster::Stack when the :hamster option is set to :stack' do
-            records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :stack)
+            records = Ratistics::Load.dat_data(contents, def: dat_definition, :hamster => :stack)
             records.should be_kind_of Hamster::Stack
           end
 
           it 'returns a Hamster::Queue when the :hamster option is set to :queue' do
-            records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :queue)
+            records = Ratistics::Load.dat_data(contents, def: dat_definition, :hamster => :queue)
             records.should be_kind_of Hamster::Queue
           end
 
           it 'returns a Hamster::Set when the :hamster option is set to :set' do
-            records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :set)
+            records = Ratistics::Load.dat_data(contents, def: dat_definition, :hamster => :set)
             records.should be_kind_of Hamster::Set
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to :vector' do
-            records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :vector)
+            records = Ratistics::Load.dat_data(contents, def: dat_definition, :hamster => :vector)
             records.should be_kind_of Hamster::Vector
           end
 
           it 'returns a Hamster::Vector when the :hamster option is set to an unknown type' do
-            records = Ratistics::Load.dat_data(contents, dat_definition, :hamster => :bogus)
+            records = Ratistics::Load.dat_data(contents, def: dat_definition, :hamster => :bogus)
             records.should be_kind_of Hamster::Vector
           end
         end
@@ -518,18 +518,18 @@ module Ratistics
       context '#dat_file' do
 
         it 'loads records with the definition' do
-          records = Ratistics::Load.dat_file(dat_file, dat_definition)
+          records = Ratistics::Load.dat_file(dat_file, def: dat_definition)
           records.count.should eq record_count
           records.first.should eq record_hash
         end
 
         it 'returns a Ruby Array' do
-          records = Ratistics::Load.dat_file(dat_file, dat_definition)
+          records = Ratistics::Load.dat_file(dat_file, def: dat_definition)
           records.should be_kind_of Array
         end
 
         it 'supports the :hamster option', :hamster => true do
-          records = Ratistics::Load.dat_file(dat_file, dat_definition, :hamster => true)
+          records = Ratistics::Load.dat_file(dat_file, def: dat_definition, :hamster => true)
           records.should be_kind_of Hamster::Vector
           records.size.should eq record_count
         end
@@ -538,18 +538,18 @@ module Ratistics
       context '#dat_gz_file' do
 
         it 'loads records with the definition' do
-          records = Ratistics::Load.dat_gz_file(dat_gz_file, dat_definition)
+          records = Ratistics::Load.dat_gz_file(dat_gz_file, def: dat_definition)
           records.count.should eq record_count
           records.first.should eq record_hash
         end
 
         it 'returns a Ruby Array' do
-          records = Ratistics::Load.dat_gz_file(dat_gz_file, dat_definition)
+          records = Ratistics::Load.dat_gz_file(dat_gz_file, def: dat_definition)
           records.should be_kind_of Array
         end
 
         it 'supports the :hamster option', :hamster => true do
-          records = Ratistics::Load.dat_gz_file(dat_gz_file, dat_definition, :hamster => true)
+          records = Ratistics::Load.dat_gz_file(dat_gz_file, def: dat_definition, :hamster => true)
           records.should be_kind_of Hamster::Vector
           records.size.should eq record_count
         end

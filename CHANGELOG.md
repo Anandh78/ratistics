@@ -5,6 +5,7 @@
 Release Date: TBD
 
 * Dropped support for Ruby < 1.9.2
+* Definition is now part of opts hash for Load functions
 
 ### 0.2.3
 

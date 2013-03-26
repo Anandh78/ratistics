@@ -39,7 +39,7 @@ class Racer < parent
   ]
 
   def self.from_csv
-    Ratistics::Load.csv_file(CSV_PATH, CSV_DEFINITION)
+    Ratistics::Load.csv_file(CSV_PATH, def: CSV_DEFINITION)
   end
 
   def self.from_dat

@@ -71,10 +71,10 @@ module Ratistics
     #   ]
     #
     # @param [String, Array] data the CSV data to be processed
-    # @param [Array] definition the record definition for processing
-    #   individual fields (see above)
     # @param [Hash] opts CSV parsing options
     #
+    # @option opts [Array] :definition the record definition for processing
+    #   individual fields (see above)
     # @option opts [Character] :col_sep column separator (default: ',')
     # @option opts [Character] :row_sep row separator (default: $/)
     # @option opts [Character] :quote_char quote character (default: '"')
@@ -83,7 +83,8 @@ module Ratistics
     #
     # @return [Array, Hash] an array of values when no record definition
     #   is given or a hash with keys matching the record definition
-    def csv_record(data, definition = nil, opts = {})
+    def csv_record(data, opts = {})
+      definition = opts[:definition] || opts[:def]
 
       if data.is_a?(String)
         col_sep = opts[:col_sep] || ','
@@ -134,17 +135,17 @@ module Ratistics
     #
     # @example
     #   data = Ratistics::Load.csv_data(path)
-    #   data = Ratistics::Load.csv_data(path, definition)
+    #   data = Ratistics::Load.csv_data(path, :def => definition)
     #   data = Ratistics::Load.csv_data(path, :hamster => true)
-    #   data = Ratistics::Load.csv_data(path, definition, :hamster => true)
+    #   data = Ratistics::Load.csv_data(path, :def => definition, :hamster => true)
     #   data = Ratistics::Load.csv_data(path, :hamster => :set)
-    #   data = Ratistics::Load.csv_data(path, definition, :hamster => :set)
+    #   data = Ratistics::Load.csv_data(path, :def => definition, :hamster => :set)
     #
     # @param [String] data the CSV data to be processed
-    # @param [Array] definition the record definition for processing
-    #   individual fields (see #csv_record)
     # @param [Hash] opts CSV parsing options
     #
+    # @option opts [Array] :definition the record definition for processing
+    #   individual fields (see above)
     # @option opts [Symbol] :hamster (false) set to *true* to return a
     #   Hamster collection, or indicate a specific Hamster return type
     # @option opts [Character] :col_sep column separator (default: ',')
@@ -157,18 +158,19 @@ module Ratistics
     #   all the records
     # 
     # @see #csv_record
-    def csv_data(data, definition = nil, opts = {})
+    def csv_data(data, opts = {})
+      definition = opts[:definition] || opts[:def]
       records = new_collection(opts[:hamster])
       headers = (opts[:headers] == true)
 
       data.split(opts[:row_sep] || $/).each do |row|
         if headers
           headers = false
-          definition = definition_from_header(row, definition, opts)
+          opts = opts.merge(:definition => definition_from_header(row, opts))
         else
           row = row.strip
           unless row.empty?
-            records = add_to_collection(records, csv_record(row.strip, definition, opts))
+            records = add_to_collection(records, csv_record(row.strip, opts))
           end
         end
       end
@@ -182,8 +184,6 @@ module Ratistics
     # @note (see #csv_record)
     #
     # @param [String] path path to the CSV file
-    # @param [Array] definition the record definition for processing
-    #   individual fields (see #csv_record)
     # @param [Hash] opts CSV parsing options
     #
     # @option (see #csv_data)
@@ -191,7 +191,8 @@ module Ratistics
     # @return (see #csv_record)
     # 
     # @see #csv_record
-    def csv_file(path, definition = nil, opts = {})
+    def csv_file(path, opts = {})
+      definition = opts[:definition] || opts[:def]
       records = new_collection(opts[:hamster])
       headers = (opts[:headers] == true)
 
@@ -199,9 +200,9 @@ module Ratistics
         row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
         if headers
           headers = false
-          definition = definition_from_header(row, definition, opts)
+          opts = opts.merge(:definition => definition_from_header(row, opts))
         else
-          records = add_to_collection(records, csv_record(row.strip, definition, opts))
+          records = add_to_collection(records, csv_record(row.strip, opts))
         end
       end
 
@@ -220,7 +221,8 @@ module Ratistics
     # @return (see #csv_record)
     # 
     # @see #csv_record
-    def csv_gz_file(path, definition = nil, opts = {})
+    def csv_gz_file(path, opts = {})
+      definition = opts[:definition] || opts[:def]
       records = new_collection(opts[:hamster])
       headers = (opts[:headers] == true)
 
@@ -229,9 +231,9 @@ module Ratistics
           row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
           if headers
             headers = false
-            definition = definition_from_header(row, definition, opts)
+            opts = opts.merge(:definition => definition_from_header(row, opts))
           else
-            records = add_to_collection(records, csv_record(row.strip, definition, opts))
+            records = add_to_collection(records, csv_record(row.strip, opts))
           end
         end
       end
@@ -300,11 +302,14 @@ module Ratistics
     #   ]
     #
     # @param [String] data the data to be processed
-    # @param [Array] definition the record definition for processing
-    #   individual fields (see above)
+    # @param [Hash] opts processing options
+    #
+    # @option opts [Array] :definition the record definition for processing
+    #   individual fields (required, see above)
     #
     # @return [Hash] a hash with keys matching the fields in the record definition
-    def dat_record(data, definition, opts={})
+    def dat_record(data, opts={})
+      definition = opts[:definition] || opts[:def]
       record = {}
 
       definition.each do |field|
@@ -338,15 +343,15 @@ module Ratistics
     #   Record definitions work identically to #dat_record
     #
     # @example
-    #   data = Ratistics::Load.dat_data(path, definition)
-    #   data = Ratistics::Load.dat_data(path, definition, :hamster => true)
-    #   data = Ratistics::Load.dat_data(path, definition, :hamster => :set)
+    #   data = Ratistics::Load.dat_data(path, :def => definition)
+    #   data = Ratistics::Load.dat_data(path, :def => definition, :hamster => true)
+    #   data = Ratistics::Load.dat_data(path, :def => definition, :hamster => :set)
     #
     # @param [String] data the data to be processed
-    # @param [Array] definition the record definition for processing
-    #   individual fields (see above)
     # @param [Hash] opts processing options
     #
+    # @option opts [Array] :definition the record definition for processing
+    #   individual fields (required, see above)
     # @option opts [Symbol] :hamster (false) set to *true* to return a
     #   Hamster collection, or indicate a specific Hamster return type
     #
@@ -354,11 +359,12 @@ module Ratistics
     #   all the records
     #
     # @see #dat_record
-    def dat_data(data, definition, opts = {})
+    def dat_data(data, opts = {})
+      definition = opts[:definition] || opts[:def]
       records = new_collection(opts[:hamster])
 
       data.lines do |line|
-        records = add_to_collection(records, dat_record(line, definition))
+        records = add_to_collection(records, dat_record(line, def: definition))
       end
 
       return records
@@ -371,8 +377,6 @@ module Ratistics
     # @note (see #dat_data)
     #
     # @param [String] path path to the data file
-    # @param [Array] definition the record definition for processing
-    #   individual fields (see above)
     # @param [Hash] opts processing options
     #
     # @option (see #dat_data)
@@ -380,12 +384,13 @@ module Ratistics
     # @return (see #dat_data)
     #
     # @see #dat_record
-    def dat_file(path, definition, opts = {})
+    def dat_file(path, opts = {})
+      definition = opts[:definition] || opts[:def]
       records = new_collection(opts[:hamster])
 
       File.open(path, 'r').each do |line|
         line = line.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
-        records = add_to_collection(records, dat_record(line, definition))
+        records = add_to_collection(records, dat_record(line, def: definition))
       end
 
       return records
@@ -404,13 +409,14 @@ module Ratistics
     # @return (see #dat_data)
     #
     # @see #dat_record
-    def dat_gz_file(path, definition, opts = {})
+    def dat_gz_file(path, opts = {})
+      definition = opts[:definition] || opts[:def]
       records = new_collection(opts[:hamster])
 
       Zlib::GzipReader.open(path) do |gz|
         gz.each_line do |line|
           line = line.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
-          records = add_to_collection(records, dat_record(line, definition))
+          records = add_to_collection(records, dat_record(line, def: definition))
         end
       end
 
@@ -444,9 +450,10 @@ module Ratistics
 
     # :nodoc:
     # @private
-    def definition_from_header(row, definition, opts)
+    def definition_from_header(row, opts)
+      definition = opts[:definition] || opts[:def]
       if definition.nil?
-        definition = add_to_collection([], csv_record(row.strip, definition, opts))
+        definition = add_to_collection([], csv_record(row.strip, opts))
         definition = definition.flatten.collect{|field| field.to_sym }
       end
       return definition
