@@ -84,7 +84,6 @@ module Ratistics
     # @return [Array, Hash] an array of values when no record definition
     #   is given or a hash with keys matching the record definition
     def csv_record(data, opts = {})
-      definition = opts[:definition] || opts[:def]
 
       if data.is_a?(String)
         col_sep = opts[:col_sep] || ','
@@ -99,19 +98,24 @@ module Ratistics
         end
       end
 
-      unless definition.nil?
-        field = {}
+      as = opts[:as]
+      definition = opts[:definition] || opts[:def]
+      unless definition.nil? || as == :frame || as == :dataframe
+        field = (as == :array || as == :catalog || as == :catalogue ? [] : {})
+
         definition.each_index do |index|
           name, cast = definition[index]
           next if name.nil?
           if cast.is_a?(Symbol) && ! (data[index].nil? || data[index].empty?)
-            field[name] = data[index].send(cast)
+            value = data[index].send(cast)
           elsif cast.is_a?(Proc) && ! (data[index].nil? || data[index].empty?)
-            field[name] = cast.call(data[index])
+            value = cast.call(data[index])
           else
-            field[name] = data[index]
+            value = data[index]
           end
+          as == :array || as == :catalog || as == :catalogue ? field << [name, value] : field[name] = value
         end
+
         data = field
       end
 

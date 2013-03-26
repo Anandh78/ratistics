@@ -88,6 +88,22 @@ module Ratistics
       }
     end
 
+    let(:record_catalog) do
+      [
+        [:place, 1],
+        [:div_tot, '1/362'],
+        [:div, 'M2039'],
+        [:guntime, '30:43'],
+        [:nettime, '30:42'],
+        [:pace, '4:57'],
+        [:name, 'Brian Harvey'],
+        [:age, 22],
+        [:gender, 'M'],
+        [:race_num, 1422],
+        [:city_state, 'Allston MA'],
+      ]
+    end
+
     context 'CSV files' do
 
       context '#csv_record' do
@@ -179,6 +195,46 @@ module Ratistics
           record.count.should eq 14
           record.should eq ["1", "", "1/362", "M2039", "", "30:43", "30:42", "4:57", "Harvey, Brian", "22", "", "M", "1422", "Allston MA"]
         end
+
+        it 'returns a hash when :as option is nil' do
+          record = Ratistics::Load.csv_record(csv_row, def: csv_definition)
+          record.should eq record_hash
+        end
+
+        it 'returns a hash when :as option is :hash' do
+          record = Ratistics::Load.csv_record(csv_row, def: csv_definition, as: :hash)
+          record.should eq record_hash
+        end
+
+        it 'returns a hash when :as option is :map' do
+          record = Ratistics::Load.csv_record(csv_row, def: csv_definition, as: :map)
+          record.should eq record_hash
+        end
+
+        it 'returns a catalog when :as option is :array' do
+          record = Ratistics::Load.csv_record(csv_row, def: csv_definition, as: :array)
+          record.should eq record_catalog
+        end
+
+        it 'returns a catalog when :as option is :catalog' do
+          record = Ratistics::Load.csv_record(csv_row, def: csv_definition, as: :catalog)
+          record.should eq record_catalog
+        end
+
+        it 'returns a catalog when :as option is :catalogue' do
+          record = Ratistics::Load.csv_record(csv_row, def: csv_definition, as: :catalogue)
+          record.should eq record_catalog
+        end
+
+        it 'returns a simple array when :as option is :frame' do
+          record = Ratistics::Load.csv_record(csv_row, def: csv_definition, as: :frame)
+          record.should eq record_array
+        end
+
+        it 'returns a simple array when :as option is :dataframe' do
+          record = Ratistics::Load.csv_record(csv_row, def: csv_definition, as: :dataframe)
+          record.should eq record_array
+        end
       end
 
       context '#csv_data' do
@@ -250,6 +306,54 @@ module Ratistics
           record.count.should eq record_count-1
           record.first.should_not eq record_hash
           record.first.keys.should eq record_hash.keys
+        end
+
+        it 'returns a hash when :as option is nil' do
+          record = Ratistics::Load.csv_data(contents, def: csv_definition)
+          record.count.should eq record_count
+          record.first.should eq record_hash
+        end
+
+        it 'returns a hash when :as option is :hash' do
+          record = Ratistics::Load.csv_data(contents, as: :hash, def: csv_definition)
+          record.count.should eq record_count
+          record.first.should eq record_hash
+        end
+
+        it 'returns a hash when :as option is :map' do
+          record = Ratistics::Load.csv_data(contents, as: :map, def: csv_definition)
+          record.count.should eq record_count
+          record.first.should eq record_hash
+        end
+
+        it 'returns a catalog when :as option is :array' do
+          record = Ratistics::Load.csv_data(contents, as: :array, def: csv_definition)
+          record.count.should eq record_count
+          record.first.should eq record_catalog
+        end
+
+        it 'returns a catalog when :as option is :catalog' do
+          record = Ratistics::Load.csv_data(contents, as: :catalog, def: csv_definition)
+          record.count.should eq record_count
+          record.first.should eq record_catalog
+        end
+
+        it 'returns a catalog when :as option is :catalogue' do
+          record = Ratistics::Load.csv_data(contents, as: :catalog, def: csv_definition)
+          record.count.should eq record_count
+          record.first.should eq record_catalog
+        end
+
+        it 'returns a simple array when :as option is :frame' do
+          record = Ratistics::Load.csv_data(contents, as: :frame, def: csv_definition)
+          record.count.should eq record_count
+          record.first.should eq record_array
+        end
+
+        it 'returns a simple array when :as option is :dataframe' do
+          record = Ratistics::Load.csv_data(contents, as: :dataframe, def: csv_definition)
+          record.count.should eq record_count
+          record.first.should eq record_array
         end
 
         context 'with Hamster', :hamster => true do
@@ -446,6 +550,24 @@ module Ratistics
           record = Ratistics::Load.dat_record(dat_row, def: definition)
           record.should == {:place => 1}
         end
+
+        it 'returns a hash when :as option is nil'
+
+        it 'returns a hash when :as option is :hash'
+
+        it 'returns a hash when :as option is :map'
+
+        it 'returns a catalog when :as option is :array'
+
+        it 'returns a catalog when :as option is :catalog'
+
+        it 'returns a catalog when :as option is :catalogue'
+
+        it 'returns a simple array when :as option is :array'
+
+        it 'returns a simple array when :as option is :frame'
+
+        it 'returns a simple array when :as option is :dataframe'
       end
 
       context '#dat_data' do
@@ -463,6 +585,20 @@ module Ratistics
           record.count.should eq record_count
           record.first.should eq record_hash
         end
+
+        it 'returns a hash when :as option is nil'
+
+        it 'returns a catalog when :as option is :array'
+
+        it 'returns a catalog when :as option is :catalog'
+
+        it 'returns a catalog when :as option is :catalogue'
+
+        it 'returns a simple array when :as option is :array'
+
+        it 'returns a simple array when :as option is :frame'
+
+        it 'returns a simple array when :as option is :dataframe'
 
         context 'with Hamster', :hamster => true do
 
