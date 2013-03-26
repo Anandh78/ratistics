@@ -249,6 +249,13 @@ module Ratistics
         let(:contents) { csv_headers + $/ + csv_row + $/ + csv_row + $/ + csv_row }
         let(:data_rows) { 3 }
 
+        let(:big_content) do
+          file = File.open(csv_file, 'rb')
+          contents = file.read
+          file.close
+          return contents
+        end
+
         it 'sets the row keys to the header values when returning a hash' do
           data = Load::csv_data(contents, headers: true, as: :hash)
           data.length == data_rows
@@ -268,26 +275,132 @@ module Ratistics
           data.first.should eq headers
         end
 
-        it 'works with headers but without a definition' do
-          pending
+        it 'uses headers when present an no definition given' do
+          data = Load::csv_data(contents, headers: true, as: :frame)
+          data.length == data_rows + 1
+          data.first.should eq headers
         end
 
-        it 'works with headers and with a definition' do
-          pending
+        it 'overrides headers with a definition' do
+          data = Load::csv_data(contents, def: csv_definition, headers: true, as: :frame)
+          data.length == data_rows + 1
+          data.first.should eq record_hash.keys
         end
 
-        it 'works without headers and without a definition' do
-          pending
+        it 'names columns numerically when not given headers or a definition' do
+          data = Load::csv_data(big_content, as: :frame)
+          data.length == data_rows + 1
+          data.first.length.times do |i|
+            data.first[i].should =~ /_#{i+1}$/
+          end
         end
 
-        it 'works without headers but with a definition' do
-          pending
+        it 'applies the definition when given but headers not present' do
+          data = Load::csv_data(contents, def: csv_definition, headers: false, as: :frame)
+          data.length == data_rows + 1
+          data.first.should eq record_hash.keys
         end
 
         it 'supports :row_sep option' do
           contents = csv_row + '|' + csv_row + '|' + csv_row 
           data = Ratistics::Load.csv_data(contents, :row_sep => '|')
           data.length == data_rows
+        end
+
+        it 'returns hash elements when :as is nil' do
+          data = Load::csv_data(contents, headers: true, def: csv_definition)
+          data.first.should eq record_hash
+        end
+
+        it 'supports :as => :hash option' do
+          data = Load::csv_data(contents, headers: true, def: csv_definition, as: :hash)
+          data.first.should eq record_hash
+        end
+
+        it 'supports :as => :map option' do
+          data = Load::csv_data(contents, headers: true, def: csv_definition, as: :map)
+          data.first.should eq record_hash
+        end
+
+        it 'supports :as => :array option' do
+          data = Load::csv_data(contents, headers: true, def: csv_definition, as: :array)
+          data.first.should eq record_catalog
+        end
+
+        it 'supports :as => :catalog option' do
+          data = Load::csv_data(contents, headers: true, def: csv_definition, as: :catalog)
+          data.first.should eq record_catalog
+        end
+
+        it 'supports :as => :catalogue option' do
+          data = Load::csv_data(contents, headers: true, def: csv_definition, as: :catalogue)
+          data.first.should eq record_catalog
+        end
+
+        it 'supports :as => :frame option' do
+          data = Load::csv_data(contents, headers: true, def: csv_definition, as: :frame)
+          data[0].should eq record_hash.keys
+          data[1].should eq record_array
+        end
+
+        it 'supports :as => :dataframe option' do
+          data = Load::csv_data(contents, headers: true, def: csv_definition, as: :dataframe)
+          data[0].should eq record_hash.keys
+          data[1].should eq record_array
+        end
+
+        it 'sets the first row equal to the column names when returning a frame' do
+          data = Load::csv_data(contents, headers: true, headers: true, as: :dataframe)
+          data[0].should eq headers
+          data[1].should eq record_array
+        end
+
+        context 'with Hamster', :hamster => true do
+
+          it 'returns a Ruby Array when no :hamster option is given' do
+            records = Ratistics::Load.csv_data(contents, def: csv_definition)
+            records.should be_kind_of Array
+          end
+
+          it 'returns a Ruby Array when the :hamster option is set to false' do
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => false)
+            records.should be_kind_of Array
+          end
+
+          it 'returns a Hamster::Vector when the :hamster option is set to true' do
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => true)
+            records.should be_kind_of Hamster::Vector
+          end
+
+          it 'returns a Hamster::List when the :hamster option is set to :list' do
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :list)
+            records.should be_kind_of Hamster::List
+          end
+
+          it 'returns a Hamster::Stack when the :hamster option is set to :stack' do
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :stack)
+            records.should be_kind_of Hamster::Stack
+          end
+
+          it 'returns a Hamster::Queue when the :hamster option is set to :queue' do
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :queue)
+            records.should be_kind_of Hamster::Queue
+          end
+
+          it 'returns a Hamster::Set when the :hamster option is set to :set' do
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :set)
+            records.should be_kind_of Hamster::Set
+          end
+
+          it 'returns a Hamster::Vector when the :hamster option is set to :vector' do
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :vector)
+            records.should be_kind_of Hamster::Vector
+          end
+
+          it 'returns a Hamster::Vector when the :hamster option is set to an unknown type' do
+            records = Ratistics::Load.csv_data(contents, def: csv_definition, :hamster => :bogus)
+            records.should be_kind_of Hamster::Vector
+          end
         end
       end
 

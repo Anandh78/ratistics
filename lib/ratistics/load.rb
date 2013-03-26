@@ -158,23 +158,35 @@ module Ratistics
     # 
     # @see #csv_record
     def csv_data(data, opts = {})
-      #definition = opts[:definition] || opts[:def]
-      #records = new_collection(opts[:hamster])
-      #headers = (opts[:headers] == true)
 
-      #data.split(opts[:row_sep] || $/).each do |row|
-        #if headers
-          #headers = false
-          #opts = opts.merge(:definition => definition_from_header(row, opts))
-        #else
-          #row = row.strip
-          #unless row.empty?
-            #records = add_to_collection(records, csv_record(row.strip, opts))
-          #end
-        #end
-      #end
+      definition = opts[:definition] || opts[:def]
+      headers = opts[:headers] == true
+      records = new_collection(opts[:hamster])
 
-      #return records
+      data = data.split(opts[:row_sep] || $/)
+
+      if definition.nil?
+        options = opts.merge(as: :frame, def: nil, definition: nil)
+        definition = csv_record(data.first.strip, options)
+        unless headers
+          definition.each_index{|i| definition[i] = "field_#{i+1}"}
+        end
+        opts = opts.merge(def: definition)
+      end
+
+      if opts[:as] == :frame || opts[:as] == :dataframe
+        add_to_collection(records, definition.collect{|item| [item].flatten.first})
+      end
+
+      start = headers ? 1 : 0
+      (start..data.length-1).each do |i|
+        row = data[i].strip
+        unless row.empty?
+          add_to_collection(records, csv_record(row, opts))
+        end
+      end
+
+      return records
     end
 
     # Convert a CSV file into an array of Ruby data structures
@@ -449,13 +461,13 @@ module Ratistics
 
     # :nodoc:
     # @private
-    def definition_from_header(row, opts)
-      definition = opts[:definition] || opts[:def]
-      if definition.nil?
-        definition = add_to_collection([], csv_record(row.strip, opts))
-        definition = definition.flatten.collect{|field| field.to_sym }
-      end
-      return definition
-    end
+    #def definition_from_header(row, opts)
+      #definition = opts[:definition] || opts[:def]
+      #if definition.nil?
+        #definition = add_to_collection([], csv_record(row.strip, opts))
+        #definition = definition.flatten.collect{|field| field.to_sym }
+      #end
+      #return definition
+    #end
   end
 end
