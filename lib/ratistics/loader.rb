@@ -65,7 +65,7 @@ module Ratistics
           match.select{|m| ! m.nil? }.first.chomp(cfg[:col_sep]).gsub(cfg[:quote_char], '')
         end
       else
-        frame << [] # header placeholder
+        frame << nil # header placeholder
       end
 
       start = cfg[:headers] ? 1 : 0
@@ -76,12 +76,37 @@ module Ratistics
       end
 
       unless cfg[:headers]
-        frame.last.length.times do |i|
-          frame.first << "column_#{i}"
-        end
+        frame[0] = (1..frame.last.length).collect{|i| "column_#{i}" }
       end
 
       return frame
+    end
+
+    # Crater count: 384,343
+    # Fastest load: catalog w/ header @ ~15.4 seconds
+    # Fastest load: catalog w/o header @ ~15.4 seconds
+    def catalog_from_csv_data_using_headers(contents, opts={})
+
+      cfg = csv_config(opts)
+
+      catalog = []
+      contents = contents.split(cfg[:row_regex])
+
+      field_names = contents.first.strip.scan(cfg[:field_regex]).collect do |match|
+        match.select{|m| ! m.nil? }.first.chomp(cfg[:col_sep]).gsub(cfg[:quote_char], '')
+      end
+      unless cfg[:headers]
+        field_names = (1..field_names.length).collect{|i| "column_#{i}" }
+      end
+
+      start = cfg[:headers] ? 1 : 0
+      (start..contents.length-1).each do |i|
+        catalog << field_names.zip(contents[i].strip.scan(cfg[:field_regex]).collect do |match|
+          match.select{|m| ! m.nil? }.first.chomp(cfg[:col_sep]).gsub(cfg[:quote_char], '')
+        end)
+      end
+
+      return catalog
     end
 
     def file_contents(path)
