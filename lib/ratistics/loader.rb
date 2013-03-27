@@ -20,8 +20,7 @@ module Ratistics
     end
 
     # Crater count: 384,343
-    # Fastest load: no procs in fields @ ~14.1 seconds
-    # Fastest load: with procs for fields @ ~15.5 seconds
+    # Fastest load: ~15.5 seconds
     def frame_from_csv_data_using_definition(contents, opts={})
 
       definition = opts[:def] || opts[:definition]
@@ -51,8 +50,7 @@ module Ratistics
     end
 
     # Crater count: 384,343
-    # Fastest load: frame w/ header @ ~12.2 seconds
-    # Fastest load: frame w/o header @ ~13.6 seconds
+    # Fastest load: ~13.6 seconds
     def frame_from_csv_data_using_headers(contents, opts={})
 
       cfg = csv_config(opts)
@@ -83,8 +81,7 @@ module Ratistics
     end
 
     # Crater count: 384,343
-    # Fastest load: catalog w/ header @ ~15.4 seconds
-    # Fastest load: catalog w/o header @ ~15.4 seconds
+    # Fastest load: ~15.4 seconds
     def catalog_from_csv_data_using_headers(contents, opts={})
 
       cfg = csv_config(opts)
