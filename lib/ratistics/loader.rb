@@ -6,6 +6,9 @@ module Ratistics
   module Loader
     extend self
 
+    # NOTE: Not skipping fields defined as nil or not included
+    # in the definition
+
     def csv_config(opts)
       cfg = {
         headers: opts[:headers] == true,
@@ -78,6 +81,36 @@ module Ratistics
       end
 
       return frame
+    end
+
+    # Crater count: 384,343
+    # Fastest load: ~16.4 seconds
+    def catalog_from_csv_data_using_definition(contents, opts={})
+
+      definition = opts[:def] || opts[:definition]
+      cfg = csv_config(opts)
+
+      catalog = []
+      contents = contents.split(cfg[:row_regex])
+
+      field_names = definition.collect{|field| [field].flatten.first}
+      trans = definition.collect{|field| [field].flatten.length > 1 ? field.last : nil}
+
+      start = cfg[:headers] ? 1 : 0
+      (start..contents.length-1).each do |i|
+        row = contents[i].strip.scan(cfg[:field_regex]).collect do |match|
+          match.select{|m| ! m.nil? }.first.chomp(cfg[:col_sep]).gsub(cfg[:quote_char], '')
+        end
+        row.size.times do |i|
+          unless trans[i].nil? || row[i].nil? || row[i].empty?
+            row[i] = row[i].send(trans[i]) if trans[i].is_a?(Symbol)
+            row[i] = trans[i].call(row[i]) if trans[i].is_a?(Proc)
+          end
+        end
+        catalog << field_names.zip(row)
+      end
+
+      return catalog
     end
 
     # Crater count: 384,343
