@@ -5,7 +5,8 @@
 Release Date: TBD
 
 * Dropped support for Ruby < 1.9.2
-* Definition is now part of opts hash for Load functions
+* Completely refactored data loading helper modules
+  * Significantly increased performance when loading CSV files
 
 ### 0.2.3
 

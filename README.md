@@ -209,7 +209,7 @@ fields on load.
       [:race_num, :to_i],
     ]
 
-    sample = Ratistics::Load.csv_file('examples/race.csv', definition)
+    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition)
     sample.count #=> 1633
     sample.first #=> :place=>1, :div=>"M2039", :guntime=>"30:43", ... }
 
@@ -221,13 +221,22 @@ Hamster::Vector.
 
     require 'hamster'
 
-    sample = Ratistics::Load.csv_file('examples/race.csv', definition)
+    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, as: :hash)
     sample.class #=> Array
+    sample.first.class #=> Hash
 
-    sample = Ratistics::Load.csv_file('examples/race.csv', definition, :hamster => true)
+    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, as: :catalog)
+    sample.class #=> Array
+    sample.first.class #=> Array
+
+    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, as: :dataframe)
+    sample.class #=> Array
+    sample.first.class #=> Array
+
+    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, hamster: true)
     sample.class #=> Hamster::Vector
 
-    sample = Ratistics::Load.csv_file('examples/race.csv', definition, :hamster => :set)
+    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, hamster: :set)
     sample.class #=> Hamster::Set
 
 Consult the API documentation for the Load module for more information.

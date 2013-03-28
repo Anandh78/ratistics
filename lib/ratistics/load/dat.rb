@@ -216,17 +216,6 @@ module Ratistics
           return collection.cons(item)
         end
       end
-
-      # :nodoc:
-      # @private
-      def definition_from_header(row, opts)
-        definition = opts[:definition] || opts[:def]
-        if definition.nil?
-          definition = add_to_collection([], csv_record(row.strip, opts))
-          definition = definition.flatten.collect{|field| field.to_sym }
-        end
-        return definition
-      end
     end
   end
 end

@@ -39,11 +39,11 @@ class Racer < parent
   ]
 
   def self.from_csv
-    Ratistics::Load.csv_file(CSV_PATH, def: CSV_DEFINITION)
+    Ratistics::Load::Csv.file(CSV_PATH, def: CSV_DEFINITION)
   end
 
   def self.from_dat
-    Ratistics::Load.dat_file(DAT_PATH, DAT_DEFINITION)
+    Ratistics::Load::Dat.file(DAT_PATH, DAT_DEFINITION)
   end
 
   if defined? ActiveRecord::Base
