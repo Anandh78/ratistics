@@ -85,13 +85,17 @@ module Ratistics
     #   is given or a hash with keys matching the record definition
     def csv_record(data, opts = {})
 
-      col_sep = opts[:col_sep] || ','
-      col_sep_r = Regexp.escape(col_sep)
-      quote_char_r = Regexp.escape(opts[:quote_char] || '"')
-      line_regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
-      quote_regex = /#{quote_char_r}/
-      data = data.scan(line_regex).collect do |match|
-        match.select{|m| ! m.nil? }.first.chomp(col_sep).gsub(quote_regex, '')
+      if data.is_a?(String)
+        col_sep = opts[:col_sep] || ','
+        col_sep_r = Regexp.escape(col_sep)
+
+        quote_char_r = Regexp.escape(opts[:quote_char] || '"')
+
+        regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
+
+        data = data.scan(regex).collect do |match|
+          match.select{|m| ! m.nil? }.first.chomp(col_sep).gsub(/#{quote_char_r}/, '')
+        end
       end
 
       as = opts[:as]
@@ -159,86 +163,23 @@ module Ratistics
     # 
     # @see #csv_record
     def csv_data(data, opts = {})
-
       definition = opts[:definition] || opts[:def]
-      headers = opts[:headers] == true
       records = new_collection(opts[:hamster])
+      headers = (opts[:headers] == true)
 
-      data = data.split(opts[:row_sep] || $/)
-
-      if definition.nil?
-        options = opts.merge(as: :frame, def: nil, definition: nil)
-        definition = csv_record(data.first.strip, options)
-        unless headers
-          definition.each_index{|i| definition[i] = "field_#{i+1}"}
-        end
-        opts = opts.merge(def: definition)
-      end
-
-      if opts[:as] == :frame || opts[:as] == :dataframe
-        add_to_collection(records, definition.collect{|item| [item].flatten.first})
-      end
-
-#col_sep = opts[:col_sep] || ','
-#col_sep_r = Regexp.escape(col_sep)
-#quote_char_r = Regexp.escape(opts[:quote_char] || '"')
-#line_regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
-#quote_regex = /#{quote_char_r}/
-      start = headers ? 1 : 0
-      (start..data.length-1).each do |i|
-        row = data[i].strip
-        unless row.empty?
-#row = row.scan(line_regex).collect do |match|
-  #match.select{|m| ! m.nil? }.first.chomp(col_sep).gsub(quote_regex, '')
-#end
-#add_to_collection(records, row)
-          add_to_collection(records, csv_record(row, opts))
+      data.split(opts[:row_sep] || $/).each do |row|
+        if headers
+          headers = false
+          opts = opts.merge(:definition => definition_from_header(row, opts))
+        else
+          row = row.strip
+          unless row.empty?
+            records = add_to_collection(records, csv_record(row.strip, opts))
+          end
         end
       end
 
       return records
-    end
-
-    def csv_file_to_frame(path, opts={})
-      definition = opts[:definition] || opts[:def]
-      headers = opts[:headers] == true
-
-      row_sep_r = Regexp.escape(opts[:row_sep] || $/)
-      col_sep_r = Regexp.escape(opts[:col_sep] || ',')
-      quote_char_r = Regexp.escape(opts[:quote_char] || '"')
-      line_regex = /(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}#{col_sep_r})|(#{quote_char_r}[^#{quote_char_r}]*#{quote_char_r}$)|([^#{col_sep_r}]*#{col_sep_r})|([^#{col_sep_r}]+$)/
-      quote_regex = /#{quote_char_r}/
-
-      file = File.open(path, 'rb')
-      contents = file.read
-      file.close
-
-      data = []
-      contents = contents.split(row_sep_r)
-
-      if definition.nil?
-        definition = contents.first.strip.scan(line_regex).collect do |match|
-          match.select{|m| ! m.nil? }.first.chomp(col_sep_r).gsub(quote_char_r, '')
-        end
-        if headers
-          # use the first row for headers
-          data << definition
-        else
-          # create bogus headers
-          data << definition.length.times {|i| "column_#{i+1}"}
-        end
-      else
-        # get the column names from the definition
-      end
-
-      start = headers ? 1 : 0
-      (start..contents.length-1).each do |i|
-        data << contents[i].strip.scan(line_regex).collect do |match|
-          match.select{|m| ! m.nil? }.first.chomp(col_sep_r).gsub(quote_char_r, '')
-        end
-      end
-
-      return data
     end
 
     # Convert a CSV file into an array of Ruby data structures
@@ -255,21 +196,21 @@ module Ratistics
     # 
     # @see #csv_record
     def csv_file(path, opts = {})
-      #definition = opts[:definition] || opts[:def]
-      #records = new_collection(opts[:hamster])
-      #headers = (opts[:headers] == true)
+      definition = opts[:definition] || opts[:def]
+      records = new_collection(opts[:hamster])
+      headers = (opts[:headers] == true)
 
-      #File.open(path, 'r').each_line(opts[:row_sep] || $/) do |row|
-        #row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
-        #if headers
-          #headers = false
-          #opts = opts.merge(:definition => definition_from_header(row, opts))
-        #else
-          #records = add_to_collection(records, csv_record(row.strip, opts))
-        #end
-      #end
+      File.open(path, 'r').each_line(opts[:row_sep] || $/) do |row|
+        row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
+        if headers
+          headers = false
+          opts = opts.merge(:definition => definition_from_header(row, opts))
+        else
+          records = add_to_collection(records, csv_record(row.strip, opts))
+        end
+      end
 
-      #return records
+      return records
     end
 
     # Convert a gzipped CSV file into an array of Ruby data structures
@@ -285,23 +226,23 @@ module Ratistics
     # 
     # @see #csv_record
     def csv_gz_file(path, opts = {})
-      #definition = opts[:definition] || opts[:def]
-      #records = new_collection(opts[:hamster])
-      #headers = (opts[:headers] == true)
+      definition = opts[:definition] || opts[:def]
+      records = new_collection(opts[:hamster])
+      headers = (opts[:headers] == true)
 
-      #Zlib::GzipReader.open(path) do |gz|
-        #gz.each_line do |row|
-          #row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
-          #if headers
-            #headers = false
-            #opts = opts.merge(:definition => definition_from_header(row, opts))
-          #else
-            #records = add_to_collection(records, csv_record(row.strip, opts))
-          #end
-        #end
-      #end
+      Zlib::GzipReader.open(path) do |gz|
+        gz.each_line do |row|
+          row = row.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
+          if headers
+            headers = false
+            opts = opts.merge(:definition => definition_from_header(row, opts))
+          else
+            records = add_to_collection(records, csv_record(row.strip, opts))
+          end
+        end
+      end
 
-      #return records
+      return records
     end
 
     # Convert an individual fixed-length field record into a Ruby
@@ -513,13 +454,13 @@ module Ratistics
 
     # :nodoc:
     # @private
-    #def definition_from_header(row, opts)
-      #definition = opts[:definition] || opts[:def]
-      #if definition.nil?
-        #definition = add_to_collection([], csv_record(row.strip, opts))
-        #definition = definition.flatten.collect{|field| field.to_sym }
-      #end
-      #return definition
-    #end
+    def definition_from_header(row, opts)
+      definition = opts[:definition] || opts[:def]
+      if definition.nil?
+        definition = add_to_collection([], csv_record(row.strip, opts))
+        definition = definition.flatten.collect{|field| field.to_sym }
+      end
+      return definition
+    end
   end
 end
