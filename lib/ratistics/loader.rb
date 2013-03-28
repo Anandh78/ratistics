@@ -20,6 +20,9 @@ module Ratistics
     end
 
     def csv_data(contents, opts = {})
+      if opts[:encoding] == :force
+        contents = contents.force_encoding('ISO-8859-1').encode('utf-8', :replace => nil)
+      end
       definition = opts[:def] || opts[:definition]
 
       if opts[:as] == :frame || opts[:as] == :dataframe
@@ -50,7 +53,7 @@ module Ratistics
       definition = opts[:def] || opts[:definition]
       cfg = csv_config(opts)
 
-      collection = []
+      collection, put = new_collection(opts[:hamster])
       contents = contents.split(cfg[:row_regex])
 
       trans = definition.collect{|field| [field].flatten.length > 1 ? field.last : nil}
@@ -67,7 +70,7 @@ module Ratistics
             row[i] = trans[i].call(row[i]) if trans[i].is_a?(Proc)
           end
         end
-        collection << row
+        collection = collection.send(put, row)
       end
 
       return collection
@@ -79,26 +82,27 @@ module Ratistics
 
       cfg = csv_config(opts)
 
-      collection = []
+      collection, put = new_collection(opts[:hamster])
       contents = contents.split(cfg[:row_regex])
 
       if cfg[:headers]
-        collection << contents.first.strip.scan(cfg[:field_regex]).collect do |match|
+        collection = collection.send(put, contents.first.strip.scan(cfg[:field_regex]).collect do |match|
           match.select{|m| ! m.nil? }.first.chomp(cfg[:col_sep]).gsub(cfg[:quote_char], '')
-        end
+        end)
       else
-        collection << nil # header placeholder
+        head = []
+        collection = collection.send(put, head)
       end
 
       start = cfg[:headers] ? 1 : 0
       (start..contents.length-1).each do |i|
-        collection << contents[i].strip.scan(cfg[:field_regex]).collect do |match|
+        collection = collection.send(put, contents[i].strip.scan(cfg[:field_regex]).collect do |match|
           match.select{|m| ! m.nil? }.first.chomp(cfg[:col_sep]).gsub(cfg[:quote_char], '')
-        end
+        end)
       end
 
       unless cfg[:headers]
-        collection[0] = (1..collection.last.length).collect{|i| "column_#{i}" }
+        (1..collection.last.length).each{|i| head << "column_#{i}" }
       end
 
       return collection
@@ -111,7 +115,7 @@ module Ratistics
       definition = opts[:def] || opts[:definition]
       cfg = csv_config(opts)
 
-      collection = []
+      collection, put = new_collection(opts[:hamster])
       contents = contents.split(cfg[:row_regex])
 
       field_names = definition.collect{|field| [field].flatten.first}
@@ -128,7 +132,7 @@ module Ratistics
             row[i] = trans[i].call(row[i]) if trans[i].is_a?(Proc)
           end
         end
-        collection << field_names.zip(row)
+        collection = collection.send(put, field_names.zip(row))
       end
 
       return collection
@@ -140,7 +144,7 @@ module Ratistics
 
       cfg = csv_config(opts)
 
-      collection = []
+      collection, put = new_collection(opts[:hamster])
       contents = contents.split(cfg[:row_regex])
 
       field_names = contents.first.strip.scan(cfg[:field_regex]).collect do |match|
@@ -165,7 +169,7 @@ module Ratistics
       definition = opts[:def] || opts[:definition]
       cfg = csv_config(opts)
 
-      collection = []
+      collection, put = new_collection(opts[:hamster])
       contents = contents.split(cfg[:row_regex])
 
       field_names = definition.collect{|field| [field].flatten.first}
@@ -182,10 +186,11 @@ module Ratistics
             row[i] = trans[i].call(row[i]) if trans[i].is_a?(Proc)
           end
         end
-        collection << {}
+        map = {}
         field_names.each_with_index do |field, index|
-          collection.last[field] = row[index]
+          map[field] = row[index]
         end
+        collection = collection.send(put, map)
       end
 
       return collection
@@ -195,7 +200,7 @@ module Ratistics
 
       cfg = csv_config(opts)
 
-      collection = []
+      collection, put = new_collection(opts[:hamster])
       contents = contents.split(cfg[:row_regex])
 
       field_names = contents.first.strip.scan(cfg[:field_regex]).collect do |match|
@@ -210,10 +215,11 @@ module Ratistics
         row = contents[i].strip.scan(cfg[:field_regex]).collect do |match|
           match.select{|m| ! m.nil? }.first.chomp(cfg[:col_sep]).gsub(cfg[:quote_char], '')
         end
-        collection << {}
+        map = {}
         field_names.each_with_index do |field, index|
-          collection.last[field] = row[index]
+          map[field] = row[index]
         end
+        collection = collection.send(put, map)
       end
 
       return collection
@@ -255,5 +261,20 @@ module Ratistics
       return cfg
     end
 
+    # :nodoc:
+    # @private
+    def new_collection(type)
+      if type.nil? || type == false
+        collection = Array.new
+        method = :<<
+      elsif Hamster.respond_to?(type.to_s)
+        collection = Hamster.send(type.to_s)
+        method = collection.respond_to?(:<<) ? :<< : :cons
+      else
+        collection = Hamster.vector
+        method = :cons
+      end
+      return collection, method
+    end
   end
 end
