@@ -1,5 +1,5 @@
+require 'ratistics/central_tendency'
 require 'ratistics/collection'
-require 'ratistics/rank'
 
 module Ratistics
 
@@ -81,9 +81,9 @@ module Ratistics
     # Calculate the value representing the upper-bound of the first
     # quartile (percentile) of a data sample.
     #
-    # {Rank#first_quartile}
+    # {CentralTendency#first_quartile}
     def first_quartile
-      @first_quartile ||= Rank.first_quartile(@data)
+      @first_quartile ||= CentralTendency.first_quartile(@data)
     end
 
     alias :lower_quartile :first_quartile
@@ -91,17 +91,17 @@ module Ratistics
     # Calculate the value representing the upper-bound of the second
     # quartile (percentile) of a data sample.
     #
-    # {Rank#second_quartile}
+    # {CentralTendency#second_quartile}
     def second_quartile
-      @second_quartile ||= Rank.second_quartile(@data)
+      @second_quartile ||= CentralTendency.second_quartile(@data)
     end
 
     # Calculate the value representing the upper-bound of the third
     # quartile (percentile) of a data sample.
     #
-    # {Rank#third_quartile}
+    # {CentralTendency#third_quartile}
     def third_quartile
-      @third_quartile ||= Rank.third_quartile(@data)
+      @third_quartile ||= CentralTendency.third_quartile(@data)
     end
 
     alias :upper_quartile :third_quartile

@@ -251,5 +251,102 @@ module Ratistics
 
       return modes
     end
+
+    # Calculate the value representing the upper-bound of the first
+    # quartile (percentile) of a data sample. This is the equivalent
+    # of the median of the subset of the sample from the lower bound to
+    # the sample-median.
+    # 
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true or a block is given.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set against which percentile is computed
+    # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [true, false] :sorted indicates of the data is already sorted
+    #
+    # @return [Numeric] value at the rank nearest to the given percentile
+    #
+    # @see {CentralTendency#median}
+    # @see http://en.wikipedia.org/wiki/Quantile
+    def first_quartile(data, opts={}, &block)
+      return nil if data.nil? || data.empty?
+      midpoint = (data.size / 2.0).floor - 1
+      return CentralTendency.median(Collection.slice(data, (0..midpoint)), opts, &block)
+    end
+
+    alias :lower_quartile :first_quartile
+
+    # Calculate the value representing the upper-bound of the second
+    # quartile (percentile) of a data sample. This is the equivalent
+    # of the sample median.
+    # 
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true or a block is given.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set against which percentile is computed
+    # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [true, false] :sorted indicates of the data is already sorted
+    #
+    # @return [Numeric] value at the rank nearest to the given percentile
+    #
+    # @see {CentralTendency#median}
+    # @see http://en.wikipedia.org/wiki/Quantile
+    def second_quartile(data, opts={}, &block)
+      return nil if data.nil? || data.empty?
+      return CentralTendency.median(data, opts, &block)
+    end
+
+    # Calculate the value representing the upper-bound of the third
+    # quartile (percentile) of a data sample. This is the equivalent
+    # of the median of the subset of the sample from the sample-median
+    # to the upper bound.
+    # 
+    # Will sort the data set using natural sort order unless
+    # the :sorted option is true or a block is given.
+    #
+    # When a block is given the block will be applied to every
+    # element in the data set. Using a block in this way allows
+    # probability to be computed against a specific field in a
+    # data set of hashes or objects.
+    #
+    # @yield iterates over each element in the data set
+    # @yieldparam item each element in the data set
+    #
+    # @param [Enumerable] data the data set against which percentile is computed
+    # @param [Block] block optional block for per-item processing
+    #
+    # @option opts [true, false] :sorted indicates of the data is already sorted
+    #
+    # @return [Numeric] value at the rank nearest to the given percentile
+    #
+    # @see {CentralTendency#median}
+    # @see http://en.wikipedia.org/wiki/Quantile
+    def third_quartile(data, opts={}, &block)
+      return nil if data.nil? || data.empty?
+      midpoint = (data.size / 2.0).ceil
+      high = data.size - 1
+      return CentralTendency.median(Collection.slice(data, (midpoint..high)), opts, &block)
+    end
+
+    alias :upper_quartile :third_quartile
+
   end
 end

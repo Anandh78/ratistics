@@ -538,5 +538,199 @@ module Ratistics
       end
 
     end
+
+    context 'quartiles' do
+
+      let(:odd_sample) { [73, 75, 80, 84, 90, 92, 93, 94, 96].freeze }
+      let(:even_sample) { [1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,4,4,5,6].freeze }
+
+      let(:block_sample) do
+        [
+          {:count => 73},
+          {:count => 75},
+          {:count => 80},
+          {:count => 84},
+          {:count => 90},
+          {:count => 92},
+          {:count => 93},
+          {:count => 94},
+          {:count => 96}
+        ].freeze
+      end
+
+      let(:ar_sample) { Racer.where('age > 0').order('age ASC') }
+
+      context 'first' do
+
+        it 'returns nil for a nil sample' do
+          CentralTendency.first_quartile(nil).should be_nil
+        end
+
+        it 'returns nil for an empty set' do
+          CentralTendency.first_quartile([].freeze).should be_nil
+        end
+
+        it 'calculates the rank for an even-numbered sample' do
+          CentralTendency.first_quartile(even_sample.freeze).should be_within(0.001).of(2)
+        end
+
+        it 'calculates the rank for an odd-numbered sample' do
+          CentralTendency.first_quartile(odd_sample.freeze).should be_within(0.001).of(77.5)
+        end
+
+        it 'calculates the rank with a block' do
+          rank = CentralTendency.first_quartile(block_sample.freeze){|item| item[:count]}
+          rank.should be_within(0.001).of(77.5)
+        end
+
+        it 'does not re-sort a sorted sample' do
+          sample = odd_sample.dup
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          CentralTendency.first_quartile(sample, :sorted => true)
+        end
+
+        it 'does not attempt to sort when a using a block' do
+          sample = [
+            {:count => 22},
+            {:count => 40}
+          ]
+
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          CentralTendency.first_quartile(sample){|item| item[:count]}
+        end
+
+        specify 'with ActiveRecord', :ar => true do
+          Racer.connect
+          rank = CentralTendency.first_quartile(ar_sample){|r| r.age}
+          rank.should be_within(0.001).of(31.0)
+        end
+
+        specify 'with Hamster', :hamster => true do
+
+          sample = Hamster.list(*even_sample).freeze
+          CentralTendency.first_quartile(sample).should be_within(0.001).of(2)
+
+          sample = Hamster.list(*odd_sample).freeze
+          CentralTendency.first_quartile(sample).should be_within(0.001).of(77.5)
+        end
+      end
+
+      context 'second' do
+
+        it 'returns nil for a nil sample' do
+          CentralTendency.second_quartile(nil).should be_nil
+        end
+
+        it 'returns nil for an empty set' do
+          CentralTendency.second_quartile([].freeze).should be_nil
+        end
+
+        it 'calculates the rank for an even-numbered sample' do
+          CentralTendency.second_quartile(even_sample.freeze).should be_within(0.001).of(2)
+        end
+
+        it 'calculates the rank for an odd-numbered sample' do
+          CentralTendency.second_quartile(odd_sample.freeze).should be_within(0.001).of(90.0)
+        end
+
+        it 'calculates the rank with a block' do
+          rank = CentralTendency.second_quartile(block_sample.freeze){|item| item[:count]}
+          rank.should be_within(0.001).of(90.0)
+        end
+
+        it 'does not re-sort a sorted sample' do
+          sample = odd_sample.dup
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          CentralTendency.second_quartile(sample, :sorted => true)
+        end
+
+        it 'does not attempt to sort when a using a block' do
+          sample = [
+            {:count => 22},
+            {:count => 40}
+          ]
+
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          CentralTendency.second_quartile(sample){|item| item[:count]}
+        end
+
+        specify 'with ActiveRecord', :ar => true do
+          Racer.connect
+          rank = CentralTendency.second_quartile(ar_sample){|r| r.age}
+          rank.should be_within(0.001).of(38.0)
+        end
+
+        specify 'with Hamster', :hamster => true do
+
+          sample = Hamster.list(*even_sample).freeze
+          CentralTendency.second_quartile(sample).should be_within(0.001).of(2)
+
+          sample = Hamster.list(*odd_sample).freeze
+          CentralTendency.second_quartile(sample).should be_within(0.001).of(90.0)
+        end
+      end
+
+      context 'third ' do
+
+        it 'returns nil for a nil sample' do
+          CentralTendency.third_quartile(nil).should be_nil
+        end
+
+        it 'returns nil for an empty set' do
+          CentralTendency.third_quartile([].freeze).should be_nil
+        end
+
+        it 'calculates the rank for an even-numbered sample' do
+          CentralTendency.third_quartile(even_sample.freeze).should be_within(0.001).of(3)
+        end
+
+        it 'calculates the rank for an odd-numbered sample' do
+          CentralTendency.third_quartile(odd_sample.freeze).should be_within(0.001).of(93.5)
+        end
+
+        it 'calculates the rank with a block' do
+          rank = CentralTendency.third_quartile(block_sample.freeze){|item| item[:count]}
+          rank.should be_within(0.001).of(93.5)
+        end
+
+        it 'does not re-sort a sorted sample' do
+          sample = odd_sample.dup
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          CentralTendency.third_quartile(sample, :sorted => true)
+        end
+
+        it 'does not attempt to sort when a using a block' do
+          sample = [
+            {:count => 22},
+            {:count => 40}
+          ]
+
+          sample.should_not_receive(:sort)
+          sample.should_not_receive(:sort_by)
+          CentralTendency.third_quartile(sample){|item| item[:count]}
+        end
+
+        specify 'with ActiveRecord', :ar => true do
+          Racer.connect
+          rank = CentralTendency.third_quartile(ar_sample){|r| r.age}
+          rank.should be_within(0.001).of(47.0)
+        end
+
+        specify 'with Hamster', :hamster => true do
+
+          sample = Hamster.list(*even_sample).freeze
+          CentralTendency.third_quartile(sample).should be_within(0.001).of(3)
+
+          sample = Hamster.list(*odd_sample).freeze
+          CentralTendency.third_quartile(sample).should be_within(0.001).of(93.5)
+        end
+      end
+    end
+
   end
 end
