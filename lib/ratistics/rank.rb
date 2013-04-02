@@ -1,4 +1,4 @@
-require 'ratistics/average'
+require 'ratistics/central_tendency'
 require 'ratistics/collection'
 require 'ratistics/math'
 require 'ratistics/probability'
@@ -356,12 +356,12 @@ module Ratistics
     #
     # @return [Numeric] value at the rank nearest to the given percentile
     #
-    # @see {Average#median}
+    # @see {CentralTendency#median}
     # @see http://en.wikipedia.org/wiki/Quantile
     def first_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
       midpoint = (data.size / 2.0).floor - 1
-      return Average.median(Collection.slice(data, (0..midpoint)), opts, &block)
+      return CentralTendency.median(Collection.slice(data, (0..midpoint)), opts, &block)
     end
 
     alias :lower_quartile :first_quartile
@@ -388,11 +388,11 @@ module Ratistics
     #
     # @return [Numeric] value at the rank nearest to the given percentile
     #
-    # @see {Average#median}
+    # @see {CentralTendency#median}
     # @see http://en.wikipedia.org/wiki/Quantile
     def second_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
-      return Average.median(data, opts, &block)
+      return CentralTendency.median(data, opts, &block)
     end
 
     # Calculate the value representing the upper-bound of the third
@@ -418,13 +418,13 @@ module Ratistics
     #
     # @return [Numeric] value at the rank nearest to the given percentile
     #
-    # @see {Average#median}
+    # @see {CentralTendency#median}
     # @see http://en.wikipedia.org/wiki/Quantile
     def third_quartile(data, opts={}, &block)
       return nil if data.nil? || data.empty?
       midpoint = (data.size / 2.0).ceil
       high = data.size - 1
-      return Average.median(Collection.slice(data, (midpoint..high)), opts, &block)
+      return CentralTendency.median(Collection.slice(data, (midpoint..high)), opts, &block)
     end
 
     alias :upper_quartile :third_quartile

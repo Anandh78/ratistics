@@ -4,7 +4,7 @@ require 'ratistics/math'
 module Ratistics
 
   # Various average (central tendency) computation functions.
-  module Average
+  module CentralTendency
     extend self
 
     # Calculates the statistical mean.
@@ -78,7 +78,7 @@ module Ratistics
 
       if truncation.nil?
         if data.size >= 3
-          mean = Average.mean(data.slice(1..data.size-2))
+          mean = CentralTendency.mean(data.slice(1..data.size-2))
         else
           mean = 0
         end
@@ -98,7 +98,7 @@ module Ratistics
           else
             slice = Collection.slice(data, index, length)
           end
-          mean = Average.mean(slice, &block)
+          mean = CentralTendency.mean(slice, &block)
 
         else
 
@@ -114,8 +114,8 @@ module Ratistics
             slice2 = Collection.slice(data, index1, length2)
           end
 
-          m1 = Average.mean(slice1, &block)
-          m2 = Average.mean(slice2, &block)
+          m1 = CentralTendency.mean(slice1, &block)
+          m2 = CentralTendency.mean(slice2, &block)
           mean = mean([m1, m2])
         end
       end
@@ -163,7 +163,7 @@ module Ratistics
         min, max = Math.minmax(data, &block)
       end
 
-      return Average.mean([min, max])
+      return CentralTendency.mean([min, max])
     end
 
     alias :midextreme :midrange

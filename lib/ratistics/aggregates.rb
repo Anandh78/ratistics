@@ -1,11 +1,11 @@
-require 'ratistics/average'
+require 'ratistics/central_tendency'
 require 'ratistics/collection'
 require 'ratistics/distribution'
 
 module Ratistics
 
   # A read-only, memoized class for calculating aggregate statistics
-  # (average, central tendency, distribution) against a data sample.
+  # (central_tendency, central tendency, distribution) against a data sample.
   class Aggregates
 
     attr_reader :data
@@ -72,44 +72,44 @@ module Ratistics
 
     # Calculates the statistical mean.
     #
-    # {Average#mean}
+    # {CentralTendency#mean}
     def mean
-      @mean ||= Average.mean(@data)
+      @mean ||= CentralTendency.mean(@data)
     end
 
     alias :avg :mean
-    alias :average :mean
+    alias :central_tendency :mean
 
     # Calculates a truncated statistical mean.
     #
-    # {Average#truncated_mean}
+    # {CentralTendency#truncated_mean}
     def truncated_mean(truncation=nil)
-      @truncated_means[truncation] ||= Average.truncated_mean(@data, truncation)
+      @truncated_means[truncation] ||= CentralTendency.truncated_mean(@data, truncation)
     end
 
     alias :trimmed_mean :truncated_mean
 
     # Calculates the statistical midrange.
     #
-    # {Average#midrange}
+    # {CentralTendency#midrange}
     def midrange
-      @midrange ||= Average.midrange(@data)
+      @midrange ||= CentralTendency.midrange(@data)
     end
 
     alias :midextreme :midrange
 
     # Calculates the statistical median.
     #
-    # {Average#median}
+    # {CentralTendency#median}
     def median
-      @median ||= Average.median(@data)
+      @median ||= CentralTendency.median(@data)
     end
 
     # Calculates the statistical modes.
     #
-    # {Average#mode}
+    # {CentralTendency#mode}
     def mode
-      @mode ||= Average.mode(@data)
+      @mode ||= CentralTendency.mode(@data)
     end
 
     # Calculates the statistical standard_deviations.

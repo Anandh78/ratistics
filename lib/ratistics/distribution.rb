@@ -1,4 +1,4 @@
-require 'ratistics/average'
+require 'ratistics/central_tendency'
 
 module Ratistics
 
@@ -26,14 +26,14 @@ module Ratistics
     def variance(data, mu=nil, opts={}, &block)
       return 0 if data.nil? || data.empty?
 
-      mu = Average.mean(data, &block) if mu.nil?
+      mu = CentralTendency.mean(data, &block) if mu.nil?
 
       deviation = data.reduce([]) do |memo, datum|
         datum = yield(datum) if block_given?
         memo << (datum.to_f - mu) ** 2
       end
 
-      variance = Average.mean(deviation)
+      variance = CentralTendency.mean(deviation)
       return variance
     end
 

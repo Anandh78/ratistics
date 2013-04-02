@@ -143,7 +143,7 @@ module Ratistics
       end
     end
 
-    context 'averages' do
+    context 'central_tendency' do
 
       it 'calculates the mean of a sample' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze

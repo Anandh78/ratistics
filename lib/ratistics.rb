@@ -1,6 +1,6 @@
 require 'ratistics/inflect'
 
-require 'ratistics/average'
+require 'ratistics/central_tendency'
 require 'ratistics/collection'
 require 'ratistics/distribution'
 require 'ratistics/math'
@@ -31,7 +31,7 @@ module Ratistics
   end
 
   class << self
-    include Average
+    include CentralTendency
     include Collection
     include Distribution
     include Inflect
