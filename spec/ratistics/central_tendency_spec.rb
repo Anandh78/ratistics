@@ -730,6 +730,44 @@ module Ratistics
           CentralTendency.third_quartile(sample).should be_within(0.001).of(93.5)
         end
       end
+
+      # The data set of N = 90 ordered observations as shown below is examined for outliers:
+      # 30, 171, 184, 201, 212, 250, 265, 270, 272, 289, 305, 306, 322, 322, 336, 346, 351, 370, 390, 404, 409, 411, 436, 437, 439, 441, 444, 448, 451, 453, 470, 480, 482, 487, 494, 495, 499, 503, 514, 521, 522, 527, 548, 550, 559, 560, 570, 572, 574, 578, 585, 592, 592, 607, 616, 618, 621, 629, 637, 638, 640, 656, 668, 707, 709, 719, 737, 739, 752, 758, 766, 792, 792, 794, 802, 818, 830, 832, 843, 858, 860, 869, 918, 925, 953, 991, 1000, 1005, 1068, 1441
+
+      # The computations are as follows:
+
+      # Median = (n+1)/2 largest data point = the average of the 45th and 46th ordered points = (559 + 560)/2 = 559.5
+      # Lower quartile = .25(N+1)th ordered point = 22.75th ordered point = 411 + .75(436-411) = 429.75
+      # Upper quartile = .75(N+1)th ordered point = 68.25th ordered point = 739 +.25(752-739) = 742.25
+      # Interquartile range = 742.25 - 429.75 = 312.5
+      # Lower inner fence = 429.75 - 1.5 (312.5) = -39.0
+      # Upper inner fence = 742.25 + 1.5 (312.5) = 1211.0
+      # Lower outer fence = 429.75 - 3.0 (312.5) = -507.75
+      # Upper outer fence = 742.25 + 3.0 (312.5) = 1679.75
+
+      context '#interquartile_range' do
+        pending
+      end
+
+      context '#lower_inner_fence' do
+        pending
+      end
+
+      context '#upper_inner_fence' do
+        pending
+      end
+
+      context '#lower_outer_fence' do
+        pending
+      end
+
+      context '#upper_outer_fence' do
+        pending
+      end
+
+      context '#five_number_summary' do
+        pending
+      end
     end
 
   end

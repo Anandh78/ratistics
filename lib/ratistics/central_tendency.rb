@@ -348,5 +348,39 @@ module Ratistics
 
     alias :upper_quartile :third_quartile
 
+    def interquartile_range
+    end
+
+    alias :iqg :interquartile_range
+
+    # http://www.itl.nist.gov/div898/handbook/prc/section1/prc16.htm
+    def lower_inner_fence
+      # Q1 - 1.5*IQ
+    end
+
+    # http://www.itl.nist.gov/div898/handbook/prc/section1/prc16.htm
+    def upper_inner_fence
+      # Q3 + 1.5*IQ
+    end
+
+    # http://www.itl.nist.gov/div898/handbook/prc/section1/prc16.htm
+    def lower_outer_fence
+      # Q1 - 3*IQ
+    end
+
+    # http://www.itl.nist.gov/div898/handbook/prc/section1/prc16.htm
+    def upper_outer_fence
+      # Q3 + 3*IQ
+    end
+
+    # http://en.wikipedia.org/wiki/Five-number_summary
+    def five_number_summary
+      #the sample minimum (smallest observation)
+      #the lower quartile or first quartile
+      #the median (middle value)
+      #the upper quartile or third quartile
+      #the sample maximum (largest observation)
+    end
+
   end
 end
