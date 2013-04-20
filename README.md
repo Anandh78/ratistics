@@ -26,11 +26,6 @@ The project is hosted on the following sites:
 See the [changelog](https://github.com/jdantonio/ratistics/blob/master/CHANGELOG.md)
 for information on the latest updates.
 
-And check out these extension libraries:
-
-* [Ratistics Charts](https://github.com/jdantonio/ratistics-charts)
-* [Ratistics Charts.js](https://github.com/jdantonio/ratistics-charts-js)
-
 # About
 
 A [friend](https://github.com/joecannatti) of mine convinced me
@@ -47,10 +42,9 @@ As much as possible I plan to follow these guidelines as I develop this gem
 (in no particular order):
 
 * Keep all functions pure and idempotent
-* But create read-only objects when it makes sense
 * Support as many common collection classes as possible, especially ActiveRecord
 * Keep runtime dependencies to a minimum, hopefully zero
-* Remain backward compatable to Ruby version 1.8.7
+* Remain backward compatable to Ruby version 1.9.2
 * Support common Ruby interpreters (MRI, RBX, and JRuby)
 * Be simple, consistent, and easy to use
 
@@ -69,14 +63,6 @@ an optional block parameter. This supports computation against
 complex data types without excessive data copying. I've followed
 the same block idiom as much as possible to make the library as
 consistent.
-
-### But With Objects
-
-To better support multiple and repeated calculations against a single data
-set (and to better support the object-oriented among us) a series of
-read-only, (mostly) memoized objects is included. Simply create the
-object by passing the data set to the constructor then call its
-calculation functions.
   
 ### Pure Ruby
 
@@ -89,8 +75,8 @@ good results with any of the following:
 * ruby-2.0.0
 * ruby-1.9.3
 * ruby-1.9.2
-* jruby-1.7.0
-* jruby-1.6.8
+* jruby-1.7.0 (1.9 mode)
+* jruby-1.6.8 (1.9 mode)
 * rbx (1.9 mode)
 
 #### ActiveRecord
@@ -140,9 +126,6 @@ then use it:
     
     mean = Ratistics.mean(sample) #=> 4.0
 
-    aggregate = Ratistics::Aggregates.new(sample)
-    mean = aggregate.mean #=> 4.0
-
 When working with sets of complex data use blocks to process the data without copying:
 
     require 'active_record'
@@ -180,13 +163,6 @@ When working with sets of complex data use blocks to process the data without co
 * third_quartile (alias: upper_quartile)
 * truncated_mean (alias: trimmed_mean)
 * variance (alias: var)
-
-#### Classes
-
-* Aggregates
-* Catalog (alias: Catalogue)
-* Frequencies
-* Percentiles
 
 ### I can drive that loader
 

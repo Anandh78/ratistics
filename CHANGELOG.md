@@ -7,6 +7,7 @@ Release Date: TBD
 * Dropped support for Ruby < 1.9.2
 * Completely refactored data loading helper modules
   * Significantly increased performance when loading CSV files
+* Removed classes Aggregates, Frequencies, and Percentiles
 
 ### 0.2.3
 
