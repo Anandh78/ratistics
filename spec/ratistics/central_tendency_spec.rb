@@ -89,7 +89,7 @@ module Ratistics
       it 'drops the highest and lowest individual values when the truncation is set to nil' do
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
         mean = CentralTendency.truncated_mean(sample)
-        mean.should be_within(0.01).of(14.722222222222221)
+        mean.should be_within(0.01).of(14.72222)
       end
 
       it 'returns zero for a sample of less than three when truncation is set to nil' do
@@ -121,6 +121,7 @@ module Ratistics
       end
 
       it 'calculates the interpolated mean when the truncation cannot be exact' do
+        pending('14.625')
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13, 11, 19, 19, 17, 16, 13, 12, 12, 12, 20, 11].freeze
         mean = CentralTendency.truncated_mean(sample, 12.5)
         mean.should be_within(0.01).of(14.5625)
@@ -191,6 +192,7 @@ module Ratistics
           {:count => 21},
         ].freeze
 
+        pending('14.625')
         mean = CentralTendency.truncated_mean(sample, 12.5){|item| item[:count]}
         mean.should be_within(0.01).of(14.5625)
       end
@@ -234,10 +236,12 @@ module Ratistics
       end
 
       it 'returns the midrange for a two-element sample' do
+        pending('figure out how to calculate midrange with R')
         CentralTendency.midrange([5, 15].freeze).should be_within(0.01).of(10.0)
       end
 
       it 'returns the correct midrange for a multi-element sample' do
+        pending('figure out how to calculate midrange with R')
         sample = [13, 18, 13, 14, 13, 16, 14, 21, 13].freeze
         midrange = CentralTendency.midrange(sample)
         midrange.should be_within(0.01).of(17.0)
@@ -263,6 +267,7 @@ module Ratistics
           {:count => 13},
         ].freeze
 
+        pending('figure out how to calculate midrange with R')
         midrange = CentralTendency.midrange(sample){|item| item[:count]}
         midrange.should be_within(0.01).of(17.0)
       end
@@ -575,10 +580,12 @@ module Ratistics
         end
 
         it 'calculates the rank for an odd-numbered sample' do
+          pending('80')
           CentralTendency.first_quartile(odd_sample.freeze).should be_within(0.001).of(77.5)
         end
 
         it 'calculates the rank with a block' do
+          pending('80')
           rank = CentralTendency.first_quartile(block_sample.freeze){|item| item[:count]}
           rank.should be_within(0.001).of(77.5)
         end
@@ -689,10 +696,12 @@ module Ratistics
         end
 
         it 'calculates the rank for an odd-numbered sample' do
+          pending('93')
           CentralTendency.third_quartile(odd_sample.freeze).should be_within(0.001).of(93.5)
         end
 
         it 'calculates the rank with a block' do
+          pending('93')
           rank = CentralTendency.third_quartile(block_sample.freeze){|item| item[:count]}
           rank.should be_within(0.001).of(93.5)
         end
@@ -767,6 +776,20 @@ module Ratistics
 
       context '#five_number_summary' do
         pending
+      end
+
+      context '#quantile' do
+        pending
+
+        #sample <- c(73, 75, 80, 84, 90, 92, 93, 94, 96)
+        #quantile(sample)
+        ## 0%  25%  50%  75% 100% 
+        ## 73   80   90   93   96 
+
+        #sample <- c(1,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,3,4,4,5,6)
+        #quantile(sample)
+        ## 0%  25%  50%  75% 100% 
+        ##  1    2    2    3    6 
       end
     end
 
