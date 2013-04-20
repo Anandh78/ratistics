@@ -137,8 +137,7 @@ module Ratistics
       # @option opts [true, false] :headers the first row of the data/file =
       #   contains field name headers (default: false)
       # @option opts [Symbol] :as the data type/structure of the individual
-      #   records, :hash/:map (default), :array/:catalog/:catalogue,
-      #   :frame/:dataframe,
+      #   records, :hash/:map (default), :array/:catalog/:catalogue
       #
       # @return [Array, Hamster] An array or Hamster collection containing
       #   all the records
@@ -148,13 +147,7 @@ module Ratistics
         end
         definition = opts[:def] || opts[:definition]
 
-        if opts[:as] == :frame || opts[:as] == :dataframe
-          if definition.nil?
-            return frame_from_data_using_headers(contents, opts)
-          else
-            return frame_from_data_using_definition(contents, opts)
-          end
-        elsif opts[:as] == :array || opts[:as] == :catalog || opts[:as] == :catalogue
+        if opts[:as] == :array || opts[:as] == :catalog || opts[:as] == :catalogue
           if definition.nil?
             return catalog_from_data_using_headers(contents, opts)
           else
@@ -172,75 +165,6 @@ module Ratistics
       #================================================================
       private
       #================================================================
-
-      # Crater count: 384,343
-      # Fastest load: ~15.5 seconds
-      # :nodoc:
-      # @private
-      def frame_from_data_using_definition(contents, opts={})
-
-        definition = opts[:def] || opts[:definition]
-        cfg = config(opts)
-
-        collection, put = new_collection(opts[:hamster])
-        contents = contents.split(cfg[:row_regex])
-
-        trans = definition.collect{|field| [field].flatten.length > 1 ? field.last : nil}
-        field_names = definition.collect{|field| [field].flatten.first}
-        collection << field_names.dup.delete_if{|field| field.nil?}
-
-        start = cfg[:headers] ? 1 : 0
-        (start..contents.length-1).each do |i|
-          row = contents[i].strip.scan(cfg[:field_regex]).collect do |match|
-            match.select{|m| ! m.nil? }.first.chomp(cfg[:col_sep]).gsub(cfg[:quote_char], '')
-          end
-          (row.size-1).downto(0) do |i|
-            if field_names[i].nil?
-              row.delete_at(i)
-            elsif !trans[i].nil? && !row[i].nil? && !row[i].empty?
-              row[i] = row[i].send(trans[i]) if trans[i].is_a?(Symbol)
-              row[i] = trans[i].call(row[i]) if trans[i].is_a?(Proc)
-            end
-          end
-          collection = collection.send(put, row)
-        end
-
-        return collection
-      end
-
-      # Crater count: 384,343
-      # Fastest load: ~13.6 seconds
-      # :nodoc:
-      # @private
-      def frame_from_data_using_headers(contents, opts={})
-
-        cfg = config(opts)
-
-        collection, put = new_collection(opts[:hamster])
-        contents = contents.split(cfg[:row_regex])
-
-        if cfg[:headers]
-          collection = collection.send(put, contents.first.strip.scan(cfg[:field_regex]).collect do |match|
-            match.select{|m| ! m.nil? }.first.chomp(cfg[:col_sep]).gsub(cfg[:quote_char], '')
-          end)
-        else
-          head = []
-          collection = collection.send(put, head)
-        end
-
-        start = cfg[:headers] ? 1 : 0
-        (start..contents.length-1).each do |i|
-          collection = collection.send(put, contents[i].strip.scan(cfg[:field_regex]).collect do |match|
-            match.select{|m| ! m.nil? }.first.chomp(cfg[:col_sep]).gsub(cfg[:quote_char], '')
-          end)
-        end
-
-        unless cfg[:headers]
-          (1..collection.last.length).each{|i| head << "column_#{i}" }
-        end
-
-        return collection
-      end
 
       # Crater count: 384,343
       # Fastest load: ~16.4 seconds

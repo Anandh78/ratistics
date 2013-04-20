@@ -114,17 +114,6 @@ module Ratistics
           data.first.should == {:place => '1'}
         end
 
-        it 'ignores fields definied as nil when creating a frame' do
-          definition = [
-            :place,
-            nil,
-            :div,
-          ]
-          data = Ratistics::Load::Csv.data(csv_row, def: definition, as: :frame)
-          data[0].should == [:place, :div]
-          data[1].should == ['1', 'M2039']
-        end
-
         it 'ignores fields definied as nil when creating a hash' do
           definition = [
             :place,
@@ -175,11 +164,6 @@ module Ratistics
           data.first.should == {:place => 1}
         end
 
-        it 'supports :col_sep option when creating a frame' do
-          data = Ratistics::Load::Csv.data(psv_row, :col_sep => '|', def: csv_definition, as: :frame)
-          data[1].should eq record_array
-        end
-
         it 'supports :col_sep option when creating a hash' do
           data = Ratistics::Load::Csv.data(psv_row, :col_sep => '|', def: csv_definition, as: :hash)
           data.first.should eq record_hash
@@ -193,20 +177,19 @@ module Ratistics
         it 'recognizes quoted fields' do
           data = '1,"1/362",M2039,"30:43",30:42,"4:57","Harvey, Brian",22,M,1422,"Allston, MA"'
           result = ["1", "1/362", "M2039", "30:43", "30:42", "4:57", "Harvey, Brian", "22", "M", "1422", "Allston, MA"]
-          data = Ratistics::Load::Csv.data(data, as: :frame, headers: false)
-          data[1].should eq result
+          data = Ratistics::Load::Csv.data(data, as: :array, headers: false)
+          data.first.collect{|i| i.last}.should eq result
         end
 
         it 'supports empty fields' do
           data = '1,,1/362,M2039,"",30:43,30:42,"4:57","Harvey, Brian",22,,M,1422,Allston MA'
-          data = Ratistics::Load::Csv.data(data, as: :frame, headers: false)
-          data[0].count.should eq 14
-          data[1].count.should eq 14
-          data[1].should eq ["1", "", "1/362", "M2039", "", "30:43", "30:42", "4:57", "Harvey, Brian", "22", "", "M", "1422", "Allston MA"]
+          data = Ratistics::Load::Csv.data(data, as: :array, headers: false)
+          data.first.count.should eq 14
+          data.first.collect{|i| i.last}.should eq ["1", "", "1/362", "M2039", "", "30:43", "30:42", "4:57", "Harvey, Brian", "22", "", "M", "1422", "Allston MA"]
         end
 
         it 'force encodes ISO-8859-1 when the option is set' do
-          Ratistics::Load::Csv.file(encoded_file, as: :frame, headers: false, encoding: :force)
+          Ratistics::Load::Csv.file(encoded_file, as: :array, headers: false, encoding: :force)
         end
 
         it 'sets the row keys to the header values when returning a hash' do
@@ -222,22 +205,16 @@ module Ratistics
           keys.should eq headers
         end
 
-        it 'sets the first row to the header values when returning a frame' do
-          data = Ratistics::Load::Csv.data(contents, headers: true, as: :frame)
-          data.length.should eq data_rows + 1
-          data.first.should eq headers
-        end
-
         it 'uses headers when present an no definition given' do
-          data = Ratistics::Load::Csv.data(contents, headers: true, as: :frame)
-          data.length.should eq data_rows + 1
-          data.first.should eq headers
+          data = Ratistics::Load::Csv.data(contents, headers: true, as: :array)
+          data.length.should eq data_rows
+          data.first.collect{|i| i.first}.should eq headers
         end
 
         it 'overrides headers with a definition' do
-          data = Ratistics::Load::Csv.data(contents, def: csv_definition, headers: true, as: :frame)
-          data.length.should eq data_rows + 1
-          data.first.should eq record_hash.keys
+          data = Ratistics::Load::Csv.data(contents, def: csv_definition, headers: true, as: :array)
+          data.length.should eq data_rows
+          data.first.collect{|i| i.first}.should eq record_hash.keys
         end
 
         it 'names columns numerically when not given headers or a definition and returning a hash' do
@@ -245,14 +222,6 @@ module Ratistics
           data.length.should eq record_count
           data.first.keys.each_with_index do |key, i|
             key.should =~ /_#{i+1}$/
-          end
-        end
-
-        it 'names columns numerically when not given headers or a definition and returning a frame' do
-          data = Ratistics::Load::Csv.data(big_content, as: :frame)
-          data.length.should eq record_count + 1
-          data.first.length.times do |i|
-            data.first[i].should =~ /_#{i+1}$/
           end
         end
 
@@ -265,9 +234,9 @@ module Ratistics
         end
 
         it 'applies the definition when given but headers not present' do
-          data = Ratistics::Load::Csv.data(contents, def: csv_definition, headers: false, as: :frame)
-          data.length.should eq data_rows + 2
-          data.first.should eq record_hash.keys
+          data = Ratistics::Load::Csv.data(contents, def: csv_definition, headers: false, as: :array)
+          data.length.should eq data_rows+1
+          data.first.collect{|i| i.first}.should eq record_hash.keys
         end
 
         it 'supports :row_sep option' do
@@ -304,23 +273,6 @@ module Ratistics
         it 'supports :as => :catalogue option' do
           data = Ratistics::Load::Csv.data(contents, headers: true, def: csv_definition, as: :catalogue)
           data.first.should eq record_catalog
-        end
-
-        it 'supports :as => :frame option' do
-          data = Ratistics::Load::Csv.data(contents, headers: true, def: csv_definition, as: :frame)
-          data[0].should eq record_hash.keys
-          data[1].should eq record_array
-        end
-
-        it 'supports :as => :dataframe option' do
-          data = Ratistics::Load::Csv.data(contents, headers: true, def: csv_definition, as: :dataframe)
-          data[0].should eq record_hash.keys
-          data[1].should eq record_array
-        end
-
-        it 'sets the first row equal to the column names when returning a frame' do
-          data = Ratistics::Load::Csv.data(contents, headers: true, as: :dataframe)
-          data[0].should eq headers
         end
 
         context 'with Hamster', :hamster => true do
@@ -375,8 +327,8 @@ module Ratistics
       context '#csv_file' do
 
         it 'loads records without a definition' do
-          record = Ratistics::Load::Csv.file(csv_file, as: :frame, headers: true)
-          record.count.should eq record_count
+          record = Ratistics::Load::Csv.file(csv_file, as: :array, headers: true)
+          record.count.should eq record_count-1
         end
 
         it 'loads records with a definition' do
@@ -386,8 +338,8 @@ module Ratistics
         end
 
         it 'supports :col_sep option' do
-          record = Ratistics::Load::Csv.file(psv_file, as: :frame, headers: true, :col_sep => '|')
-          record.count.should eq record_count
+          record = Ratistics::Load::Csv.file(psv_file, as: :array, headers: true, :col_sep => '|')
+          record.count.should eq record_count-1
         end
 
         it 'skips the first line when :headers option is true' do
@@ -419,8 +371,8 @@ module Ratistics
       context '#csv_gz_file' do
 
         it 'loads records without a definition' do
-          record = Ratistics::Load::Csv.gz_file(csv_gz_file, as: :frame, headers: true)
-          record.count.should eq record_count
+          record = Ratistics::Load::Csv.gz_file(csv_gz_file, as: :array, headers: true)
+          record.count.should eq record_count-1
         end
 
         it 'loads records with a definition' do
