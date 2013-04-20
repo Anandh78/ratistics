@@ -8,6 +8,7 @@ Release Date: TBD
 * Completely refactored data loading helper modules
   * Significantly increased performance when loading CSV files
 * Removed classes Aggregates, Frequencies, and Percentiles
+* Removed monkey patching code
 
 ### 0.2.3
 

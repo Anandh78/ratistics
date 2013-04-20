@@ -219,22 +219,6 @@ Consult the API documentation for the Load module for more information.
 
 *I've got a Class Two rating.*
 
-### Shock the Monkey
-
-I'm normally not a fan of monkey-patching classes from the Ruby standard library.
-But there could be times when it would be convenient to have statistics functions
-as instance methods on Array. I've provided this monkey-patching, but not by default.
-Simply requiring 'ratistics' will not mess with any of the Ruby collection classes.
-For that fun you must
-
-    require 'ratistics/monkey'
-
-Then you can go to town:
-
-    sample = [2, 3, 4, 5, 6]
-    
-    mean = sample.mean #=> 4.0
-
 ### Sorting
 
 Some statistical computations require sorted data. In these cases

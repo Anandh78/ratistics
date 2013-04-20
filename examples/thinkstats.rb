@@ -7,7 +7,6 @@
 
 require 'rubygems'
 require 'ratistics'
-require 'ratistics/monkey'
 #require 'hamster'
 #require 'pp'
 
