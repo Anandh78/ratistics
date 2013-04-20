@@ -13,10 +13,7 @@ require 'ratistics/search'
 require 'ratistics/sort'
 require 'ratistics/version'
 
-require 'ratistics/aggregates'
 require 'ratistics/catalog'
-require 'ratistics/frequencies'
-require 'ratistics/percentiles'
 
 Infinity = 1/0.0 unless defined?(Infinity)
 NaN = 0/0.0 unless defined?(NaN)
@@ -40,17 +37,5 @@ module Ratistics
     include Rank
     include Search
     include Sort
-
-    def aggregates(*args, &block)
-      return Aggregates.new(*args, &block)
-    end
-
-    def frequencies(*args, &block)
-      return Frequencies.new(*args, &block)
-    end
-
-    def percentiles(*args, &block)
-      return Percentiles.new(*args, &block)
-    end
   end
 end
