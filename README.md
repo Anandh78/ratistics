@@ -12,7 +12,9 @@ ActiveRecord record sets.
 
 Ratistics is pronounced *ra-TIS-tics*. Just like "statistics" but with an 'R'
 
-    "Statistics".gsub(/^St/i, 'R') #=> "Ratistics"
+```ruby
+"Statistics".gsub(/^St/i, 'R') #=> "Ratistics"
+```
 
 The project is hosted on the following sites:
 
@@ -106,35 +108,45 @@ the test suite explicitly tests Hamster compatibality.
 
 Install from RubyGems:
 
-    gem install ratistics
+```ruby
+gem install ratistics
+```
 
 or add the following line to Gemfile:
 
-    gem 'ratistics'
+```ruby
+gem 'ratistics'
+```
 
-and run *bundle install* from your shell.
+and run `bundle install` from your shell.
 
 ## Usage
 
 Require Ratistics within your Ruby project:
 
-    require 'ratistics'
+```ruby
+require 'ratistics'
+```
 
 then use it:
 
-    sample = [2, 3, 4, 5, 6]
-    
-    mean = Ratistics.mean(sample) #=> 4.0
+```ruby
+sample = [2, 3, 4, 5, 6]
+
+mean = Ratistics.mean(sample) #=> 4.0
+```
 
 When working with sets of complex data use blocks to process the data without copying:
 
-    require 'active_record'
+```ruby
+require 'active_record'
 
-    class Person < ActiveRecord::Base; end
+class Person < ActiveRecord::Base; end
 
-    people = Person.all
-    
-    mean = Ratistics.mean(people){|person| person.age}
+people = Person.all
+
+mean = Ratistics.mean(people){|person| person.age}
+```
 
 ### Statistics Functions
 
@@ -172,22 +184,24 @@ data loads. The methods in the Load module provide a robust syntax for
 defining the individual fields in each record and processing the individual
 fields on load.
 
-    definition = [
-      [:place, :to_i],
-      nil,
-      :div,
-      :guntime,
-      :nettime,
-      :pace,
-      nil,
-      [:age, :to_i],
-      :gender,
-      [:race_num, :to_i],
-    ]
+```ruby
+definition = [
+  [:place, :to_i],
+  nil,
+  :div,
+  :guntime,
+  :nettime,
+  :pace,
+  nil,
+  [:age, :to_i],
+  :gender,
+  [:race_num, :to_i],
+]
 
-    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition)
-    sample.count #=> 1633
-    sample.first #=> :place=>1, :div=>"M2039", :guntime=>"30:43", ... }
+sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition)
+sample.count #=> 1633
+sample.first #=> :place=>1, :div=>"M2039", :guntime=>"30:43", ... }
+```
 
 By default the methods of the Load module return Ruby Arrays. If the Hamster
 gem is installed a Hamster collection can be returned instead. To return a
@@ -195,25 +209,27 @@ Hamster collection set the *:hamster* option to *true* or to a symbol
 specifying the type to return. The default Hamster return type is
 Hamster::Vector.
 
-    require 'hamster'
+```ruby
+require 'hamster'
 
-    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, as: :hash)
-    sample.class #=> Array
-    sample.first.class #=> Hash
+sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, as: :hash)
+sample.class #=> Array
+sample.first.class #=> Hash
 
-    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, as: :catalog)
-    sample.class #=> Array
-    sample.first.class #=> Array
+sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, as: :catalog)
+sample.class #=> Array
+sample.first.class #=> Array
 
-    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, as: :dataframe)
-    sample.class #=> Array
-    sample.first.class #=> Array
+sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, as: :dataframe)
+sample.class #=> Array
+sample.first.class #=> Array
 
-    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, hamster: true)
-    sample.class #=> Hamster::Vector
+sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, hamster: true)
+sample.class #=> Hamster::Vector
 
-    sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, hamster: :set)
-    sample.class #=> Hamster::Set
+sample = Ratistics::Load::Csv.file('examples/race.csv', def: definition, hamster: :set)
+sample.class #=> Hamster::Set
+```
 
 Consult the API documentation for the Load module for more information.
 
@@ -249,62 +265,66 @@ The first step in this solution is to load the NSFG test data from the 'examples
 directory. The Ratistic::Load module is used to load a subset of the fields from each
 record. Each record represents a single pregnancy and has the following structure:
 
-    {:caseid => '1',
-     :nbrnaliv => '1',
-     :babysex => '1',
-     :birthwgt_lb => '8',
-     :birthwgt_oz => '13',
-     :prglength => '39',
-     :outcome => '1',
-     :birthord => '1',
-     :agepreg => '3316',
-     :finalwgt => '6448.271111704751'}
+```ruby
+{:caseid => '1',
+ :nbrnaliv => '1',
+ :babysex => '1',
+ :birthwgt_lb => '8',
+ :birthwgt_oz => '13',
+ :prglength => '39',
+ :outcome => '1',
+ :birthord => '1',
+ :agepreg => '3316',
+ :finalwgt => '6448.271111704751'}
+```
 
 Once the data is loaded it can be easily processed:
 
-    # load the data
-    fields = [
-      {:field => :caseid, :start => 1, :end => 12},
-      {:field => :nbrnaliv, :start => 22, :end => 22},
-      {:field => :babysex, :start => 56, :end => 56},
-      {:field => :birthwgt_lb, :start => 57, :end => 58},
-      {:field => :birthwgt_oz, :start => 59, :end => 60},
-      {:field => :prglength, :start => 275, :end => 276},
-      {:field => :outcome, :start => 277, :end => 277},
-      {:field => :birthord, :start => 278, :end => 279},
-      {:field => :agepreg, :start => 284, :end => 287},
-      {:field => :finalwgt, :start => 423, :end => 440},
-    ]
-    sample = Ratistics::Load.dat_gz_file('data/2002FemPreg.dat.gz', fields)
-    sample.count #=> 13593 
+```ruby
+# load the data
+fields = [
+  {:field => :caseid, :start => 1, :end => 12},
+  {:field => :nbrnaliv, :start => 22, :end => 22},
+  {:field => :babysex, :start => 56, :end => 56},
+  {:field => :birthwgt_lb, :start => 57, :end => 58},
+  {:field => :birthwgt_oz, :start => 59, :end => 60},
+  {:field => :prglength, :start => 275, :end => 276},
+  {:field => :outcome, :start => 277, :end => 277},
+  {:field => :birthord, :start => 278, :end => 279},
+  {:field => :agepreg, :start => 284, :end => 287},
+  {:field => :finalwgt, :start => 423, :end => 440},
+]
+sample = Ratistics::Load.dat_gz_file('data/2002FemPreg.dat.gz', fields)
+sample.count #=> 13593 
 
-    # filter for first-borns
-    first = sample.select{|item| item[:birthord].to_i == 1}
-    first.count #=> 4413
+# filter for first-born
+first = sample.select{|item| item[:birthord].to_i == 1}
+first.count #=> 4413
 
-    # filter for non-first-borns
-    not_first = sample.select{|item| item[:birthord].to_i > 1}
-    not_first.count #=> 4735
+# filter for non-first-borns
+not_first = sample.select{|item| item[:birthord].to_i > 1}
+not_first.count #=> 4735
 
-    # calculate mean pregnancy lengths
-    Ratistics.mean(sample){|item| item[:prglength]} #=> 29.531229309203265 
-    Ratistics.mean(first){|item| item[:prglength]} #=> 38.60095173351461 
-    Ratistics.mean(not_first){|item| item[:prglength]} #=> 38.52291446673706
+# calculate mean pregnancy lengths
+Ratistics.mean(sample){|item| item[:prglength]} #=> 29.531229309203265 
+Ratistics.mean(first){|item| item[:prglength]} #=> 38.60095173351461 
+Ratistics.mean(not_first){|item| item[:prglength]} #=> 38.52291446673706
 
-    # calculate the variance of pregnancy lengths
-    Ratistics.variance(sample){|item| item[:prglength]} #=> 190.49562224367648 
-    Ratistics.variance(first){|item| item[:prglength]} #=> 7.792947202066306 
-    Ratistics.variance(not_first){|item| item[:prglength]} #=> 6.84123839078341
+# calculate the variance of pregnancy lengths
+Ratistics.variance(sample){|item| item[:prglength]} #=> 190.49562224367648 
+Ratistics.variance(first){|item| item[:prglength]} #=> 7.792947202066306 
+Ratistics.variance(not_first){|item| item[:prglength]} #=> 6.84123839078341
 
-    # calculate the standard deviation of pregnancy lengths
-    Ratistics.standard_deviation(sample){|item| item[:prglength]} #=> 13.8020151515522 
-    Ratistics.standard_deviation(first){|item| item[:prglength]} #=> 2.7915850698243654 
-    Ratistics.standard_deviation(not_first){|item| item[:prglength]} #=> 2.6155761106844913
+# calculate the standard deviation of pregnancy lengths
+Ratistics.standard_deviation(sample){|item| item[:prglength]} #=> 13.8020151515522 
+Ratistics.standard_deviation(first){|item| item[:prglength]} #=> 2.7915850698243654 
+Ratistics.standard_deviation(not_first){|item| item[:prglength]} #=> 2.6155761106844913
 
-    # calculate the frequency of pregnancy lengths
-    sample_freq = Ratistics.frequency(sample){|item| item[:prglength]} #=> {"39"=>4744, "38"=>609, ...}
-    first_freq = Ratistics.frequency(first){|item| item[:prglength]} #=> {"39"=>2114, "38"=>272, ...}
-    not_first_freq = Ratistics.frequency(not_first){|item| item[:prglength]} #=> {"39"=>2579, "40"=>580, ...}
+# calculate the frequency of pregnancy lengths
+sample_freq = Ratistics.frequency(sample){|item| item[:prglength]} #=> {"39"=>4744, "38"=>609, ...}
+first_freq = Ratistics.frequency(first){|item| item[:prglength]} #=> {"39"=>2114, "38"=>272, ...}
+not_first_freq = Ratistics.frequency(not_first){|item| item[:prglength]} #=> {"39"=>2579, "40"=>580, ...}
+```
 
 Once you have the frequency data you can use any charting/graphing library to
 create a histogram to compare birth rates. The file
