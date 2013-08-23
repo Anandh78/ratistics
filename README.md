@@ -1,5 +1,13 @@
 # Ratistics - Ruby Statistics Gem [![Build Status](https://secure.travis-ci.org/jdantonio/ratistics.png)](http://travis-ci.org/jdantonio/ratistics?branch=master) [![Dependency Status](https://gemnasium.com/jdantonio/ratistics.png)](https://gemnasium.com/jdantonio/ratistics)
 
+*DEPRECATED: I am no longer maintaining this gem. I started writing it while learning basic
+statistics and it was a great help. Then I discovered [R](http://www.r-project.org/)* and
+decided I no longer needed this gem. I've moved all of the utility classes and functions
+(catalog, collection, inflect, math, search, and sort) into my
+[functional-ruby](https://github.com/jdantonio/functional-ruby) gem. Please use that
+gem if you need those utilities. I plan to actively maintain that gem for a very
+long time.*
+
 *Ratistics* is a purely functional library that provides basic statistical
 computation functions to Ruby programmers. It is intended for small data
 sets only. This gem was designed for simplicity. Only basic consideration
